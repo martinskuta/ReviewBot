@@ -1,29 +1,33 @@
-﻿using System;
+﻿using System.Runtime.Serialization;
 
 namespace Review.Core.DataModel
 {
-    [Serializable]
+    [DataContract]
     public class Reviewer
     {
         /// <summary>
         ///     Unique id of the reviewer
         /// </summary>
+        [DataMember]
         public string Id { get; set; }
 
         /// <summary>
         ///     Represents availability of this reviewer for reviews.
         /// </summary>
+        [DataMember]
         public ReviewerStatus Status { get; set; }
 
         /// <summary>
         ///     Number of reviews this reviewer did
         /// </summary>
+        [DataMember]
         public int ReviewCount { get; set; }
 
         /// <summary>
         ///     Represents a review debt among all the reviewers. It can be understood as how many reviews he owes to other
         ///     reviewers.
         /// </summary>
+        [DataMember]
         public int ReviewDebt { get; set; }
 
         public bool IsAvailable => Status == ReviewerStatus.Available;
