@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Review.Core", "Review.Core\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Review.Core.Tests", "Review.Core.Tests\Review.Core.Tests.csproj", "{46052ABE-001A-4591-AF8E-A371D50AA9FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReviewBot", "ReviewBot\ReviewBot.csproj", "{79D268F6-75B1-4E0F-81BE-ED129B7A2220}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{46052ABE-001A-4591-AF8E-A371D50AA9FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46052ABE-001A-4591-AF8E-A371D50AA9FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46052ABE-001A-4591-AF8E-A371D50AA9FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79D268F6-75B1-4E0F-81BE-ED129B7A2220}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79D268F6-75B1-4E0F-81BE-ED129B7A2220}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79D268F6-75B1-4E0F-81BE-ED129B7A2220}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79D268F6-75B1-4E0F-81BE-ED129B7A2220}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
