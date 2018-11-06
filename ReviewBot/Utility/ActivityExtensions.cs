@@ -27,6 +27,12 @@ namespace ReviewBot.Utility
             return recipientMention != null && activity.Text.TrimStart().StartsWith(recipientMention.Text);
         }
 
+        public static bool EndsWithRecipientMention(this IMessageActivity activity)
+        {
+            var recipientMention = activity.GetRecipientMention();
+            return recipientMention != null && activity.Text.TrimEnd().EndsWith(recipientMention.Text);
+        }
+
         public static T AddMentionToText<T>(this T activity, ChannelAccount mentionedUser, string mentionText = null)
             where T : IMessageActivity
         {
