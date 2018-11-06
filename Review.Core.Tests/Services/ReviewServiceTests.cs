@@ -28,13 +28,13 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("assigned-reviewer");
-            reviewService.RegisterReviewer("other-available-reviewer");
+            reviewService.RegisterReviewer("assigned-reviewer", "");
+            reviewService.RegisterReviewer("other-available-reviewer", "");
 
-            reviewService.RegisterReviewer("busy-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
             reviewService.MakeReviewerBusy("busy-reviewer");
 
-            reviewService.RegisterReviewer("suspended-reviewer");
+            reviewService.RegisterReviewer("suspended-reviewer", "");
             reviewService.SuspendReviewer("suspended-reviewer");
 
             //Act
@@ -67,13 +67,13 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("available-reviewer");
-            reviewService.RegisterReviewer("other-available-reviewer");
+            reviewService.RegisterReviewer("available-reviewer", "");
+            reviewService.RegisterReviewer("other-available-reviewer", "");
 
-            reviewService.RegisterReviewer("busy-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
             reviewService.MakeReviewerBusy("busy-reviewer");
 
-            reviewService.RegisterReviewer("suspended-reviewer");
+            reviewService.RegisterReviewer("suspended-reviewer", "");
             reviewService.SuspendReviewer("suspended-reviewer");
 
             //Act
@@ -106,13 +106,13 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("available-reviewer");
-            reviewService.RegisterReviewer("other-available-reviewer");
+            reviewService.RegisterReviewer("available-reviewer", "");
+            reviewService.RegisterReviewer("other-available-reviewer", "");
 
-            reviewService.RegisterReviewer("busy-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
             reviewService.MakeReviewerBusy("busy-reviewer");
 
-            reviewService.RegisterReviewer("suspended-reviewer");
+            reviewService.RegisterReviewer("suspended-reviewer", "");
             reviewService.SuspendReviewer("suspended-reviewer");
 
             //Act
@@ -156,13 +156,13 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("assigned-reviewer");
-            reviewService.RegisterReviewer("other-available-reviewer");
+            reviewService.RegisterReviewer("assigned-reviewer", "");
+            reviewService.RegisterReviewer("other-available-reviewer", "");
 
-            reviewService.RegisterReviewer("busy-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
             reviewService.MakeReviewerBusy("busy-reviewer");
 
-            reviewService.RegisterReviewer("suspended-reviewer");
+            reviewService.RegisterReviewer("suspended-reviewer", "");
             reviewService.SuspendReviewer("suspended-reviewer");
 
             //Act
@@ -194,10 +194,10 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("reviewer1");
-            reviewService.RegisterReviewer("reviewer2");
+            reviewService.RegisterReviewer("reviewer1", "");
+            reviewService.RegisterReviewer("reviewer2", "");
 
-            reviewService.RegisterReviewer("busy-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
             reviewService.MakeReviewerBusy("busy-reviewer");
 
             //Act
@@ -225,13 +225,13 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("assigned-reviewer");
-            reviewService.RegisterReviewer("other-available-reviewer");
+            reviewService.RegisterReviewer("assigned-reviewer", "");
+            reviewService.RegisterReviewer("other-available-reviewer", "");
 
-            reviewService.RegisterReviewer("busy-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
             reviewService.MakeReviewerBusy("busy-reviewer");
 
-            reviewService.RegisterReviewer("suspended-reviewer");
+            reviewService.RegisterReviewer("suspended-reviewer", "");
             reviewService.SuspendReviewer("suspended-reviewer");
 
             //Act
@@ -279,7 +279,7 @@ namespace Review.Core.Tests.Services
             var reviewers = new[] {"reviewer1", "reviewer2", "reviewer3", "reviewer4"};
             foreach (var reviewer in reviewers)
             {
-                reviewService.RegisterReviewer(reviewer);
+                reviewService.RegisterReviewer(reviewer, "");
             }
 
             //Act
@@ -317,10 +317,10 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("code-spitting-individual");
-            reviewService.RegisterReviewer("reviewer1");
-            reviewService.RegisterReviewer("reviewer2");
-            reviewService.RegisterReviewer("reviewer3");
+            reviewService.RegisterReviewer("code-spitting-individual", "");
+            reviewService.RegisterReviewer("reviewer1", "");
+            reviewService.RegisterReviewer("reviewer2", "");
+            reviewService.RegisterReviewer("reviewer3", "");
 
             //Act
             for (var i = 0; i < 6; i++)
@@ -353,10 +353,10 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("busy-reviewer");
-            reviewService.RegisterReviewer("suspended-reviewer");
-            reviewService.RegisterReviewer("available-reviewer");
-            reviewService.RegisterReviewer("excluded-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
+            reviewService.RegisterReviewer("suspended-reviewer", "");
+            reviewService.RegisterReviewer("available-reviewer", "");
+            reviewService.RegisterReviewer("excluded-reviewer", "");
 
             reviewService.MakeReviewerBusy("busy-reviewer");
             reviewService.SuspendReviewer("suspended-reviewer");
@@ -378,12 +378,12 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("available-reviewer1");
-            reviewService.RegisterReviewer("available-reviewer2");
+            reviewService.RegisterReviewer("available-reviewer1", "");
+            reviewService.RegisterReviewer("available-reviewer2", "");
 
-            reviewService.RegisterReviewer("busy-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
             reviewService.MakeReviewerBusy("busy-reviewer");
-            reviewService.RegisterReviewer("suspended-reviewer");
+            reviewService.RegisterReviewer("suspended-reviewer", "");
             reviewService.SuspendReviewer("suspended-reviewer");
 
             //Act
@@ -416,7 +416,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
 
             //Act
             var assignedReviewer = reviewService.AddReviewToHighestDebtor(new string[0]);
@@ -455,7 +455,7 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
 
             //Act
             var reviewer = reviewService.GetReviewer("user-id");
@@ -470,7 +470,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
 
             //Act
             //Assert
@@ -483,7 +483,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
             reviewService.MakeReviewerBusy("user-id");
 
             //Act
@@ -511,7 +511,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
             reviewService.SuspendReviewer("user-id");
 
             //Act
@@ -526,7 +526,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
 
             //Act
             reviewService.MakeReviewerBusy("user-id");
@@ -541,7 +541,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
             reviewService.MakeReviewerBusy("user-id");
 
             //Act
@@ -567,7 +567,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
             reviewService.SuspendReviewer("user-id");
 
             //Act
@@ -582,11 +582,11 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
 
             //Act
             //Assert
-            Assert.Throws<ReviewerAlreadyRegisteredException>(() => reviewService.RegisterReviewer("user-id"));
+            Assert.Throws<ReviewerAlreadyRegisteredException>(() => reviewService.RegisterReviewer("user-id", ""));
         }
 
         [Test]
@@ -598,11 +598,12 @@ namespace Review.Core.Tests.Services
             var reviewService = new ReviewService(reviewContext);
 
             //Act
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "FirstName LastName");
 
             //Assert
             Assert.That(reviewContext.Reviewers, Has.Count.EqualTo(1));
             Assert.That(reviewContext.Reviewers[0].Id, Is.EqualTo("user-id"));
+            Assert.That(reviewContext.Reviewers[0].Name, Is.EqualTo("FirstName LastName"));
             Assert.That(reviewContext.Reviewers[0].Status, Is.EqualTo(ReviewerStatus.Available));
             Assert.That(reviewContext.Reviewers[0].ReviewCount, Is.EqualTo(0));
             Assert.That(reviewContext.Reviewers[0].ReviewDebt, Is.EqualTo(0));
@@ -615,7 +616,7 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("reviewer");
+            reviewService.RegisterReviewer("reviewer", "");
 
             //Act
             //Assert
@@ -630,13 +631,13 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("available-reviewer");
-            reviewService.RegisterReviewer("other-available-reviewer");
+            reviewService.RegisterReviewer("available-reviewer", "");
+            reviewService.RegisterReviewer("other-available-reviewer", "");
 
-            reviewService.RegisterReviewer("busy-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
             reviewService.MakeReviewerBusy("busy-reviewer");
 
-            reviewService.RegisterReviewer("suspended-reviewer");
+            reviewService.RegisterReviewer("suspended-reviewer", "");
             reviewService.SuspendReviewer("suspended-reviewer");
 
             //Act
@@ -669,13 +670,13 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("available-reviewer");
-            reviewService.RegisterReviewer("other-available-reviewer");
+            reviewService.RegisterReviewer("available-reviewer", "");
+            reviewService.RegisterReviewer("other-available-reviewer", "");
 
-            reviewService.RegisterReviewer("busy-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
             reviewService.MakeReviewerBusy("busy-reviewer");
 
-            reviewService.RegisterReviewer("suspended-reviewer");
+            reviewService.RegisterReviewer("suspended-reviewer", "");
             reviewService.SuspendReviewer("suspended-reviewer");
 
             //Act
@@ -708,13 +709,13 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("available-reviewer");
-            reviewService.RegisterReviewer("other-available-reviewer");
+            reviewService.RegisterReviewer("available-reviewer", "");
+            reviewService.RegisterReviewer("other-available-reviewer", "");
 
-            reviewService.RegisterReviewer("busy-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
             reviewService.MakeReviewerBusy("busy-reviewer");
 
-            reviewService.RegisterReviewer("suspended-reviewer");
+            reviewService.RegisterReviewer("suspended-reviewer", "");
             reviewService.SuspendReviewer("suspended-reviewer");
 
             //Act
@@ -746,7 +747,7 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("reviewer");
+            reviewService.RegisterReviewer("reviewer", "");
 
             //Act
             //Assert
@@ -761,13 +762,13 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("assigned-reviewer");
-            reviewService.RegisterReviewer("other-available-reviewer");
+            reviewService.RegisterReviewer("assigned-reviewer", "");
+            reviewService.RegisterReviewer("other-available-reviewer", "");
 
-            reviewService.RegisterReviewer("busy-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
             reviewService.MakeReviewerBusy("busy-reviewer");
 
-            reviewService.RegisterReviewer("suspended-reviewer");
+            reviewService.RegisterReviewer("suspended-reviewer", "");
             reviewService.SuspendReviewer("suspended-reviewer");
 
             //Act
@@ -799,13 +800,13 @@ namespace Review.Core.Tests.Services
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
 
-            reviewService.RegisterReviewer("assigned-reviewer");
-            reviewService.RegisterReviewer("other-available-reviewer");
+            reviewService.RegisterReviewer("assigned-reviewer", "");
+            reviewService.RegisterReviewer("other-available-reviewer", "");
 
-            reviewService.RegisterReviewer("busy-reviewer");
+            reviewService.RegisterReviewer("busy-reviewer", "");
             reviewService.MakeReviewerBusy("busy-reviewer");
 
-            reviewService.RegisterReviewer("suspended-reviewer");
+            reviewService.RegisterReviewer("suspended-reviewer", "");
             reviewService.SuspendReviewer("suspended-reviewer");
 
             //Act
@@ -836,7 +837,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
 
             //Act
             //Assert
@@ -849,7 +850,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
             reviewService.MakeReviewerBusy("user-id");
 
             //Act
@@ -875,7 +876,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
             reviewService.SuspendReviewer("user-id");
 
             //Act
@@ -891,7 +892,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
             reviewService.SuspendReviewer("user-id");
 
             //Act
@@ -905,7 +906,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
 
             //Act
             reviewService.SuspendReviewer("user-id");
@@ -920,7 +921,7 @@ namespace Review.Core.Tests.Services
             //Arrange
             var reviewContext = new ReviewContext();
             var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id");
+            reviewService.RegisterReviewer("user-id", "");
             reviewService.MakeReviewerBusy("user-id");
 
             //Act

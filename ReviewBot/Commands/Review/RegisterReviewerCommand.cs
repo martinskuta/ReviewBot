@@ -89,7 +89,7 @@ namespace ReviewBot.Commands.Review
 
                 try
                 {
-                    reviewService.RegisterReviewer(reviewer.Id);
+                    reviewService.RegisterReviewer(reviewer.Id, reviewer.Name);
                     return TurnContext.Activity.CreateReply("You are now registered as reviewer.");
                 }
                 catch (ReviewerAlreadyRegisteredException)
@@ -102,7 +102,7 @@ namespace ReviewBot.Commands.Review
             {
                 try
                 {
-                    reviewService.RegisterReviewer(reviewer.Id);
+                    reviewService.RegisterReviewer(reviewer.Id, reviewer.Name);
                     var reply = TurnContext.Activity.CreateReply().AsMessageActivity();
                     reply.AddMentionToText(reviewer);
                     reply.AppendText(" is now registered as reviewer.");
@@ -126,7 +126,7 @@ namespace ReviewBot.Commands.Review
                 {
                     try
                     {
-                        reviewService.RegisterReviewer(reviewer.Id);
+                        reviewService.RegisterReviewer(reviewer.Id, reviewer.Name);
                         registered.Add(reviewer);
                     }
                     catch (ReviewerAlreadyRegisteredException)

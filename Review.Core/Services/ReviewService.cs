@@ -21,12 +21,12 @@ namespace Review.Core.Services
             _context = reviewContext ?? throw new ArgumentNullException(nameof(reviewContext));
         }
 
-        public void RegisterReviewer(string reviewerId)
+        public void RegisterReviewer(string reviewerId, string displayName)
         {
             var reviewer = _context.Reviewers.FirstOrDefault(r => r.Id == reviewerId);
             if (reviewer != null) throw new ReviewerAlreadyRegisteredException(reviewerId);
 
-            _context.Reviewers.Add(new Reviewer {Id = reviewerId});
+            _context.Reviewers.Add(new Reviewer {Id = reviewerId, Name = displayName});
         }
 
         public Reviewer GetReviewer(string reviewerId)

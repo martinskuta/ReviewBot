@@ -16,22 +16,28 @@ namespace Review.Core.DataModel
         public string Id { get; set; }
 
         /// <summary>
-        ///   Represents availability of this reviewer for reviews.
+        ///   Reviewers display name
         /// </summary>
         [DataMember(Order = 2)]
+        public string Name { get; set; }
+
+        /// <summary>
+        ///   Represents availability of this reviewer for reviews.
+        /// </summary>
+        [DataMember(Order = 3)]
         public ReviewerStatus Status { get; set; }
 
         /// <summary>
         ///   Number of reviews this reviewer did
         /// </summary>
-        [DataMember(Order = 3)]
+        [DataMember(Order = 4)]
         public int ReviewCount { get; set; }
 
         /// <summary>
         ///   Represents a review debt among all the reviewers. It can be understood as how many reviews he owes to other
         ///   reviewers.
         /// </summary>
-        [DataMember(Order = 4)]
+        [DataMember(Order = 5)]
         public int ReviewDebt { get; set; }
 
         public bool IsAvailable => Status == ReviewerStatus.Available;
@@ -42,7 +48,7 @@ namespace Review.Core.DataModel
 
         public override string ToString()
         {
-            return $"{Id} ({Status}): {nameof(ReviewCount)}: {ReviewCount}, {nameof(ReviewDebt)}: {ReviewDebt}";
+            return $"{Name} ({Status}): {nameof(ReviewCount)}: {ReviewCount}, {nameof(ReviewDebt)}: {ReviewDebt}";
         }
     }
 

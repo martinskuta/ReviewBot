@@ -47,7 +47,7 @@ namespace ReviewBot.Utility
 
             var mentionEntityText = string.Format("<at>{0}</at>", mentionedUser.Name);
 
-            activity.Text = activity.Text + " " + mentionEntityText;
+            activity.Text = activity.Text + mentionEntityText;
 
             if (activity.Entities == null)
             {
@@ -61,6 +61,12 @@ namespace ReviewBot.Utility
                     Mentioned = mentionedUser
                 });
 
+            return activity;
+        }
+
+        public static T AppendNewline<T>(this T activity) where T : IMessageActivity
+        {
+            activity.Text = activity.Text + Environment.NewLine;
             return activity;
         }
 

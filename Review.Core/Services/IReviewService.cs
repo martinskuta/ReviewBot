@@ -6,7 +6,7 @@ namespace Review.Core.Services
 {
     public interface IReviewService
     {
-        void RegisterReviewer([NotNull] string reviewerId);
+        void RegisterReviewer([NotNull] string reviewerId, string displayName);
 
         [NotNull]
         Reviewer GetReviewer([NotNull] string reviewerId);

@@ -1,12 +1,15 @@
-﻿using System;
+﻿#region using
+
+using System;
 using System.Linq;
-using System.Text;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using Review.Core.Services;
 using Review.Core.Utility;
 using ReviewBot.Storage;
 using ReviewBot.Utility;
+
+#endregion
 
 namespace ReviewBot.Commands.Review
 {
@@ -62,16 +65,15 @@ namespace ReviewBot.Commands.Review
                     return TurnContext.Activity.CreateReply("There are no reviewers registered yet.");
                 }
 
-                var sb = new StringBuilder($"There are {allReviewers.Count} reviewers registered. Ordered debt:");
-                sb.AppendLine();
-                sb.AppendLine(new string('-', sb.Length));
+                var reply = TurnContext.Activity.CreateReply($"There are {allReviewers.Count} reviewers registered. Ordered debt:").AppendNewline();
                 foreach (var reviewer in allReviewers.OrderByDescending(r => r.ReviewDebt))
                 {
-                    //TODO Use user's name, by my mapping the reviewer id to channelAccount and using it in mention?
-                    sb.AppendLine(reviewer.ToString());
+                    reply.AddMentionToText(new ChannelAccount(reviewer.Id, reviewer.Name))
+                         .AppendText($" ({reviewer.Status}): ReviewCount: {reviewer.ReviewCount}, ReviewDebt: {reviewer.ReviewDebt}")
+                         .AppendNewline();
                 }
 
-                return TurnContext.Activity.CreateReply(sb.ToString());
+                return reply;
             }
         }
     }
