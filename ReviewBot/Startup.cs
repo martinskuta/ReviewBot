@@ -92,7 +92,7 @@ namespace ReviewBot
                     {
                         logger.LogError($"Exception caught : {exception}");
                         await context.SendActivityAsync(
-                            $"Sorry, it looks like something went wrong. Exception: {exception}");
+                            $"Sorry, it looks like something went wrong. Error: {exception.Message}");
                     };
                 });
 
