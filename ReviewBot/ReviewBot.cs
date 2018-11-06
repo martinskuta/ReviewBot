@@ -28,6 +28,7 @@ namespace ReviewBot
             _logger.LogTrace("Review bot started.");
 
             _reviewCommands.Add(new RegisterReviewerCommand(contextStore));
+            _reviewCommands.Add(new OverallStatusCommand(contextStore));
         }
 
         public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = new CancellationToken())

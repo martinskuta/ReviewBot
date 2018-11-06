@@ -1,5 +1,6 @@
 ﻿#region using
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Bot.Builder;
@@ -35,12 +36,12 @@ namespace ReviewBot.Commands.Review
             }
 
             var message = messageActivity.RemoveRecipientMention().Trim();
-            return message.StartsWith("register") ? 1 : 0;
+            return message.StartsWith("register", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
         }
 
         public override string PrintUsage(string myName)
         {
-            return $"Registering reviewers: '@{myName} register @reviewer1, @reviewer2' or '@{myName} register me' to register yourself.";
+            return $"Register reviewers: '@{myName} register @reviewer1, @reviewer2' or '@{myName} register me' to register yourself.";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore reviewContextStore)
@@ -54,6 +55,8 @@ namespace ReviewBot.Commands.Review
                 : base(command, turnContext, contextStore)
             {
             }
+
+            protected override bool IsReadonly => false;
 
             protected override IActivity Execute(IReviewService reviewService)
             {

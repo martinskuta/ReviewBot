@@ -21,11 +21,18 @@ namespace ReviewBot.Commands.Review
             _contextStore = contextStore;
         }
 
+        /// <summary>
+        ///   If true, then the executable is only reading from review context and doesn't need to save any changes.
+        /// </summary>
+        protected abstract bool IsReadonly { get; }
+
         public override async Task Execute()
         {
             var reviewContext = await _contextStore.GetContext("contextId");
 
             _reply = Execute(new ReviewService(reviewContext));
+
+            if (IsReadonly) return;
 
             await _contextStore.SaveContext(reviewContext);
         }

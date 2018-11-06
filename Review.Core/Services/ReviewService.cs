@@ -35,9 +35,9 @@ namespace Review.Core.Services
                    throw new ReviewerNotRegisteredException(reviewerId);
         }
 
-        public List<Reviewer> GetAllReviewers()
+        public IReadOnlyList<Reviewer> GetAllReviewers()
         {
-            return _context.Reviewers;
+            return _context.Reviewers.AsReadOnly();
         }
 
         public void SuspendReviewer(string reviewerId)

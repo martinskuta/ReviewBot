@@ -11,7 +11,7 @@ namespace Review.Core.Services
         [NotNull]
         Reviewer GetReviewer([NotNull] string reviewerId);
 
-        List<Reviewer> GetAllReviewers();
+        IReadOnlyList<Reviewer> GetAllReviewers();
 
         void SuspendReviewer([NotNull] string reviewerId);
 
