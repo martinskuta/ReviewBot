@@ -124,7 +124,7 @@ namespace ReviewBot.Utility
 
         public static string GetMsTeamsChannelId(this IActivity activity)
         {
-            return activity.ChannelData.teamsChannelId;
+            return activity.ChannelData.channel.id;
         }
     }
 }
