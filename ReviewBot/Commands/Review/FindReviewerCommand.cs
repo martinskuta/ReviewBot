@@ -32,7 +32,7 @@ namespace ReviewBot.Commands.Review
                 return 0;
             }
 
-            var message = messageActivity.RemoveRecipientMention().StripNewLineAndTrim();
+            var message = messageActivity.StripRecipientMention().StripNewLineAndTrim();
             return message.EndsWith("is ready for", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
         }
 

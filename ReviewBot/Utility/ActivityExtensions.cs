@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using Microsoft.Bot.Schema;
 using Review.Core.Utility;
@@ -88,6 +89,32 @@ namespace ReviewBot.Utility
         private static Mention GetRecipientMention(this IMessageActivity activity)
         {
             return activity.GetMentions().FirstOrDefault(m => m.Mentioned.Id == activity.Recipient.Id);
+        }
+
+        /// <summary>
+        /// Remove recipient mention text from Text property
+        /// </summary>
+        /// <param name="activity"></param>
+        /// <returns>new .Text property value</returns>
+        public static string StripRecipientMention(this IMessageActivity activity)
+        {
+            return activity.StripMentionText(activity.Recipient.Id);
+        }
+
+        /// <summary>
+        /// Replace any mention text for given id from Text property
+        /// </summary>
+        /// <param name="id">id to match</param>
+        /// <param name="activity"></param>
+        /// <returns>new .Text property value</returns>
+        public static string StripMentionText(this IMessageActivity activity, string id)
+        {
+            var resultText = activity.Text;
+            foreach (var mention in activity.GetMentions().Where(mention => mention.Mentioned.Id == id))
+            {
+                resultText = Regex.Replace(resultText, mention.Text, string.Empty, RegexOptions.IgnoreCase);
+            }
+            return resultText;
         }
     }
 }

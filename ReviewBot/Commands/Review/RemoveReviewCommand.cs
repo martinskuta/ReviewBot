@@ -28,7 +28,7 @@ namespace ReviewBot.Commands.Review
                 return 0;
             }
 
-            var message = messageActivity.RemoveRecipientMention().StripNewLineAndTrim();
+            var message = messageActivity.StripRecipientMention().StripNewLineAndTrim();
             return message.StartsWith("remove  from", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
         }
 
