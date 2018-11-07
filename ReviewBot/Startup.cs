@@ -65,7 +65,7 @@ namespace ReviewBot
                     var botFilePath = Configuration.GetSection("botFilePath")?.Value;
 
                     // Loads .bot configuration file and adds a singleton that your Bot can access through dependency injection.
-                    var botConfig = BotConfiguration.Load(botFilePath ?? @".\BotConfiguration.bot", secretKey);
+                    var botConfig = BotConfiguration.Load(botFilePath, secretKey);
                     services.AddSingleton(
                         sp =>
                             botConfig ??

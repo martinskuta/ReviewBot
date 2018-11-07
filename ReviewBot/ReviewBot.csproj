@@ -3,11 +3,19 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
+    <UserSecretsId>fc3a62dd-140a-4c54-90d2-e65742b1e60f</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ProductionBotConfiguration.bot" />
+  </ItemGroup>
 
 
   <ItemGroup>
-    <Content Include="BotConfiguration.bot">
+    <Content Include="ProductionBotConfiguration.bot">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="LocalConfiguration.bot">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
