@@ -74,7 +74,7 @@ namespace ReviewBot.Utility
         public static T AppendNewline<T>(this T activity)
             where T : IMessageActivity
         {
-            activity.Text = activity.Text + Environment.NewLine;
+            activity.Text = activity.Text + "\n\n";
             return activity;
         }
 
@@ -115,6 +115,16 @@ namespace ReviewBot.Utility
                 resultText = Regex.Replace(resultText, mention.Text, string.Empty, RegexOptions.IgnoreCase);
             }
             return resultText;
+        }
+
+        public static string GetMsTeamsTenantId(this IActivity activity)
+        {
+            return activity.ChannelData.tenant.id;
+        }
+
+        public static string GetMsTeamsChannelId(this IActivity activity)
+        {
+            return activity.ChannelData.teamsChannelId;
         }
     }
 }

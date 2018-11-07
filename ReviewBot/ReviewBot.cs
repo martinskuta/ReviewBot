@@ -76,7 +76,7 @@ namespace ReviewBot
         {
             var help = new StringBuilder();
             help.AppendLine("Here is what you can do:");
-            help.AppendJoin(Environment.NewLine, _reviewCommands.Select(cmd => cmd.PrintUsage(turnContext.Activity.Recipient.Name)));
+            help.AppendJoin("\n\n", _reviewCommands.Select(cmd => cmd.PrintUsage(turnContext.Activity.Recipient.Name)));
 
             return turnContext.SendActivityAsync(help.ToString());
         }
