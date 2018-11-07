@@ -33,7 +33,7 @@ namespace ReviewBot.Utility
             return recipientMention != null && activity.Text.TrimEnd().EndsWith(recipientMention.Text);
         }
 
-        public static T AddMentionToText<T>(this T activity, ChannelAccount mentionedUser, string mentionText = null)
+        public static T AppendMention<T>(this T activity, ChannelAccount mentionedUser, string mentionText = null)
             where T : IMessageActivity
         {
             if (mentionedUser == null || string.IsNullOrEmpty(mentionedUser.Id))
@@ -70,7 +70,8 @@ namespace ReviewBot.Utility
             return activity;
         }
 
-        public static T AppendNewline<T>(this T activity) where T : IMessageActivity
+        public static T AppendNewline<T>(this T activity)
+            where T : IMessageActivity
         {
             activity.Text = activity.Text + Environment.NewLine;
             return activity;

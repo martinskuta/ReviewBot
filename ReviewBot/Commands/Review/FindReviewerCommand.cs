@@ -1,10 +1,14 @@
-﻿using System;
+﻿#region using
+
+using System;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using Review.Core.Services;
 using Review.Core.Services.Exceptions;
 using ReviewBot.Storage;
 using ReviewBot.Utility;
+
+#endregion
 
 namespace ReviewBot.Commands.Review
 {
@@ -59,13 +63,13 @@ namespace ReviewBot.Commands.Review
                 {
                     var reviewer = reviewService.AddReviewToHighestDebtor(new[] { featureAuthor.Id });
                     return TurnContext.Activity.CreateReply()
-                                      .AddMentionToText(featureAuthor)
+                                      .AppendMention(featureAuthor)
                                       .AppendText(" assign the review to ")
-                                      .AddMentionToText(new ChannelAccount(reviewer.Id, reviewer.Name));
+                                      .AppendMention(new ChannelAccount(reviewer.Id, reviewer.Name));
                 }
                 catch (NoReviewerAvailableException)
                 {
-                    return TurnContext.Activity.CreateReply("Sorry ").AddMentionToText(featureAuthor).AppendText(", there are no reviewers available.");
+                    return TurnContext.Activity.CreateReply("Sorry ").AppendMention(featureAuthor).AppendText(", there are no reviewers available.");
                 }
             }
         }

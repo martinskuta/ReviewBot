@@ -68,7 +68,7 @@ namespace ReviewBot.Commands.Review
                 var reply = TurnContext.Activity.CreateReply($"There are {allReviewers.Count} reviewers registered. Ordered debt:").AppendNewline();
                 foreach (var reviewer in allReviewers.OrderByDescending(r => r.ReviewDebt))
                 {
-                    reply.AddMentionToText(new ChannelAccount(reviewer.Id, reviewer.Name))
+                    reply.AppendMention(new ChannelAccount(reviewer.Id, reviewer.Name))
                          .AppendText($" ({reviewer.Status}): ReviewCount: {reviewer.ReviewCount}, ReviewDebt: {reviewer.ReviewDebt}")
                          .AppendNewline();
                 }

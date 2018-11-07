@@ -104,14 +104,14 @@ namespace ReviewBot.Commands.Review
                 {
                     reviewService.RegisterReviewer(reviewer.Id, reviewer.Name);
                     var reply = TurnContext.Activity.CreateReply().AsMessageActivity();
-                    reply.AddMentionToText(reviewer);
+                    reply.AppendMention(reviewer);
                     reply.AppendText(" is now registered as reviewer.");
                     return reply;
                 }
                 catch (ReviewerAlreadyRegisteredException)
                 {
                     var reply = TurnContext.Activity.CreateReply().AsMessageActivity();
-                    reply.AddMentionToText(reviewer);
+                    reply.AppendMention(reviewer);
                     reply.AppendText(" is already registered.");
                     return reply;
                 }
@@ -141,14 +141,14 @@ namespace ReviewBot.Commands.Review
                 {
                     if (registered.Count == 1)
                     {
-                        reply.AddMentionToText(registered[0]);
+                        reply.AppendMention(registered[0]);
                         reply.AppendText(" is now registered as reviewer.");
                     }
                     else
                     {
                         foreach (var reviewer in registered)
                         {
-                            reply.AddMentionToText(reviewer);
+                            reply.AppendMention(reviewer);
                             reply.AppendText(" ");
                         }
 
@@ -162,14 +162,14 @@ namespace ReviewBot.Commands.Review
 
                     if (alreadyRegistered.Count == 1)
                     {
-                        reply.AddMentionToText(alreadyRegistered[0]);
+                        reply.AppendMention(alreadyRegistered[0]);
                         reply.AppendText(" was already registered.");
                     }
                     else
                     {
                         foreach (var reviewer in alreadyRegistered)
                         {
-                            reply.AddMentionToText(reviewer);
+                            reply.AppendMention(reviewer);
                             reply.AppendText(" ");
                         }
 

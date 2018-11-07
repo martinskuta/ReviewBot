@@ -2,9 +2,13 @@
 {
     public class ReviewerNotRegisteredException : ReviewException
     {
-        public ReviewerNotRegisteredException(string reviewerId) : base(
-            $"Reviewer with id '{reviewerId}' is not registered.")
+        public ReviewerNotRegisteredException(string reviewerId)
+            : base(
+                $"Reviewer with id '{reviewerId}' is not registered.")
         {
+            ReviewerId = reviewerId;
         }
+
+        public string ReviewerId { get; }
     }
 }
