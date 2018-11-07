@@ -28,7 +28,7 @@ namespace ReviewBot.Commands.Review
                 return 0;
             }
 
-            var message = messageActivity.RemoveRecipientMention().Trim();
+            var message = messageActivity.RemoveRecipientMention().StripNewLineAndTrim();
             return message.StartsWith("add  to", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
         }
 

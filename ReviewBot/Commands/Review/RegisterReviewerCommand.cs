@@ -35,7 +35,7 @@ namespace ReviewBot.Commands.Review
                 return 0;
             }
 
-            var message = messageActivity.RemoveRecipientMention().Trim();
+            var message = messageActivity.RemoveRecipientMention().StripNewLineAndTrim();
             return message.StartsWith("register", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
         }
 
@@ -61,7 +61,7 @@ namespace ReviewBot.Commands.Review
             protected override IActivity Execute(IReviewService reviewService)
             {
                 var messageActivity = TurnContext.Activity.AsMessageActivity();
-                var message = messageActivity.RemoveRecipientMention().Trim();
+                var message = messageActivity.RemoveRecipientMention().StripNewLineAndTrim();
                 var reviewersToRegister =
                     messageActivity.GetUniqueMentionsExceptRecipient().Select(m => m.Mentioned).ToList();
 
