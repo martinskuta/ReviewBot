@@ -1,9 +1,6 @@
 ﻿#region using
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
@@ -12,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using ReviewBot.Commands;
 using ReviewBot.Commands.Review;
 using ReviewBot.Storage;
+using ReviewBot.Utility;
 
 #endregion
 
@@ -53,7 +51,6 @@ namespace ReviewBot
             if (matchingCommand == null)
             {
                 _logger.LogTrace($"Message couldn't be handled. Returning help. Message: {turnContext.Activity.Text}");
-                await turnContext.SendActivityAsync("Sorry, didn't get your message.");
                 await ReplyWithHelp(turnContext);
                 return;
             }
@@ -74,11 +71,15 @@ namespace ReviewBot
 
         private Task ReplyWithHelp(ITurnContext turnContext)
         {
-            var help = new StringBuilder();
-            help.AppendLine("Here is what you can do:");
-            help.AppendJoin("\n\n", _reviewCommands.Select(cmd => cmd.PrintUsage(turnContext.Activity.Recipient.Name)));
+            var reply = turnContext.Activity.CreateReply("This is what I can do for you:");
+            reply.AppendNewline();
 
-            return turnContext.SendActivityAsync(help.ToString());
+            foreach (var reviewCommand in _reviewCommands)
+            {
+                reply.AppendNewline().AppendText(reviewCommand.PrintUsage(turnContext.Activity.Recipient.Name));
+            }
+
+            return turnContext.SendActivityAsync(reply);
         }
 
         private Command GetMatchingCommand(ITurnContext turnContext)
