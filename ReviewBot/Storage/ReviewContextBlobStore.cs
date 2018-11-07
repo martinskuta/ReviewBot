@@ -29,7 +29,7 @@ namespace ReviewBot.Storage
             var blockBlob = container.GetBlockBlobReference(contextid);
             if (!await blockBlob.ExistsAsync())
             {
-                var reviewContext = new ReviewContext { Id = contextid };
+                var reviewContext = new ReviewContext { Id = contextid, ETag = "" };
                 using (var ms = reviewContext.ToMemoryStream())
                 {
                     await blockBlob.UploadFromStreamAsync(ms);
