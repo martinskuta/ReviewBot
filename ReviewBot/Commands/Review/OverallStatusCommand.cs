@@ -65,8 +65,8 @@ namespace ReviewBot.Commands.Review
                     return TurnContext.Activity.CreateReply("There are no reviewers registered yet.");
                 }
 
-                var reply = TurnContext.Activity.CreateReply($"There are {allReviewers.Count} reviewers registered. Ordered debt:").AppendNewline();
-                foreach (var reviewer in allReviewers.OrderByDescending(r => r.ReviewDebt))
+                var reply = TurnContext.Activity.CreateReply("Ordered by debt:").AppendNewline();
+                foreach (var reviewer in allReviewers.OrderByDescending(r => r.ReviewDebt).ThenBy(r => r.Name))
                 {
                     reply.AppendMention(new ChannelAccount(reviewer.Id, reviewer.Name))
                          .AppendText($" ({reviewer.Status}): ReviewCount: {reviewer.ReviewCount}, ReviewDebt: {reviewer.ReviewDebt}")
