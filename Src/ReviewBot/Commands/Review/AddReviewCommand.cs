@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
-using Review.Core.Services;
 using Review.Core.Services.Exceptions;
 using Review.Core.Utility;
 using ReviewBot.Storage;
@@ -51,7 +50,7 @@ namespace ReviewBot.Commands.Review
 
             protected override bool IsReadonly => false;
 
-            protected override IActivity Execute(IReviewService reviewService)
+            protected override IActivity ExecuteReviewAction()
             {
                 var featureAuthor = TurnContext.Activity.From;
                 var messageActivity = TurnContext.Activity.AsMessageActivity();
@@ -59,20 +58,16 @@ namespace ReviewBot.Commands.Review
 
                 try
                 {
-                    reviewService.AddReview(reviewersToRegister.Select(r => r.Id).ToArray());
+                    ReviewService.AddReview(reviewersToRegister.Select(r => r.Id).ToArray());
                     return TurnContext.Activity.CreateReply("Added.");
                 }
                 catch (NoReviewerAvailableException)
                 {
-                    return TurnContext.Activity.CreateReply("Sorry ").AppendMention(featureAuthor).AppendText(", there are no reviewers registered.");
+                    return CreateSorryNoReviewersRegisteredYetReply(featureAuthor);
                 }
                 catch (ReviewerNotRegisteredException e)
                 {
-                    return TurnContext.Activity.CreateReply("Sorry ")
-                                      .AppendMention(featureAuthor)
-                                      .AppendText(", but ")
-                                      .AppendMention(reviewersToRegister.First(r => r.Id == e.ReviewerId))
-                                      .AppendText(" is not registered as reviewer.");
+                    return CreateSorryReviewerNotRegisteredReply(featureAuthor, reviewersToRegister.First(r => r.Id == e.ReviewerId));
                 }
             }
         }

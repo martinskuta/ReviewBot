@@ -16,6 +16,7 @@ namespace ReviewBot.Commands.Review
     {
         private readonly IReviewContextStore _contextStore;
         private IActivity _reply;
+        protected IReviewService ReviewService;
 
         protected ReviewCommandExecutable(Command command, ITurnContext turnContext, IReviewContextStore contextStore)
             : base(command, turnContext)
@@ -32,11 +33,40 @@ namespace ReviewBot.Commands.Review
         {
             var reviewContext = await _contextStore.GetContext(GetReviewContextId());
 
-            _reply = Execute(new ReviewService(reviewContext));
+            ReviewService = new ReviewService(reviewContext);
+
+            _reply = ExecuteReviewAction();
 
             if (IsReadonly) return;
 
             await _contextStore.SaveContext(reviewContext);
+        }
+
+        public override IActivity GetReply() => _reply;
+
+        protected abstract IActivity ExecuteReviewAction();
+
+        protected IActivity CreateSorryYouAreNotRegisteredReply(ChannelAccount sender)
+        {
+            return TurnContext.Activity.CreateReply("Sorry ")
+                              .AppendMention(sender)
+                              .AppendText(", but you are not registered as reviewer.");
+        }
+
+        protected IActivity CreateSorryReviewerNotRegisteredReply(ChannelAccount sender, ChannelAccount notRegistered)
+        {
+            return TurnContext.Activity.CreateReply("Sorry ")
+                              .AppendMention(sender)
+                              .AppendText(", but ")
+                              .AppendMention(notRegistered)
+                              .AppendText(" is not registered as reviewer.");
+        }
+
+        protected IActivity CreateSorryNoReviewersRegisteredYetReply(ChannelAccount sender)
+        {
+            return TurnContext.Activity.CreateReply("Sorry ")
+                              .AppendMention(sender)
+                              .AppendText(", there are no reviewers registered here yet.");
         }
 
         private string GetReviewContextId()
@@ -46,9 +76,5 @@ namespace ReviewBot.Commands.Review
 
             return HttpUtility.UrlDecode($"{tenantId}_{channelId}");
         }
-
-        public override IActivity GetReply() => _reply;
-
-        protected abstract IActivity Execute(IReviewService reviewService);
     }
 }

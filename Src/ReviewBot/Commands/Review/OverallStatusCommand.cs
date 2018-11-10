@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
-using Review.Core.Services;
 using Review.Core.Utility;
 using ReviewBot.Storage;
 using ReviewBot.Utility;
@@ -50,9 +49,9 @@ namespace ReviewBot.Commands.Review
 
             protected override bool IsReadonly => true;
 
-            protected override IActivity Execute(IReviewService reviewService)
+            protected override IActivity ExecuteReviewAction()
             {
-                var allReviewers = reviewService.GetAllReviewers();
+                var allReviewers = ReviewService.GetAllReviewers();
 
                 if (allReviewers.IsEmpty())
                 {

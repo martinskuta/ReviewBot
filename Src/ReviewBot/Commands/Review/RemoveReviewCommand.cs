@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
-using Review.Core.Services;
 using Review.Core.Services.Exceptions;
 using Review.Core.Utility;
 using ReviewBot.Storage;
@@ -51,7 +50,7 @@ namespace ReviewBot.Commands.Review
 
             protected override bool IsReadonly => false;
 
-            protected override IActivity Execute(IReviewService reviewService)
+            protected override IActivity ExecuteReviewAction()
             {
                 var featureAuthor = TurnContext.Activity.From;
                 var messageActivity = TurnContext.Activity.AsMessageActivity();
@@ -59,7 +58,7 @@ namespace ReviewBot.Commands.Review
 
                 try
                 {
-                    reviewService.RemoveReview(reviewersToRegister.Select(r => r.Id).ToArray());
+                    ReviewService.RemoveReview(reviewersToRegister.Select(r => r.Id).ToArray());
                     return TurnContext.Activity.CreateReply("Removed.");
                 }
                 catch (NoReviewerAvailableException)

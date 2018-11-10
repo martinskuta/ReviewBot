@@ -3,7 +3,6 @@
 using System;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
-using Review.Core.Services;
 using Review.Core.Services.Exceptions;
 using ReviewBot.Storage;
 using ReviewBot.Utility;
@@ -49,13 +48,13 @@ namespace ReviewBot.Commands.Review
 
             protected override bool IsReadonly => false;
 
-            protected override IActivity Execute(IReviewService reviewService)
+            protected override IActivity ExecuteReviewAction()
             {
                 var featureAuthor = TurnContext.Activity.From;
 
                 try
                 {
-                    var reviewer = reviewService.AddReviewToHighestDebtor(new[] { featureAuthor.Id });
+                    var reviewer = ReviewService.AddReviewToHighestDebtor(new[] { featureAuthor.Id });
                     return TurnContext.Activity.CreateReply()
                                       .AppendMention(featureAuthor)
                                       .AppendText(" assign the review to ")

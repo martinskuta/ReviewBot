@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
-using Review.Core.Services;
 using Review.Core.Services.Exceptions;
 using Review.Core.Utility;
 using ReviewBot.Storage;
@@ -29,10 +28,12 @@ namespace ReviewBot.Commands.Review
 
             if (!messageActivity.StartsWithRecipientMention()) return 0;
 
-            if (messageActivity.GetUniqueMentionsExceptRecipient().IsEmpty()) return 0;
-
             var message = messageActivity.StripRecipientMention().StripNewLineAndTrim();
-            return message.StartsWith("register", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
+            var mentions = messageActivity.GetUniqueMentionsExceptRecipient();
+
+            if (message.StartsWith("register me", StringComparison.InvariantCultureIgnoreCase) && mentions.IsEmpty()) return 1;
+
+            return message.StartsWith("register", StringComparison.InvariantCultureIgnoreCase) && !mentions.IsEmpty() ? 1 : 0;
         }
 
         public override string PrintUsage(string myName)
@@ -54,7 +55,7 @@ namespace ReviewBot.Commands.Review
 
             protected override bool IsReadonly => false;
 
-            protected override IActivity Execute(IReviewService reviewService)
+            protected override IActivity ExecuteReviewAction()
             {
                 var messageActivity = TurnContext.Activity.AsMessageActivity();
                 var message = messageActivity.StripRecipientMention().StripNewLineAndTrim();
@@ -65,7 +66,7 @@ namespace ReviewBot.Commands.Review
                 {
                     if (message == "register me")
                     {
-                        return RegisterSenderAsReviewer(reviewService);
+                        return RegisterSenderAsReviewer();
                     }
 
                     return CreateHelpReply();
@@ -73,19 +74,19 @@ namespace ReviewBot.Commands.Review
 
                 if (reviewersToRegister.Count == 1)
                 {
-                    return RegisterReviewer(reviewService, reviewersToRegister.First());
+                    return RegisterReviewer(reviewersToRegister.First());
                 }
 
-                return RegisterReviewers(reviewService, reviewersToRegister);
+                return RegisterReviewers(reviewersToRegister);
             }
 
-            private IActivity RegisterSenderAsReviewer(IReviewService reviewService)
+            private IActivity RegisterSenderAsReviewer()
             {
                 var reviewer = TurnContext.Activity.From;
 
                 try
                 {
-                    reviewService.RegisterReviewer(reviewer.Id, reviewer.Name);
+                    ReviewService.RegisterReviewer(reviewer.Id, reviewer.Name);
                     return TurnContext.Activity.CreateReply("You are now registered as reviewer.");
                 }
                 catch (ReviewerAlreadyRegisteredException)
@@ -94,11 +95,11 @@ namespace ReviewBot.Commands.Review
                 }
             }
 
-            private IActivity RegisterReviewer(IReviewService reviewService, ChannelAccount reviewer)
+            private IActivity RegisterReviewer(ChannelAccount reviewer)
             {
                 try
                 {
-                    reviewService.RegisterReviewer(reviewer.Id, reviewer.Name);
+                    ReviewService.RegisterReviewer(reviewer.Id, reviewer.Name);
                     var reply = TurnContext.Activity.CreateReply().AsMessageActivity();
                     reply.AppendMention(reviewer);
                     reply.AppendText(" is now registered as reviewer.");
@@ -113,7 +114,7 @@ namespace ReviewBot.Commands.Review
                 }
             }
 
-            private IActivity RegisterReviewers(IReviewService reviewService, IEnumerable<ChannelAccount> reviewers)
+            private IActivity RegisterReviewers(IEnumerable<ChannelAccount> reviewers)
             {
                 var registered = new List<ChannelAccount>();
                 var alreadyRegistered = new List<ChannelAccount>();
@@ -122,7 +123,7 @@ namespace ReviewBot.Commands.Review
                 {
                     try
                     {
-                        reviewService.RegisterReviewer(reviewer.Id, reviewer.Name);
+                        ReviewService.RegisterReviewer(reviewer.Id, reviewer.Name);
                         registered.Add(reviewer);
                     }
                     catch (ReviewerAlreadyRegisteredException)
