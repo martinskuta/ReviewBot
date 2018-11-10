@@ -21,15 +21,15 @@ namespace ReviewBot.Storage
             _cloudStorageAccount = CloudStorageAccount.Parse(configuration["AzureBlobStorageConnectionString"]);
         }
 
-        public async Task<ReviewContext> GetContext(string contextid)
+        public async Task<ReviewContext> GetContext(string contextId)
         {
             var container = await GetBlobContainer();
 
             // Create test blob - default strategy is last writer wins - so UploadText will overwrite existing blob if present
-            var blockBlob = container.GetBlockBlobReference(contextid);
+            var blockBlob = container.GetBlockBlobReference(contextId);
             if (!await blockBlob.ExistsAsync())
             {
-                var reviewContext = new ReviewContext { Id = contextid, ETag = "" };
+                var reviewContext = new ReviewContext { Id = contextId, ETag = "" };
                 using (var ms = reviewContext.ToMemoryStream())
                 {
                     await blockBlob.UploadFromStreamAsync(ms);

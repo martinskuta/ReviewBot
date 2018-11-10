@@ -6,6 +6,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using Review.Core.Services;
 using Review.Core.Services.Exceptions;
+using Review.Core.Utility;
 using ReviewBot.Storage;
 using ReviewBot.Utility;
 
@@ -23,10 +24,9 @@ namespace ReviewBot.Commands.Review
         public override double GetMatchingScore(IActivity activity)
         {
             var messageActivity = activity.AsMessageActivity();
-            if (messageActivity == null)
-            {
-                return 0;
-            }
+            if (messageActivity == null) return 0;
+
+            if (messageActivity.GetUniqueMentionsExceptRecipient().IsEmpty()) return 0;
 
             var message = messageActivity.StripRecipientMention().StripNewLineAndTrim();
             return message.StartsWith("remove  from", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;

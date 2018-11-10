@@ -9,7 +9,7 @@ namespace ReviewBot.Storage
 {
     public interface IReviewContextStore
     {
-        Task<ReviewContext> GetContext(string contextid);
+        Task<ReviewContext> GetContext(string contextId);
 
         Task SaveContext(ReviewContext context);
     }

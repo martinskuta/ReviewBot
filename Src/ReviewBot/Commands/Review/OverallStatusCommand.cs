@@ -23,15 +23,9 @@ namespace ReviewBot.Commands.Review
         public override double GetMatchingScore(IActivity activity)
         {
             var messageActivity = activity.AsMessageActivity();
-            if (messageActivity == null)
-            {
-                return 0;
-            }
+            if (messageActivity == null) return 0;
 
-            if (!messageActivity.StartsWithRecipientMention())
-            {
-                return 0;
-            }
+            if (!messageActivity.StartsWithRecipientMention()) return 0;
 
             var message = messageActivity.StripRecipientMention().StripNewLineAndTrim();
             return message.Equals("status", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
