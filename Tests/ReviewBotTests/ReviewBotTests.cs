@@ -125,7 +125,7 @@ namespace ReviewBot.Tests
             [TestCase("FEATURE-1234 is ready for @Review")]
             [TestCase("FEATURE-1234 @jira-help is ready for @Review")]
             [TestCase("FEATURE-1234 is ready for @Review @jira-help")]
-            public async Task OnTurnAsync_SingleFeatureAuthorIsAskingForReview_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
+            public async Task OnTurnAsync_LookingForReviewerOfYourPullRequest_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
@@ -148,6 +148,89 @@ namespace ReviewBot.Tests
                         "Ordered by debt:\n\n" +
                         "<at>xxx</at> (Available): ReviewCount: 1, ReviewDebt: 0\n\n" +
                         "<at>yyy</at> (Available): ReviewCount: 1, ReviewDebt: 0\n\n"));
+            }
+
+            [TestCase("@xxx is looking for @Review of SKYE-1234")]
+            [TestCase("@xxx is looking for @Review of SKYE-1234. It is quite small.")]
+            [TestCase("@xxx is looking for @Review of SKYE-1234 @jira-help")]
+            public async Task OnTurnAsync_FindingReviewForOtherDeveloper_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
+            {
+                //Arrange
+                var reviewBot = MakeReviewBot();
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx, @yyy");
+                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotMessage(findReviewerMessageText);
+                var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                //Act
+                await reviewBot.OnTurnAsync(registerMessage);
+                await reviewBot.OnTurnAsync(findReviewerMessage);
+                await reviewBot.OnTurnAsync(statusMessage);
+
+                //Assert
+                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>yyy</at>"));
+                Assert.That(
+                    statusMessage.Responses.Peek().Text,
+                    Is.EqualTo(
+                        "Ordered by debt:\n\n" +
+                        "<at>xxx</at> (Available): ReviewCount: 0, ReviewDebt: 1\n\n" +
+                        "<at>yyy</at> (Available): ReviewCount: 1, ReviewDebt: 0\n\n"));
+            }
+
+            [TestCase("@xxx and @yyy are looking for @Review of SKYE-1234")]
+            [TestCase("@xxx and @yyy are looking for @Review of SKYE-1234. It is quite small.")]
+            [TestCase("@xxx and @yyy are looking for @Review of SKYE-1234 @jira-help")]
+            public async Task OnTurnAsync_FindingReviewForMultipleOtherDevelopers_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
+            {
+                //Arrange
+                var reviewBot = MakeReviewBot();
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx, @yyy and @zzz");
+                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotMessage(findReviewerMessageText);
+                var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                //Act
+                await reviewBot.OnTurnAsync(registerMessage);
+                await reviewBot.OnTurnAsync(findReviewerMessage);
+                await reviewBot.OnTurnAsync(statusMessage);
+
+                //Assert
+                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>zzz</at>"));
+                Assert.That(
+                    statusMessage.Responses.Peek().Text,
+                    Is.EqualTo(
+                        "Ordered by debt:\n\n" +
+                        "<at>xxx</at> (Available): ReviewCount: 0, ReviewDebt: 1\n\n" +
+                        "<at>yyy</at> (Available): ReviewCount: 0, ReviewDebt: 1\n\n" +
+                        "<at>zzz</at> (Available): ReviewCount: 1, ReviewDebt: 0\n\n"));
+            }
+
+            [TestCase("@xxx @yyy and me are looking for @Review of SKYE-1234")]
+            [TestCase("@xxx @yyy and me are looking for @Review of SKYE-1234. It is quite small.")]
+            [TestCase("@xxx @yyy and me are looking for @Review of SKYE-1234 @jira-help")]
+            public async Task OnTurnAsync_FindingReviewForMultipleOtherDevelopersAndSelf_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
+            {
+                //Arrange
+                var reviewBot = MakeReviewBot();
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx, @yyy and @zzz");
+                var registerSelfMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
+                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotMessage(findReviewerMessageText);
+                var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                //Act
+                await reviewBot.OnTurnAsync(registerMessage);
+                await reviewBot.OnTurnAsync(registerSelfMessage);
+                await reviewBot.OnTurnAsync(findReviewerMessage);
+                await reviewBot.OnTurnAsync(statusMessage);
+
+                //Assert
+                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>zzz</at>"));
+                Assert.That(
+                    statusMessage.Responses.Peek().Text,
+                    Is.EqualTo(
+                        "Ordered by debt:\n\n" +
+                        "<at>Sender</at> (Available): ReviewCount: 0, ReviewDebt: 1\n\n" +
+                        "<at>xxx</at> (Available): ReviewCount: 0, ReviewDebt: 1\n\n" +
+                        "<at>yyy</at> (Available): ReviewCount: 0, ReviewDebt: 1\n\n" +
+                        "<at>zzz</at> (Available): ReviewCount: 1, ReviewDebt: 0\n\n"));
             }
         }
 
@@ -634,7 +717,7 @@ namespace ReviewBot.Tests
                     "This is what I can do for you:\n\n\n\n" +
                     "Register reviewers: \'@Review register @reviewer1, @reviewer2\' or \'@Review register me\' to register yourself.\n\n" +
                     "Print overall status: @Review status\n\n" +
-                    "Find reviewer: SKYE-1234 is ready for @Review\n\n" +
+                    "Find reviewer: 'SKYE-1234 is ready for @Review' or '@reviewer is looking for @Review of SKYE-1234' or '@reviewer1, @reviewer2 and me are looking for @Review of SKYE-1234'\n\n" +
                     "Add review: Add @Review to @reviewer1 and @reviewer2\n\n" +
                     "Remove review: Remove @Review from @reviewer1 and @reviewer2\n\n" +
                     "Suspend reviewer: \'@Review suspend @reviewer1\' or \'@Review\' suspend me\' to suspend yourself\n\n" +
