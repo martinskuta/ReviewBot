@@ -97,7 +97,7 @@ namespace ReviewBot.Commands.Review
                 {
                     ReviewService.MakeReviewerBusy(TurnContext.Activity.From.Id);
                     var reply = TurnContext.Activity.CreateReply();
-                    return reply.AppendText("Ok ").AppendMention(TurnContext.Activity.From).AppendText(". I will not assign you any reviews, to help you to get things done.");
+                    return reply.AppendText("Ok ").AppendMention(TurnContext.Activity.From).AppendText(". I will not assign you any reviews, so you can get things done.");
                 }
                 catch (ReviewerNotRegisteredException)
                 {

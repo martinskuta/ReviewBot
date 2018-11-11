@@ -451,7 +451,7 @@ namespace ReviewBot.Tests
                     await reviewBot.OnTurnAsync(statusMessage);
 
                     //Assert
-                    Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Ok <at>Sender</at>. I will not assign you any reviews, to help you to get things done."));
+                    Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Ok <at>Sender</at>. I will not assign you any reviews, so you can get things done."));
                     Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>Sender</at> (Busy): ReviewCount: 0, ReviewDebt: 0\n\n"));
                 }
 
