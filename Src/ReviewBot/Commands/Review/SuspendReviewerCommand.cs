@@ -70,7 +70,7 @@ namespace ReviewBot.Commands.Review
                 {
                     ReviewService.SuspendReviewer(TurnContext.Activity.From.Id);
                     var reply = TurnContext.Activity.CreateReply();
-                    return reply.AppendMention(TurnContext.Activity.From).AppendText(", you are now suspended from reviews. Your review debt won't increase until resumed.");
+                    return reply.AppendMention(TurnContext.Activity.From).AppendText(" enjoy your time off! Your review debt won't increase until you are back.");
                 }
                 catch (ReviewerNotRegisteredException)
                 {
@@ -79,7 +79,7 @@ namespace ReviewBot.Commands.Review
                 catch (ReviewerAlreadySuspendedException)
                 {
                     var reply = TurnContext.Activity.CreateReply();
-                    return reply.AppendMention(TurnContext.Activity.From).AppendText(", you are already suspended.");
+                    return reply.AppendText("Sorry ").AppendMention(TurnContext.Activity.From).AppendText(", but you are already suspended.");
                 }
             }
 
@@ -89,7 +89,7 @@ namespace ReviewBot.Commands.Review
                 {
                     ReviewService.SuspendReviewer(reviewer.Id);
                     var reply = TurnContext.Activity.CreateReply();
-                    return reply.AppendMention(reviewer).AppendText($" is now suspended from reviews. {reviewer.Name}'s review debt won't increase until resumed.");
+                    return reply.AppendMention(reviewer).AppendText(" enjoy your time off! Your review debt won't increase until you are back.");
                 }
                 catch (ReviewerNotRegisteredException)
                 {
@@ -98,7 +98,7 @@ namespace ReviewBot.Commands.Review
                 catch (ReviewerAlreadySuspendedException)
                 {
                     var reply = TurnContext.Activity.CreateReply();
-                    return reply.AppendMention(reviewer).AppendText(" is already suspended.");
+                    return reply.AppendText("Sorry ").AppendMention(TurnContext.Activity.From).AppendText(", but ").AppendMention(reviewer).AppendText(" is already suspended.");
                 }
             }
         }
