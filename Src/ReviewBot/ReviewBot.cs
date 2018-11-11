@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using ReviewBot.Commands;
 using ReviewBot.Commands.Review;
 using ReviewBot.Storage;
-using ReviewBot.Utility;
 
 #endregion
 
@@ -33,6 +32,7 @@ namespace ReviewBot
             _reviewCommands.Add(new SuspendReviewerCommand(contextStore));
             _reviewCommands.Add(new MakeReviewerBusyCommand(contextStore));
             _reviewCommands.Add(new MakeAvailableCommand(contextStore));
+            _reviewCommands.Add(new HelpCommand(_reviewCommands));
         }
 
         public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = new CancellationToken())
@@ -74,15 +74,7 @@ namespace ReviewBot
 
         private Task ReplyWithHelp(ITurnContext turnContext)
         {
-            var reply = turnContext.Activity.CreateReply("This is what I can do for you:");
-            reply.AppendNewline();
-
-            foreach (var reviewCommand in _reviewCommands)
-            {
-                reply.AppendNewline().AppendText(reviewCommand.PrintUsage(turnContext.Activity.Recipient.Name));
-            }
-
-            return turnContext.SendActivityAsync(reply);
+            return turnContext.SendActivityAsync($"Sorry, I didn't understand your message. Use '@{turnContext.Activity.Recipient.Name} help' to see what I understand.");
         }
 
         private Command GetMatchingCommand(ITurnContext turnContext)

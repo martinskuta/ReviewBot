@@ -585,6 +585,46 @@ namespace ReviewBot.Tests
             }
         }
 
+        [Test]
+        public async Task OnTurnAsync_HelpMessageReceived_ExpectHelpReply()
+        {
+            //Arrange
+            var reviewBot = MakeReviewBot();
+            var helpMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review help");
+
+            //Act
+            await reviewBot.OnTurnAsync(helpMessage);
+
+            //Assert
+            Assert.That(
+                helpMessage.Responses.Peek().Text,
+                Is.EqualTo(
+                    "This is what I can do for you:\n\n\n\n" +
+                    "Register reviewers: \'@Review register @reviewer1, @reviewer2\' or \'@Review register me\' to register yourself.\n\n" +
+                    "Print overall status: @Review status\n\n" +
+                    "Find reviewer: SKYE-1234 is ready for @Review\n\n" +
+                    "Add review: Add @Review to @reviewer1 and @reviewer2\n\n" +
+                    "Remove review: Remove @Review from @reviewer1 and @reviewer2\n\n" +
+                    "Suspend reviewer: \'@Review suspend @reviewer1\' or \'@Review\' suspend me\' to suspend yourself\n\n" +
+                    "Make busy: \'@Review @reviewer is busy\' or \'@Review I am busy\' to make yourself busy\n\n" +
+                    "Make available: \'@Review @reviewer1 is back\' or \'@Review I am back\' to make yourself available\n\n" +
+                    "Help: @Review help"));
+        }
+
+        [Test]
+        public async Task OnTurnAsync_UnrecognizedCommandMessageReceived_ExpectHelpReply()
+        {
+            //Arrange
+            var reviewBot = MakeReviewBot();
+            var helpMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review nothing");
+
+            //Act
+            await reviewBot.OnTurnAsync(helpMessage);
+
+            //Assert
+            Assert.That(helpMessage.Responses.Peek().Text, Is.EqualTo("Sorry, I didn't understand your message. Use '@Review help' to see what I understand."));
+        }
+
         private static ReviewBot MakeReviewBot()
         {
             var loggerFactoryMock = new Mock<ILoggerFactory>();
