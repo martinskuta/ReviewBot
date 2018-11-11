@@ -57,11 +57,9 @@ namespace ReviewBot.Commands.Review
             protected override IActivity ExecuteReviewAction()
             {
                 var messageActivity = TurnContext.Activity.AsMessageActivity();
-                var reviewersToSuspend = messageActivity.GetUniqueMentionsExceptRecipient().Select(m => m.Mentioned).ToList();
+                var reviewerToSuspend = messageActivity.GetUniqueMentionsExceptRecipient().FirstOrDefault()?.Mentioned;
 
-                if (reviewersToSuspend.IsEmpty()) return SelfSuspend();
-
-                return SuspendReviewer(reviewersToSuspend[0]);
+                return reviewerToSuspend == null ? SelfSuspend() : SuspendReviewer(reviewerToSuspend);
             }
 
             private IActivity SelfSuspend()
@@ -74,7 +72,7 @@ namespace ReviewBot.Commands.Review
                 }
                 catch (ReviewerNotRegisteredException)
                 {
-                    return CreateSorryYouAreNotRegisteredReply(TurnContext.Activity.From);
+                    return CreateSorryYouAreNotRegisteredReply();
                 }
                 catch (ReviewerAlreadySuspendedException)
                 {
@@ -93,7 +91,7 @@ namespace ReviewBot.Commands.Review
                 }
                 catch (ReviewerNotRegisteredException)
                 {
-                    return CreateSorryReviewerNotRegisteredReply(TurnContext.Activity.From, reviewer);
+                    return CreateSorryReviewerNotRegisteredReply(reviewer);
                 }
                 catch (ReviewerAlreadySuspendedException)
                 {

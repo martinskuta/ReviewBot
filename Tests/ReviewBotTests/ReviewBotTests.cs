@@ -371,6 +371,178 @@ namespace ReviewBot.Tests
             }
         }
 
+        [TestFixture]
+        public class MakeBusyCommand
+        {
+            [TestFixture]
+            public class MakeSelfBusy
+            {
+                [Test]
+                public async Task OnTurnAsync_MakingSelfBusyWhenNotRegistered_ExpectNotRegisteredReply()
+                {
+                    //Arrange
+                    var reviewBot = MakeReviewBot();
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am busy");
+                    var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                    //Act
+                    await reviewBot.OnTurnAsync(makeBusyMessage);
+                    await reviewBot.OnTurnAsync(statusMessage);
+
+                    //Assert
+                    Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but you are not registered as reviewer."));
+                    Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("There are no reviewers registered yet."));
+                }
+
+                [Test]
+                public async Task OnTurnAsync_MakingSelfBusyWhenAvailable_ExpectMadeBusyReply()
+                {
+                    //Arrange
+                    var reviewBot = MakeReviewBot();
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am busy");
+                    var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                    //Act
+                    await reviewBot.OnTurnAsync(registerMessage);
+                    await reviewBot.OnTurnAsync(makeBusyMessage);
+                    await reviewBot.OnTurnAsync(statusMessage);
+
+                    //Assert
+                    Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Ok <at>Sender</at>. I will not assign you any reviews, to help you to get things done."));
+                    Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>Sender</at> (Busy): ReviewCount: 0, ReviewDebt: 0\n\n"));
+                }
+
+                [Test]
+                public async Task OnTurnAsync_MakingSelfBusyWhenAlreadyBusy_ExpectYouAreAlreadyBusyReply()
+                {
+                    //Arrange
+                    var reviewBot = MakeReviewBot();
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
+                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am busy");
+                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am busy");
+                    var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                    //Act
+                    await reviewBot.OnTurnAsync(registerMessage);
+                    await reviewBot.OnTurnAsync(makeBusyMessage1);
+                    await reviewBot.OnTurnAsync(makeBusyMessage2);
+                    await reviewBot.OnTurnAsync(statusMessage);
+
+                    //Assert
+                    Assert.That(makeBusyMessage2.Responses.Peek().Text, Is.EqualTo("<at>Sender</at>, I know that already. Stop lurking around here and get your things done!"));
+                    Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>Sender</at> (Busy): ReviewCount: 0, ReviewDebt: 0\n\n"));
+                }
+
+                [Test]
+                public async Task OnTurnAsync_MakingSelfBusyWhenSuspended_ExpectYouAreSuspendedReply()
+                {
+                    //Arrange
+                    var reviewBot = MakeReviewBot();
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
+                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend me");
+                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am busy");
+                    var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                    //Act
+                    await reviewBot.OnTurnAsync(registerMessage);
+                    await reviewBot.OnTurnAsync(makeBusyMessage1);
+                    await reviewBot.OnTurnAsync(makeBusyMessage2);
+                    await reviewBot.OnTurnAsync(statusMessage);
+
+                    //Assert
+                    Assert.That(
+                        makeBusyMessage2.Responses.Peek().Text,
+                        Is.EqualTo("<at>Sender</at>, to my knowledge, you are having time off! Resume yourself first if you are back from your time off."));
+                    Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>Sender</at> (Suspended): ReviewCount: 0, ReviewDebt: 0\n\n"));
+                }
+            }
+
+            [TestFixture]
+            public class MakeSingleReviewerBusy
+            {
+                [Test]
+                public async Task OnTurnAsync_MakingNotRegisteredReviewerBusy_ExpectNotRegisteredReply()
+                {
+                    //Arrange
+                    var reviewBot = MakeReviewBot();
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is busy");
+                    var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                    //Act
+                    await reviewBot.OnTurnAsync(makeBusyMessage);
+                    await reviewBot.OnTurnAsync(statusMessage);
+
+                    //Assert
+                    Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but <at>xxx</at> is not registered as reviewer."));
+                    Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("There are no reviewers registered yet."));
+                }
+
+                [Test]
+                public async Task OnTurnAsync_MakingAvailableReviewerBusy_ExpectReviewerMadeBusyReply()
+                {
+                    //Arrange
+                    var reviewBot = MakeReviewBot();
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is busy");
+                    var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                    //Act
+                    await reviewBot.OnTurnAsync(registerMessage);
+                    await reviewBot.OnTurnAsync(makeBusyMessage);
+                    await reviewBot.OnTurnAsync(statusMessage);
+
+                    //Assert
+                    Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Ok <at>Sender</at>. I will not assign <at>xxx</at> any reviews."));
+                    Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>xxx</at> (Busy): ReviewCount: 0, ReviewDebt: 0\n\n"));
+                }
+
+                [Test]
+                public async Task OnTurnAsync_MakingReviewerBusyWhenAlreadyBusy_ExpectReviewerAlreadyBusyReply()
+                {
+                    //Arrange
+                    var reviewBot = MakeReviewBot();
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
+                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is busy");
+                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is busy");
+                    var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                    //Act
+                    await reviewBot.OnTurnAsync(registerMessage);
+                    await reviewBot.OnTurnAsync(makeBusyMessage1);
+                    await reviewBot.OnTurnAsync(makeBusyMessage2);
+                    await reviewBot.OnTurnAsync(statusMessage);
+
+                    //Assert
+                    Assert.That(makeBusyMessage2.Responses.Peek().Text, Is.EqualTo("<at>Sender</at>, I know that already. <at>xxx</at> must be really busy!"));
+                    Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>xxx</at> (Busy): ReviewCount: 0, ReviewDebt: 0\n\n"));
+                }
+
+                [Test]
+                public async Task OnTurnAsync_MakingReviewerBusyWhenSuspended_ExpectReviewerSuspendedReply()
+                {
+                    //Arrange
+                    var reviewBot = MakeReviewBot();
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
+                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend @xxx");
+                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is busy");
+                    var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                    //Act
+                    await reviewBot.OnTurnAsync(registerMessage);
+                    await reviewBot.OnTurnAsync(makeBusyMessage1);
+                    await reviewBot.OnTurnAsync(makeBusyMessage2);
+                    await reviewBot.OnTurnAsync(statusMessage);
+
+                    //Assert
+                    Assert.That(
+                        makeBusyMessage2.Responses.Peek().Text,
+                        Is.EqualTo("<at>Sender</at>, to my knowledge, <at>xxx</at> is having time off! So I hope <at>xxx</at> is not busy."));
+                    Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>xxx</at> (Suspended): ReviewCount: 0, ReviewDebt: 0\n\n"));
+                }
+            }
+        }
+
         private static ReviewBot MakeReviewBot()
         {
             var loggerFactoryMock = new Mock<ILoggerFactory>();

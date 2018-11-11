@@ -57,11 +57,9 @@ namespace ReviewBot.Commands.Review
             protected override IActivity ExecuteReviewAction()
             {
                 var messageActivity = TurnContext.Activity.AsMessageActivity();
-                var reviewersToResume = messageActivity.GetUniqueMentionsExceptRecipient().Select(m => m.Mentioned).ToList();
+                var reviewerToResume = messageActivity.GetUniqueMentionsExceptRecipient().FirstOrDefault()?.Mentioned;
 
-                if (reviewersToResume.IsEmpty()) return SelfResume();
-
-                return ResumeReviewer(reviewersToResume[0]);
+                return reviewerToResume == null ? SelfResume() : ResumeReviewer(reviewerToResume);
             }
 
             private IActivity ResumeReviewer(ChannelAccount reviewer)
@@ -74,7 +72,7 @@ namespace ReviewBot.Commands.Review
                 }
                 catch (ReviewerNotRegisteredException)
                 {
-                    return CreateSorryReviewerNotRegisteredReply(TurnContext.Activity.From, reviewer);
+                    return CreateSorryReviewerNotRegisteredReply(reviewer);
                 }
                 catch (ReviewerNotSuspendedCannotBeResumedException)
                 {
@@ -93,7 +91,7 @@ namespace ReviewBot.Commands.Review
                 }
                 catch (ReviewerNotRegisteredException)
                 {
-                    return CreateSorryYouAreNotRegisteredReply(TurnContext.Activity.From);
+                    return CreateSorryYouAreNotRegisteredReply();
                 }
                 catch (ReviewerNotSuspendedCannotBeResumedException)
                 {

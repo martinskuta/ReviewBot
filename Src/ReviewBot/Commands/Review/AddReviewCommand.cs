@@ -52,7 +52,6 @@ namespace ReviewBot.Commands.Review
 
             protected override IActivity ExecuteReviewAction()
             {
-                var featureAuthor = TurnContext.Activity.From;
                 var messageActivity = TurnContext.Activity.AsMessageActivity();
                 var reviewersToRegister = messageActivity.GetUniqueMentionsExceptRecipient().Select(m => m.Mentioned).ToList();
 
@@ -63,11 +62,11 @@ namespace ReviewBot.Commands.Review
                 }
                 catch (NoReviewerAvailableException)
                 {
-                    return CreateSorryNoReviewersRegisteredYetReply(featureAuthor);
+                    return CreateSorryNoReviewersRegisteredYetReply();
                 }
                 catch (ReviewerNotRegisteredException e)
                 {
-                    return CreateSorryReviewerNotRegisteredReply(featureAuthor, reviewersToRegister.First(r => r.Id == e.ReviewerId));
+                    return CreateSorryReviewerNotRegisteredReply(reviewersToRegister.First(r => r.Id == e.ReviewerId));
                 }
             }
         }

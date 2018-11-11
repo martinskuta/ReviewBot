@@ -46,26 +46,26 @@ namespace ReviewBot.Commands.Review
 
         protected abstract IActivity ExecuteReviewAction();
 
-        protected IActivity CreateSorryYouAreNotRegisteredReply(ChannelAccount sender)
+        protected IActivity CreateSorryYouAreNotRegisteredReply()
         {
             return TurnContext.Activity.CreateReply("Sorry ")
-                              .AppendMention(sender)
+                              .AppendMention(TurnContext.Activity.From)
                               .AppendText(", but you are not registered as reviewer.");
         }
 
-        protected IActivity CreateSorryReviewerNotRegisteredReply(ChannelAccount sender, ChannelAccount notRegistered)
+        protected IActivity CreateSorryReviewerNotRegisteredReply(ChannelAccount notRegistered)
         {
             return TurnContext.Activity.CreateReply("Sorry ")
-                              .AppendMention(sender)
+                              .AppendMention(TurnContext.Activity.From)
                               .AppendText(", but ")
                               .AppendMention(notRegistered)
                               .AppendText(" is not registered as reviewer.");
         }
 
-        protected IActivity CreateSorryNoReviewersRegisteredYetReply(ChannelAccount sender)
+        protected IActivity CreateSorryNoReviewersRegisteredYetReply()
         {
             return TurnContext.Activity.CreateReply("Sorry ")
-                              .AppendMention(sender)
+                              .AppendMention(TurnContext.Activity.From)
                               .AppendText(", there are no reviewers registered here yet.");
         }
 
