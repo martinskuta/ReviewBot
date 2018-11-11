@@ -1,0 +1,42 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.3/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.3",
+    "version": "1.0.0",
+    "id": "5ad7a0fa-48e6-4fe3-bef1-5e05692c5df4",
+    "packageName": "com.mskuta.review",
+    "developer": {
+        "name": "Martin Skuta",
+        "websiteUrl": "https://github.com/martinskuta",
+        "privacyUrl": "https://github.com/martinskuta/ReviewBot",
+        "termsOfUseUrl": "https://github.com/martinskuta/ReviewBot"
+    },
+    "icons": {
+        "color": "color.png",
+        "outline": "outline.png"
+    },
+    "name": {
+        "short": "Review",
+        "full": "Review bot to distribute code reviews"
+    },
+    "description": {
+        "short": "Review bot to help distribute code reviews equally to reviewers",
+        "full": "Review bot which keeps track of how many code reviews each registered reviewer did and is there to help distribute the code reviews equally to all reviewers."
+    },
+    "accentColor": "#F9F9FA",
+    "bots": [
+        {
+            "botId": "37e3d59d-69e5-4d0b-a9d0-fb2af79fb423",
+            "scopes": [
+                "personal",
+                "team"
+            ],
+            "supportsFiles": false,
+            "isNotificationOnly": false
+        }
+    ],
+    "permissions": [
+        "identity",
+        "messageTeamMembers"
+    ],
+    "validDomains": []
+}

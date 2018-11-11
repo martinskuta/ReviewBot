@@ -1,136 +1,41 @@
-# Steps to run locally
+# Review bot
 
-## Prerequisites
+## What is the bot for?
 
-* Install Git for windows: https://git-for-windows.github.io/
+This bot is designed to help developer teams to distribute code reviews equally between reviewers and also distribute knowledge of code.
 
-* Clone this repo:<br>
-    ```
-    git clone https://github.com/OfficeDev/microsoft-teams-template-bot-CSharp.git
-    ```
+## What do you mean equally?
 
-* Install Visual Studio and launch it as an administrator
+The idea is very simple. The bot is distributing the code reviews in a way that all reviewers do same number of code reviews. In the beginning I wanted to have the bot also measure the 'size'/ complexity of a review, by looking at the changed code and measure the complexity. It turns out that it is not really worth the effort, because it is very hard to objectively define complexity of code review, because the reviews vary. It can be many code changes with automatic refactoring, which are very simple for review, or, on the other side, it can be just one line change that can affect lots of code and requires lots of thinking. So in the end since the size of code reviews is random and if all the reviewers do same number of reviews it will balance the load anyway over time. Some might get unlucky to get two or more big reviews in row, but in a same way they can get lucky and have simple reviews assigned to them, but overtime, since the complexity of reviews is random, my statistics shows that all the reviewers have very similar (almost same) complexity/simple code review ratio (even though the complexity measurment itself is questionable and subjective as I explained).
 
-* Build the solution to download all configured NuGet packages
+## How does it help distribute knowledge of code
 
-* (Only needed if wanting to run in Microsoft Teams)<br>
-Install some sort of tunnelling service. These instructions assume you are using ngrok: https://ngrok.com/
+Since the reviews are distributed equally between all reviewers, it means, that it doesn't prefer any reviewer that might have prior knowledge of the changed code, so every reviewer will get to know all parts of code, which in the end helps spread the code knowledge and prevents to have one or two developers that know particularly well some parts of code and don't know some other parts at all. Eventhough, if you really want someone specific, you can still assign specific reviewer through the bot.
 
-* (Only needed if wanting to run in the Bot Emulator)<br>
-Install the Bot Emulator - click on "Bot Framework Emulator (Mac and Windows)": https://docs.botframework.com/en-us/downloads/#navtitle  
-    * NOTE: make sure to pin the emulator to your task bar because it can sometimes be difficult to find again 
+## Show me some real usage already!
 
-## Steps to see the bot running in the Bot Emulator<br>
-NOTE: Teams does not work nor render things exactly like the Bot Emulator, but it is a quick way to see if your bot is running and functioning correctly.
+### Review debt
 
-1. Open the template-bot-master-csharp.sln solution with Visual Studio
+Before that it is still good to know, that the bot works with so called **review debt** instead of real review count, so it is possible that reviewers can join later or leave, without affecting the equal distribution of code reviews between reviewers. You can understand **review debt** as number of reviewes that you owe to a reviewer that does most reviews. If a new reviewer joins the team, he starts with debt of zero. You might get better understanding of review debt by looking at the real usage.
 
-2. In Visual Studio click the play button (should be defaulted to running the Microsoft Edge configuration) 
+### Supported commands
 
-3. Once the code is running, connect with the Bot Emulator to the default endpoint, "http://localhost:3979/api/messages", leaving "Microsoft App ID" and "Microsoft App Password" blank
+Please note that @Review is the mention of the bot in a team chat. In any case you can just use '@Review help' to see all available commands.
 
-Congratulations!!! You can now chat with the bot in the Bot Emulator!
+1. **Registering reviewers**. This allows you to define the reviewers in given context. Context can for example MS Teams channel or Slack channel.
+	* Registering yourself: <br> ![reigstering yourself](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/self_registering.png "Self registering")
+	* Registering others: <br> ![reigstering others](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/registering_others.png "Registering others")
 
-## Steps to see the full app in Microsoft Teams
+2. **Assigning reviews**
+	* Find reviewer automatically (one with the highest debt): <br> ![assigning review](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/find_reviewer_auto.png "Assigning review automatically")
+	* Assign review directly to someone: <br> ![assign review directly](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/add_review.png "Assigning review directly")
 
-1. Begin your tunnelling service to get an https endpoint. 
+3. **Show overall stats**
+	* ![showing overall review status](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/review_status.png "Showing overall review status")
 
-	* Open a new **Command Prompt** window. 
+5. **Reviewer status commands**
+	* **Busy** status. Reviewers can be marked as busy, which means that they have something urgent to do and don't want to have reviews assigned to them by the bot. Their review debt increases during while they are busy. <br> ![making self busy](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/self_busy.png "Marking self busy")
+	* **Suspended** status. Reviewers can be suspended from reviews, which means that they are inactive, eg on holidays or not working. During inactive period their debt doesn't increase. <br> ![making self suspended](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/self_suspended.png "Making self suspended")
+	* **Available** again. Marking self as available again, after being busy or suspended. <br> ![making self available again](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/self_available.png "Making self available again")
 
-	* Change to the directory that contains the ngrok.exe application. 
-
-	* Run the command `ngrok http [port] --host-header=localhost` (you'll need the https endpoint for the bot registration) e.g.<br>
-		```
-		ngrok http 3979 --host-header=localhost
-		```
-
-	* The ngrok application will fill the entire prompt window. Make note of the Forwarding address using https. This address is required in the next step. 
-
-	* Minimize the ngrok Command Prompt window. It is no longer referenced in this lab, but it must remain running.
-
-
-    
-2. Register a new bot (or update an existing one) with Bot Framework by using the https endpoint started by ngrok and the extension "/api/messages" as the full endpoint for the bot's "Messaging endpoint". e.g. "https://####abcd.ngrok.io/api/messages" - Bot registration is here (open in a new browser tab): https://dev.botframework.com/bots
-
-    > **NOTE**: When you create your bot you will create an App ID and App password - make sure you keep these for later.
-
-3. You project needs to run with a configuration that matches your registered bot's configuration. To do this, you will need to update the web.config file:
-
-	* In Visual Studio, open the Web.config file. Locate the `<appSettings>` section. 
- 
-	* Enter the BotId value. The BotId is the **Bot handle** from the **Configuration** section of the bot registration. 
- 
-	* Enter the MicrosoftAppId. The MicrosoftAppId is the app ID from the **Configuration** section of the bot registration. 
- 
-	* Enter the MicrosoftAppPassword. The MicrosoftAppPassword is the auto-generated app password displayed in the pop-up during bot registration.
-	
-	* Enter the BaseUri. The BaseUri is the https endpoint generated from ngrok.
-
-	Here is an example for reference:
-	
-		<add key="BotId" value="Bot_Handle_Here" />
-		<add key="MicrosoftAppId" value="88888888-8888-8888-8888-888888888888" />
-		<add key="MicrosoftAppPassword" value="aaaa22229999dddd0000999" />
-		<add key="BaseUri" value="https://#####abc.ngrok.io" />
-
-4. In Visual Studio click the play button (should be defaulted to running the Microsoft Edge configuration)
-
-5. Once the app is running, a manifest file is needed:
-    * On the solution explorer of Visual Studio, navigate to the file, manifest/manifest.json - change:
-        * <<REGISTERED_BOT_ID>> (there are 3) change to your registered bot's app ID
-        * <<BASE_URI>> (there are 2) change to your https endpoint from ngrok
-        * <<BASE_URI_DOMAIN>> (there is 1) change to your https endpoint from ngrok excluding the "https://" part
-		
-    * Save the file and zip this file and the bot_blue.png file (located next to it) together to create a manifest.zip file
-
-6. Once complete, sideload your zipped manifest to a team as described here (open in a new browser tab): https://msdn.microsoft.com/en-us/microsoft-teams/sideload
-
-Congratulations!!! You have just created and sideloaded your first Microsoft Teams app! Try adding a configurable tab, at-mentioning your bot by its registered name, or viewing your static tabs.<br><br>
-NOTE: Most of this sample app's functionality will now work. The only limitations are the authentication examples because your app is not registered with AAD nor Visual Studio Team Services.
-
-# Overview
-
-This project is meant to help a Teams developer in two ways.  First, it is meant to show many examples of how an app can integrate into Teams.  Second, it is meant to give a set of patterns, templates, and tools that can be used as a starting point for creating a larger, scalable, more enterprise level bot to work within Teams.  Although this project focuses on creating a robust bot, it does include simples examples of tabs as well as examples of how a bot can give links into these tabs.
-
-# What it is
-
-At a high level, this project is written in C#, built to run a .Net, and uses the BotFramework to handle the bot's requests and responses. This project is designed to be run in Visual Studio using its debugger in order to leverage breakpoints. Most directories will hold a README file which will describe what the files within that directory do.
-The easiest way to get started is to follow the steps listed in the "Steps to get started running the Bot Emulator". Once this is complete and running, the easiest way to add your own content is to create a new dialog in src/dialogs by copying one from src/dialogs/examples, change it accordingly, and then instantiate it with the others in the RootDialog.cs.
-
-# General Architecture
-
-Most code files that need to be compile reside in the src directory. Most files outside of the src directory are static files used for either configuration or for providing static resources to tabs, e.g. images and html.
-
-# Files and Directories
-
-* **manifest**<br><br>
-This directory holds the skeleton of a manifest.json file that can be altered in order sideload this application into a team.
-
-* **middleware**<br><br>
-This directory holds the stripping at mention for channel class and Invoke message processing.
-
-* **public**<br><br>
-This directory holds static html, image, and javascript files used by the tabs and bot.  This is not the only public directory that is used for the tabs, though.  This directory holds the html and javascript used for the configuration page of the configurable tab.  The main content of the static and configurable comes from the static files placed in /public/tab/tabConfig.
-
-* **src**<br><br>
-This directory holds all the code files, which run the entire application.
-
-* **utility**<br><br>
-This directory holds utility functions for the project.
-
-* **web.config**<br><br>
-This file is a configuration file that can be used to update the config keys globally used in Application.
-
-# Contributing
-
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.microsoft.com.
-
-When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+* This is the full list of commands as printed from help command: <br> ![help command](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/help_command.png "Help command")
