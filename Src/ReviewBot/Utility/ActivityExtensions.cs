@@ -86,13 +86,13 @@ namespace ReviewBot.Utility
         }
 
         [CanBeNull]
-        private static Mention GetRecipientMention(this IMessageActivity activity)
+        public static Mention GetRecipientMention(this IMessageActivity activity)
         {
             return activity.GetMentions().FirstOrDefault(m => m.Mentioned.Id == activity.Recipient.Id);
         }
 
         /// <summary>
-        /// Remove recipient mention text from Text property
+        ///   Remove recipient mention text from Text property
         /// </summary>
         /// <param name="activity"></param>
         /// <returns>new .Text property value</returns>
@@ -102,7 +102,7 @@ namespace ReviewBot.Utility
         }
 
         /// <summary>
-        /// Replace any mention text for given id from Text property
+        ///   Replace any mention text for given id from Text property
         /// </summary>
         /// <param name="id">id to match</param>
         /// <param name="activity"></param>
@@ -114,6 +114,7 @@ namespace ReviewBot.Utility
             {
                 resultText = Regex.Replace(resultText, mention.Text, string.Empty, RegexOptions.IgnoreCase);
             }
+
             return resultText;
         }
 

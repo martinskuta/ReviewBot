@@ -120,6 +120,38 @@ namespace ReviewBot.Tests
         }
 
         [TestFixture]
+        public class FindReviewerCommand
+        {
+            [TestCase("FEATURE-1234 is ready for @Review")]
+            [TestCase("FEATURE-1234 @jira-help is ready for @Review")]
+            [TestCase("FEATURE-1234 is ready for @Review @jira-help")]
+            public async Task OnTurnAsync_SingleFeatureAuthorIsAskingForReview_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
+            {
+                //Arrange
+                var reviewBot = MakeReviewBot();
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx, @yyy");
+                var addReviewMessage = MSTeamsTurnContext.CreateUserToBotMessage("Add @Review to @xxx");
+                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotMessage(findReviewerMessageText);
+                var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                //Act
+                await reviewBot.OnTurnAsync(registerMessage);
+                await reviewBot.OnTurnAsync(addReviewMessage);
+                await reviewBot.OnTurnAsync(findReviewerMessage);
+                await reviewBot.OnTurnAsync(statusMessage);
+
+                //Assert
+                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>yyy</at>"));
+                Assert.That(
+                    statusMessage.Responses.Peek().Text,
+                    Is.EqualTo(
+                        "Ordered by debt:\n\n" +
+                        "<at>xxx</at> (Available): ReviewCount: 1, ReviewDebt: 0\n\n" +
+                        "<at>yyy</at> (Available): ReviewCount: 1, ReviewDebt: 0\n\n"));
+            }
+        }
+
+        [TestFixture]
         public class SuspendCommand
         {
             [TestFixture]
