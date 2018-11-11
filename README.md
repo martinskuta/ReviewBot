@@ -4,11 +4,11 @@
 
 This bot is designed to help developer teams to distribute code reviews equally between reviewers and also distribute knowledge of code.
 
-## What do you mean equally?
+## What do you mean by 'equally'?
 
 The idea is very simple. The bot is distributing the code reviews in a way that all reviewers do same number of code reviews. In the beginning I wanted to have the bot also measure the 'size'/ complexity of a review, by looking at the changed code and measure the complexity. It turns out that it is not really worth the effort, because it is very hard to objectively define complexity of code review, because the reviews vary. It can be many code changes with automatic refactoring, which are very simple for review, or, on the other side, it can be just one line change that can affect lots of code and requires lots of thinking. So in the end since the size of code reviews is random and if all the reviewers do same number of reviews it will balance the load anyway over time. Some might get unlucky to get two or more big reviews in row, but in a same way they can get lucky and have simple reviews assigned to them, but overtime, since the complexity of reviews is random, my statistics shows that all the reviewers have very similar (almost same) complexity/simple code review ratio (even though the complexity measurment itself is questionable and subjective as I explained).
 
-## How does it help distribute knowledge of code
+## How does it help distribute knowledge of code?
 
 Since the reviews are distributed equally between all reviewers, it means, that it doesn't prefer any reviewer that might have prior knowledge of the changed code, so every reviewer will get to know all parts of code, which in the end helps spread the code knowledge and prevents to have one or two developers that know particularly well some parts of code and don't know some other parts at all. Eventhough, if you really want someone specific, you can still assign specific reviewer through the bot.
 
