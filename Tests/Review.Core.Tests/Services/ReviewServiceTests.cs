@@ -506,21 +506,6 @@ namespace Review.Core.Tests.Services
         }
 
         [Test]
-        public void MakeReviewerAvailable_ReviewerSuspended_ExpectReviewerSuspendedCannotBeAvailableException()
-        {
-            //Arrange
-            var reviewContext = new ReviewContext();
-            var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id", "");
-            reviewService.SuspendReviewer("user-id");
-
-            //Act
-            //Assert
-            Assert.Throws<ReviewerSuspendedCannotBeAvailableException>(() =>
-                reviewService.MakeReviewerAvailable("user-id"));
-        }
-
-        [Test]
         public void MakeReviewerBusy_ReviewerAvailable_ExpectReviewerStatusChangedToBusy()
         {
             //Arrange
@@ -829,61 +814,6 @@ namespace Review.Core.Tests.Services
             var suspendedReviewer = reviewService.GetReviewer("suspended-reviewer");
             Assert.That(suspendedReviewer.ReviewCount, Is.EqualTo(0));
             Assert.That(suspendedReviewer.ReviewDebt, Is.EqualTo(0));
-        }
-
-        [Test]
-        public void ResumeReviewer_ReviewerAvailable_ExpectReviewerNotSuspendedCannotBeResumedException()
-        {
-            //Arrange
-            var reviewContext = new ReviewContext();
-            var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id", "");
-
-            //Act
-            //Assert
-            Assert.Throws<ReviewerNotSuspendedCannotBeResumedException>(() => reviewService.ResumeReviewer("user-id"));
-        }
-
-        [Test]
-        public void ResumeReviewer_ReviewerBusy_ExpectReviewerNotSuspendedCannotBeResumedException()
-        {
-            //Arrange
-            var reviewContext = new ReviewContext();
-            var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id", "");
-            reviewService.MakeReviewerBusy("user-id");
-
-            //Act
-            //Assert
-            Assert.Throws<ReviewerNotSuspendedCannotBeResumedException>(() => reviewService.ResumeReviewer("user-id"));
-        }
-
-        [Test]
-        public void ResumeReviewer_ReviewerDoesntExist_ExpectReviewerNotRegisteredException()
-        {
-            //Arrange
-            var reviewContext = new ReviewContext();
-            var reviewService = new ReviewService(reviewContext);
-
-            //Act
-            //Assert
-            Assert.Throws<ReviewerNotRegisteredException>(() => reviewService.ResumeReviewer("user-id"));
-        }
-
-        [Test]
-        public void ResumeReviewer_ReviewerSuspended_ExpectReviewerStatusChangedToAvailable()
-        {
-            //Arrange
-            var reviewContext = new ReviewContext();
-            var reviewService = new ReviewService(reviewContext);
-            reviewService.RegisterReviewer("user-id", "");
-            reviewService.SuspendReviewer("user-id");
-
-            //Act
-            reviewService.ResumeReviewer("user-id");
-
-            //Assert
-            Assert.That(reviewService.GetReviewer("user-id").Status, Is.EqualTo(ReviewerStatus.Available));
         }
 
         [Test]

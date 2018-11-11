@@ -31,8 +31,8 @@ namespace ReviewBot
             _reviewCommands.Add(new AddReviewCommand(contextStore));
             _reviewCommands.Add(new RemoveReviewCommand(contextStore));
             _reviewCommands.Add(new SuspendReviewerCommand(contextStore));
-            _reviewCommands.Add(new ResumeReviewerCommand(contextStore));
             _reviewCommands.Add(new MakeReviewerBusyCommand(contextStore));
+            _reviewCommands.Add(new MakeAvailableCommand(contextStore));
         }
 
         public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = new CancellationToken())

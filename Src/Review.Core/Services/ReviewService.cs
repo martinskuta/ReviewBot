@@ -49,18 +49,6 @@ namespace Review.Core.Services
             reviewer.Status = ReviewerStatus.Suspended;
         }
 
-        public void ResumeReviewer(string reviewerId)
-        {
-            var reviewer = GetReviewer(reviewerId);
-
-            if (reviewer.Status != ReviewerStatus.Suspended)
-            {
-                throw new ReviewerNotSuspendedCannotBeResumedException(reviewerId);
-            }
-
-            reviewer.Status = ReviewerStatus.Available;
-        }
-
         public void MakeReviewerBusy(string reviewerId)
         {
             var reviewer = GetReviewer(reviewerId);
@@ -80,11 +68,6 @@ namespace Review.Core.Services
             var reviewer = GetReviewer(reviewerId);
 
             if (reviewer.Status == ReviewerStatus.Available) throw new ReviewerAlreadyAvailableException(reviewerId);
-
-            if (reviewer.Status == ReviewerStatus.Suspended)
-            {
-                throw new ReviewerSuspendedCannotBeAvailableException(reviewerId);
-            }
 
             reviewer.Status = ReviewerStatus.Available;
         }

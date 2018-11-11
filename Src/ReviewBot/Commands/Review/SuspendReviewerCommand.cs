@@ -77,7 +77,7 @@ namespace ReviewBot.Commands.Review
                 catch (ReviewerAlreadySuspendedException)
                 {
                     var reply = TurnContext.Activity.CreateReply();
-                    return reply.AppendText("Sorry ").AppendMention(TurnContext.Activity.From).AppendText(", but you are already suspended.");
+                    return reply.AppendText("Yeah yeah, I know that already.");
                 }
             }
 
@@ -96,7 +96,7 @@ namespace ReviewBot.Commands.Review
                 catch (ReviewerAlreadySuspendedException)
                 {
                     var reply = TurnContext.Activity.CreateReply();
-                    return reply.AppendText("Sorry ").AppendMention(TurnContext.Activity.From).AppendText(", but ").AppendMention(reviewer).AppendText(" is already suspended.");
+                    return reply.AppendText("Yeah yeah, I know that already.");
                 }
             }
         }

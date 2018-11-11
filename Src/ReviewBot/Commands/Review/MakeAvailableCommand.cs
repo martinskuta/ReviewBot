@@ -13,9 +13,9 @@ using ReviewBot.Utility;
 
 namespace ReviewBot.Commands.Review
 {
-    public class ResumeReviewerCommand : ReviewCommand
+    public class MakeAvailableCommand : ReviewCommand
     {
-        public ResumeReviewerCommand(IReviewContextStore contextStore)
+        public MakeAvailableCommand(IReviewContextStore contextStore)
             : base(contextStore)
         {
         }
@@ -30,14 +30,14 @@ namespace ReviewBot.Commands.Review
             var message = messageActivity.StripRecipientMention().StripNewLineAndTrim();
             var mentions = messageActivity.GetUniqueMentionsExceptRecipient();
 
-            if (message.StartsWith("resume me", StringComparison.InvariantCultureIgnoreCase) && mentions.IsEmpty()) return 1;
+            if (mentions.IsEmpty() && message.Equals("I am back", StringComparison.InvariantCultureIgnoreCase)) return 1;
 
-            return message.StartsWith("resume", StringComparison.InvariantCultureIgnoreCase) && mentions.Count == 1 ? 1 : 0;
+            return mentions.Count == 1 && message.EndsWith("is back", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
         }
 
         public override string PrintUsage(string myName)
         {
-            return $"Resume reviewer: '@{myName} resume @reviewer1' or '@{myName}' resume me' to resume yourself";
+            return $"Make available: '@{myName} @reviewer1 is back' or '@{myName} I am back' to make yourself available";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)
@@ -66,7 +66,7 @@ namespace ReviewBot.Commands.Review
             {
                 try
                 {
-                    ReviewService.ResumeReviewer(reviewer.Id);
+                    ReviewService.MakeReviewerAvailable(reviewer.Id);
                     var reply = TurnContext.Activity.CreateReply();
                     return reply.AppendText("Welcome back ").AppendMention(reviewer).AppendText("! Great to see you doing reviews again.");
                 }
@@ -74,10 +74,10 @@ namespace ReviewBot.Commands.Review
                 {
                     return CreateSorryReviewerNotRegisteredReply(reviewer);
                 }
-                catch (ReviewerNotSuspendedCannotBeResumedException)
+                catch (ReviewerAlreadyAvailableException)
                 {
                     var reply = TurnContext.Activity.CreateReply();
-                    return reply.AppendText("Sorry ").AppendMention(TurnContext.Activity.From).AppendText(", but ").AppendMention(reviewer).AppendText(" is not suspended.");
+                    return reply.AppendText("Yeah yeah, I know that already.");
                 }
             }
 
@@ -85,7 +85,7 @@ namespace ReviewBot.Commands.Review
             {
                 try
                 {
-                    ReviewService.ResumeReviewer(TurnContext.Activity.From.Id);
+                    ReviewService.MakeReviewerAvailable(TurnContext.Activity.From.Id);
                     var reply = TurnContext.Activity.CreateReply();
                     return reply.AppendText("Welcome back ").AppendMention(TurnContext.Activity.From).AppendText("! Great to see you doing reviews again.");
                 }
@@ -93,10 +93,10 @@ namespace ReviewBot.Commands.Review
                 {
                     return CreateSorryYouAreNotRegisteredReply();
                 }
-                catch (ReviewerNotSuspendedCannotBeResumedException)
+                catch (ReviewerAlreadyAvailableException)
                 {
                     var reply = TurnContext.Activity.CreateReply();
-                    return reply.AppendText("Sorry ").AppendMention(TurnContext.Activity.From).AppendText(", but you are not suspended.");
+                    return reply.AppendText("Yeah yeah, I know that already.");
                 }
             }
         }

@@ -15,8 +15,6 @@ namespace Review.Core.Services
 
         void SuspendReviewer([NotNull] string reviewerId);
 
-        void ResumeReviewer([NotNull] string reviewerId);
-
         void MakeReviewerBusy([NotNull] string reviewerId);
 
         void MakeReviewerAvailable([NotNull] string reviewerId);

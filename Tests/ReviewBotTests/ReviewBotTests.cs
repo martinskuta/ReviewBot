@@ -178,7 +178,7 @@ namespace ReviewBot.Tests
                     await reviewBot.OnTurnAsync(statusMessage);
 
                     //Assert
-                    Assert.That(suspendMessage2.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but you are already suspended."));
+                    Assert.That(suspendMessage2.Responses.Peek().Text, Is.EqualTo("Yeah yeah, I know that already."));
                     Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>Sender</at> (Suspended): ReviewCount: 0, ReviewDebt: 0\n\n"));
                 }
             }
@@ -239,133 +239,175 @@ namespace ReviewBot.Tests
                     await reviewBot.OnTurnAsync(statusMessage);
 
                     //Assert
-                    Assert.That(suspendMessage2.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but <at>xxx</at> is already suspended."));
+                    Assert.That(suspendMessage2.Responses.Peek().Text, Is.EqualTo("Yeah yeah, I know that already."));
                     Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>xxx</at> (Suspended): ReviewCount: 0, ReviewDebt: 0\n\n"));
                 }
             }
         }
 
         [TestFixture]
-        public class ResumeCommand
+        public class MakeAvailableCommand
         {
             [TestFixture]
-            public class SelfResume
+            public class MakeSelfAvailable
             {
                 [Test]
-                public async Task OnTurnAsync_SelfResumingWhenNotRegistered_ExpectNotRegisteredReply()
+                public async Task OnTurnAsync_MakingSelfAvailableWhenNotRegistered_ExpectNotRegisteredReply()
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var resumeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review resume me");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am back");
                     var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
 
                     //Act
-                    await reviewBot.OnTurnAsync(resumeMessage);
+                    await reviewBot.OnTurnAsync(makeAvailableMessage);
                     await reviewBot.OnTurnAsync(statusMessage);
 
                     //Assert
-                    Assert.That(resumeMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but you are not registered as reviewer."));
+                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but you are not registered as reviewer."));
                     Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("There are no reviewers registered yet."));
                 }
 
                 [Test]
-                public async Task OnTurnAsync_SelfResumingWhenNotSuspended_ExpectNotSuspendedWithCorrectReply()
+                public async Task OnTurnAsync_MakingSelfAvailableWhenAlreadyAvailable_ExpectYeahIKnowReply()
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
                     var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
-                    var resumeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review resume me");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am back");
                     var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
-                    await reviewBot.OnTurnAsync(resumeMessage);
+                    await reviewBot.OnTurnAsync(makeAvailableMessage);
                     await reviewBot.OnTurnAsync(statusMessage);
 
                     //Assert
-                    Assert.That(resumeMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but you are not suspended."));
+                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Yeah yeah, I know that already."));
                     Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>Sender</at> (Available): ReviewCount: 0, ReviewDebt: 0\n\n"));
                 }
 
                 [Test]
-                public async Task OnTurnAsync_SelfResumingWhenSuspended_ExpectWelcomeBackToDoingReviewsReply()
+                public async Task OnTurnAsync_MakingSelfAvailableWhenSuspended_ExpectWelcomeBackToDoingReviewsReply()
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
                     var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
                     var suspendMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend me");
-                    var resumeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review resume me");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am back");
                     var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
                     await reviewBot.OnTurnAsync(suspendMessage);
-                    await reviewBot.OnTurnAsync(resumeMessage);
+                    await reviewBot.OnTurnAsync(makeAvailableMessage);
                     await reviewBot.OnTurnAsync(statusMessage);
 
                     //Assert
-                    Assert.That(resumeMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>Sender</at>! Great to see you doing reviews again."));
+                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>Sender</at>! Great to see you doing reviews again."));
+                    Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>Sender</at> (Available): ReviewCount: 0, ReviewDebt: 0\n\n"));
+                }
+
+                [Test]
+                public async Task OnTurnAsync_MakingSelfAvailableWhenBusy_ExpectWelcomeBackToDoingReviewsReply()
+                {
+                    //Arrange
+                    var reviewBot = MakeReviewBot();
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am busy");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am back");
+                    var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                    //Act
+                    await reviewBot.OnTurnAsync(registerMessage);
+                    await reviewBot.OnTurnAsync(makeBusyMessage);
+                    await reviewBot.OnTurnAsync(makeAvailableMessage);
+                    await reviewBot.OnTurnAsync(statusMessage);
+
+                    //Assert
+                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>Sender</at>! Great to see you doing reviews again."));
                     Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>Sender</at> (Available): ReviewCount: 0, ReviewDebt: 0\n\n"));
                 }
             }
 
             [TestFixture]
-            public class ResumeSingleReviewer
+            public class MakeSingleReviewerAvailable
             {
                 [Test]
                 public async Task OnTurnAsync_ResumingNotRegisteredReviewer_ExpectNotRegisteredReply()
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var resumeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review resume @xxx");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is back");
                     var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
 
                     //Act
-                    await reviewBot.OnTurnAsync(resumeMessage);
+                    await reviewBot.OnTurnAsync(makeAvailableMessage);
                     await reviewBot.OnTurnAsync(statusMessage);
 
                     //Assert
-                    Assert.That(resumeMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but <at>xxx</at> is not registered as reviewer."));
+                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but <at>xxx</at> is not registered as reviewer."));
                     Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("There are no reviewers registered yet."));
                 }
 
                 [Test]
-                public async Task OnTurnAsync_ResumingNotSuspendedReviewer_ExpectNotSuspendedWithCorrectReply()
+                public async Task OnTurnAsync_MakingAvailableReviewerThatIsAlreadyAvailable_ExpectYeahIKnowReply()
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
                     var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
-                    var resumeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review resume @xxx");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is back");
                     var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
-                    await reviewBot.OnTurnAsync(resumeMessage);
+                    await reviewBot.OnTurnAsync(makeAvailableMessage);
                     await reviewBot.OnTurnAsync(statusMessage);
 
                     //Assert
-                    Assert.That(resumeMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but <at>xxx</at> is not suspended."));
+                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Yeah yeah, I know that already."));
                     Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>xxx</at> (Available): ReviewCount: 0, ReviewDebt: 0\n\n"));
                 }
 
                 [Test]
-                public async Task OnTurnAsync_ResumingSuspendedReviewer_ExpectWelcomeBackToDoingReviewsReply()
+                public async Task OnTurnAsync_MakingSuspendedReviewerAvailable_ExpectWelcomeBackToDoingReviewsReply()
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
                     var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
                     var suspendMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend @xxx");
-                    var resumeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review resume @xxx");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is back");
                     var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
                     await reviewBot.OnTurnAsync(suspendMessage);
-                    await reviewBot.OnTurnAsync(resumeMessage);
+                    await reviewBot.OnTurnAsync(makeAvailableMessage);
                     await reviewBot.OnTurnAsync(statusMessage);
 
                     //Assert
-                    Assert.That(resumeMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>xxx</at>! Great to see you doing reviews again."));
+                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>xxx</at>! Great to see you doing reviews again."));
+                    Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>xxx</at> (Available): ReviewCount: 0, ReviewDebt: 0\n\n"));
+                }
+
+                [Test]
+                public async Task OnTurnAsync_MakingBusyReviewerAvailable_ExpectWelcomeBackToDoingReviewsReply()
+                {
+                    //Arrange
+                    var reviewBot = MakeReviewBot();
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is busy");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is back");
+                    var statusMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review status");
+
+                    //Act
+                    await reviewBot.OnTurnAsync(registerMessage);
+                    await reviewBot.OnTurnAsync(makeBusyMessage);
+                    await reviewBot.OnTurnAsync(makeAvailableMessage);
+                    await reviewBot.OnTurnAsync(statusMessage);
+
+                    //Assert
+                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>xxx</at>! Great to see you doing reviews again."));
                     Assert.That(statusMessage.Responses.Peek().Text, Is.EqualTo("Ordered by debt:\n\n" + "<at>xxx</at> (Available): ReviewCount: 0, ReviewDebt: 0\n\n"));
                 }
             }
