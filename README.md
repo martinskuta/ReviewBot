@@ -60,6 +60,9 @@ At the moment the bot is supported only in **MS Teams**. You can either build an
 * [Azure blob storage](https://azure.microsoft.com/en-us/services/storage/blobs/)
 * [Protocol buffers](https://developers.google.com/protocol-buffers/)
 * [NUnit testing framework v3](https://nunit.org/)
+* [Moq4 (mocking framework)][https://github.com/Moq/moq4/wiki/Quickstart]
+
+* The bot is hosted in [Azure App Service](https://azure.microsoft.com/en-us/services/app-service/)
 
 ## Contact
 Feel free to contact me here on github or on [twitter.com/MSkuta](https://twitter.com/MSkuta)
