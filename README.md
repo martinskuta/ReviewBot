@@ -2,7 +2,7 @@
 
 ## What is the bot for?
 
-This bot is designed to help developer teams to distribute code reviews equally between reviewers and also distribute knowledge of code.
+The main goal is to help developer teams to find reviewer for their code quickly. It also helps to distribute code reviews equally between reviewers and improve sharing of code knowledge.
 
 ## What do you mean by 'equally'?
 
