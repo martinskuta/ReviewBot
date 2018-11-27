@@ -148,7 +148,8 @@ namespace ReviewBot.Commands.Review
                 return TurnContext.Activity.CreateReply()
                                   .AppendMention(TurnContext.Activity.From)
                                   .AppendText(" assign the review to ")
-                                  .AppendMention(new ChannelAccount(reviewer.Id, reviewer.Name));
+                                  .AppendMention(new ChannelAccount(reviewer.Id, reviewer.Name))
+                                  .AppendText(" and don't forget to create pull request!");
             }
         }
     }

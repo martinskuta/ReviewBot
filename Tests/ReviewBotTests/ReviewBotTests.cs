@@ -141,7 +141,7 @@ namespace ReviewBot.Tests
                 await reviewBot.OnTurnAsync(statusMessage);
 
                 //Assert
-                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>yyy</at>"));
+                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>yyy</at> and don't forget to create pull request!"));
                 Assert.That(
                     statusMessage.Responses.Peek().Text,
                     Is.EqualTo(
@@ -167,7 +167,7 @@ namespace ReviewBot.Tests
                 await reviewBot.OnTurnAsync(statusMessage);
 
                 //Assert
-                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>yyy</at>"));
+                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>yyy</at> and don't forget to create pull request!"));
                 Assert.That(
                     statusMessage.Responses.Peek().Text,
                     Is.EqualTo(
@@ -193,7 +193,7 @@ namespace ReviewBot.Tests
                 await reviewBot.OnTurnAsync(statusMessage);
 
                 //Assert
-                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>zzz</at>"));
+                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>zzz</at> and don't forget to create pull request!"));
                 Assert.That(
                     statusMessage.Responses.Peek().Text,
                     Is.EqualTo(
@@ -222,7 +222,7 @@ namespace ReviewBot.Tests
                 await reviewBot.OnTurnAsync(statusMessage);
 
                 //Assert
-                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>zzz</at>"));
+                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>zzz</at> and don't forget to create pull request!"));
                 Assert.That(
                     statusMessage.Responses.Peek().Text,
                     Is.EqualTo(
