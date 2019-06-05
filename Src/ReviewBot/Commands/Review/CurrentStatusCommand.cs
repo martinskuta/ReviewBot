@@ -12,9 +12,9 @@ using ReviewBot.Utility;
 
 namespace ReviewBot.Commands.Review
 {
-    public class OverallStatusCommand : ReviewCommand
+    public class CurrentStatusCommand : ReviewCommand
     {
-        public OverallStatusCommand(IReviewContextStore contextStore)
+        public CurrentStatusCommand(IReviewContextStore contextStore)
             : base(contextStore)
         {
         }
@@ -32,17 +32,17 @@ namespace ReviewBot.Commands.Review
 
         public override string PrintUsage(string myName)
         {
-            return $"Print overall status: @{myName} status";
+            return $"Print debt status of active reviewers: @{myName} status";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)
         {
-            return new OverallStatusExecutable(this, turnContext, contextStore);
+            return new CurrentStatusExecutable(this, turnContext, contextStore);
         }
 
-        private class OverallStatusExecutable : ReviewCommandExecutable
+        private class CurrentStatusExecutable : ReviewCommandExecutable
         {
-            public OverallStatusExecutable(Command command, ITurnContext turnContext, IReviewContextStore contextStore)
+            public CurrentStatusExecutable(Command command, ITurnContext turnContext, IReviewContextStore contextStore)
                 : base(command, turnContext, contextStore)
             {
             }
@@ -51,18 +51,22 @@ namespace ReviewBot.Commands.Review
 
             protected override IActivity ExecuteReviewAction()
             {
-                var allReviewers = ReviewService.GetAllReviewers();
+                var activeReviewers = ReviewService.GetAllReviewers()
+                                                   .Where(r => !r.IsSuspended)
+                                                   .OrderByDescending(r => r.ReviewDebt)
+                                                   .ThenBy(r => r.Name)
+                                                   .ToList();
 
-                if (allReviewers.IsEmpty())
+                if (activeReviewers.IsEmpty())
                 {
-                    return TurnContext.Activity.CreateReply("There are no reviewers registered yet.");
+                    return TurnContext.Activity.CreateReply("There are no active reviewers.");
                 }
 
                 var reply = TurnContext.Activity.CreateReply("Ordered by debt:").AppendNewline();
-                foreach (var reviewer in allReviewers.OrderByDescending(r => r.ReviewDebt).ThenBy(r => r.Name))
+                foreach (var reviewer in activeReviewers)
                 {
                     reply.AppendMention(new ChannelAccount(reviewer.Id, reviewer.Name))
-                         .AppendText($" ({reviewer.Status}): ReviewCount: {reviewer.ReviewCount}, ReviewDebt: {reviewer.ReviewDebt}")
+                         .AppendText($" ({reviewer.Status}) Debt: {reviewer.ReviewDebt}")
                          .AppendNewline();
                 }
 

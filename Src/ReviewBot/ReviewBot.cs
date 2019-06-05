@@ -25,7 +25,8 @@ namespace ReviewBot
             _logger.LogTrace("Review bot started.");
 
             _reviewCommands.Add(new RegisterReviewerCommand(contextStore));
-            _reviewCommands.Add(new OverallStatusCommand(contextStore));
+            _reviewCommands.Add(new CurrentStatusCommand(contextStore));
+            _reviewCommands.Add(new AllTimeCommand(contextStore));
             _reviewCommands.Add(new FindReviewerCommand(contextStore));
             _reviewCommands.Add(new AddReviewCommand(contextStore));
             _reviewCommands.Add(new RemoveReviewCommand(contextStore));
