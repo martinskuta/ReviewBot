@@ -69,7 +69,7 @@ namespace ReviewBot.Commands
             public override Task Execute()
             {
                 _reply = TurnContext.Activity.CreateReply(
-                                        "I am bot that helps you equally distribute reviews among reviewers in this channel. More at https://github.com/martinskuta/ReviewBot. ")
+                                        "I am bot that helps you equally distribute reviews among reviewers in this channel. More [here](https://github.com/martinskuta/ReviewBot). ")
                                     .AppendNewline()
                                     .AppendText("This is what I can do for you:")
                                     .AppendNewline();
