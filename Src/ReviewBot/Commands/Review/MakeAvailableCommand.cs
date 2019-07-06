@@ -46,12 +46,12 @@ namespace ReviewBot.Commands.Review
 
         public override string Name()
         {
-            return "Make available";
+            return "Make reviewer available";
         }
 
         public override string Description()
         {
-            return "Way to change status of a reviewer to active. Only active reviewers are considered when looking for a reviewer.";
+            return "Way to change status of a reviewer to active. Only active reviewers are considered when looking for a reviewer. Use all time statistics command to see status of all reviewers or current status to see only reviewers that are collecting debt.";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)

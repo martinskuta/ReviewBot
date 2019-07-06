@@ -46,7 +46,7 @@ namespace ReviewBot.Commands.Review
 
         public override string Name()
         {
-            return "Make busy";
+            return "Make reviewer busy";
         }
 
         public override string Description()

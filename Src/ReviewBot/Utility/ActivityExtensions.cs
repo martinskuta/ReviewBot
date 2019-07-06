@@ -78,10 +78,10 @@ namespace ReviewBot.Utility
             return activity;
         }
 
-        public static T AppendTab<T>(this T activity)
+        public static T AppendIndentation<T>(this T activity)
             where T : IMessageActivity
         {
-            activity.Text = activity.Text + "\t";
+            activity.Text = activity.Text + "  ";
             return activity;
         }
 

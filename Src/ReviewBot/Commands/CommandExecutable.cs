@@ -26,11 +26,11 @@ namespace ReviewBot.Commands
 
         protected IActivity CreateHelpReply()
         {
-            var reply = TurnContext.Activity.CreateReply($"Correct usage of *{_command.Name()}* command:").AppendNewline();
+            var reply = TurnContext.Activity.CreateReply($"Correct usage of **{_command.Name()}** command:").AppendNewline();
 
             foreach (var usage in _command.PrintUsages(TurnContext.Activity.Recipient.Name))
             {
-                reply.AppendTab()
+                reply.AppendIndentation()
                       .AppendText($"- {usage}")
                       .AppendNewline();
             }

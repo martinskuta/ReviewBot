@@ -68,22 +68,23 @@ namespace ReviewBot.Commands
 
             public override Task Execute()
             {
-                _reply = TurnContext.Activity.CreateReply("I am a bot that helps your channel to distribute reviews equally. The reviews are distributed per channel and every channel has their own statistics, so make sure you are using the correct channel!. The only command that works everywhere, even in private chat, is help command.");
-                _reply.AppendNewline();
-                _reply.AppendText("This is what I can do for you:");
-                _reply.AppendNewline();
+                _reply = TurnContext.Activity.CreateReply(
+                                        "I am bot that helps you equally distribute reviews among reviewers in this channel. More at https://github.com/martinskuta/ReviewBot. ")
+                                    .AppendNewline()
+                                    .AppendText("This is what I can do for you:")
+                                    .AppendNewline();
 
                 foreach (var reviewCommand in _command._allCommands)
                 {
                     _reply.AppendNewline()
-                          .AppendText($"*{reviewCommand.Name()}*: {reviewCommand.Description()}")
+                          .AppendText($"**{reviewCommand.Name()}**: {reviewCommand.Description()}")
                           .AppendNewline()
-                          .AppendText("Usage:")
+                          .AppendText("*Usage:*")
                           .AppendNewline();
 
                     foreach (var usage in reviewCommand.PrintUsages(TurnContext.Activity.Recipient.Name))
                     {
-                        _reply.AppendTab()
+                        _reply.AppendIndentation()
                               .AppendText($"- {usage}")
                               .AppendNewline();
                     }
