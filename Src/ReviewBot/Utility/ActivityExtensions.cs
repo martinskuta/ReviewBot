@@ -34,6 +34,8 @@ namespace ReviewBot.Utility
             return recipientMention != null && activity.Text.TrimEnd().EndsWith(recipientMention.Text);
         }
 
+        public static bool IsPrivateChat(this IMessageActivity activity) => activity.Conversation.ConversationType == "personal";
+
         public static T AppendMention<T>(this T activity, ChannelAccount mentionedUser, string mentionText = null)
             where T : IMessageActivity
         {

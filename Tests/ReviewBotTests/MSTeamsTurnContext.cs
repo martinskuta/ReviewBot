@@ -31,7 +31,7 @@ namespace ReviewBot.Tests
         /// <summary>
         ///   Creates MS Teams context that represents user sending message to bot in a channel (MS Teams channel).
         /// </summary>
-        public static MSTeamsTurnContext CreateUserToBotMessage(string message)
+        public static MSTeamsTurnContext CreateUserToBotChannelMessage(string message)
         {
             var activity = new Activity(ActivityTypes.Message)
             {
@@ -42,6 +42,50 @@ namespace ReviewBot.Tests
                 ServiceUrl = "https://service.net/emea/",
                 ChannelId = "msteams",
                 Conversation = new ConversationAccount(true, "channel", "channel_id"),
+                From = new ChannelAccount("Sender_id", "Sender"),
+                Recipient = new ChannelAccount("Review_id", "Review"),
+                Entities = new List<Entity>(),
+                TextFormat = "plain"
+            };
+
+            dynamic chanelData = new ExpandoObject();
+            chanelData.tenant = new ExpandoObject();
+            chanelData.channel = new ExpandoObject();
+            chanelData.team = new ExpandoObject();
+            chanelData.tenant.id = "tenant_id";
+            chanelData.channel.id = "channel_id";
+            chanelData.team.id = "team_id";
+            activity.ChannelData = chanelData;
+
+            var turnContext = new MSTeamsTurnContext(activity);
+
+            foreach (Match match in Regex.Matches(message, @"@\w+"))
+            {
+                var mentionedUserName = match.Value.Substring(1);
+                activity.Entities.Add(
+                    new Entity("mention")
+                    {
+                        Properties = JObject.FromObject(new Mention(new ChannelAccount(mentionedUserName + "_id", mentionedUserName), match.Value, "mention"))
+                    });
+            }
+
+            return turnContext;
+        }
+
+        /// <summary>
+        ///   Creates MS Teams context that represents user sending a message to bot in a private chat (MS Teams).
+        /// </summary>
+        public static MSTeamsTurnContext CreateUserToBotPrivateMessage(string message)
+        {
+            var activity = new Activity(ActivityTypes.Message)
+            {
+                Text = message,
+                Id = "1541717374898",
+                Timestamp = new DateTime(2018, 1, 30, 23, 59, 59).ToUniversalTime(),
+                LocalTimestamp = new DateTime(2018, 1, 30, 23, 59, 59).ToLocalTime(),
+                ServiceUrl = "https://service.net/emea/",
+                ChannelId = "msteams",
+                Conversation = new ConversationAccount(true, "personal", "channel_id"),
                 From = new ChannelAccount("Sender_id", "Sender"),
                 Recipient = new ChannelAccount("Review_id", "Review"),
                 Entities = new List<Entity>(),

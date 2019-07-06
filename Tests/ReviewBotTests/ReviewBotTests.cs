@@ -20,8 +20,8 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
@@ -37,8 +37,8 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx and @xxx");
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx and @xxx");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
@@ -54,9 +54,9 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage1 = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
-                var registerMessage2 = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                var registerMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
+                var registerMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage1);
@@ -74,8 +74,8 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx, @yyy and @zzz");
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx, @yyy and @zzz");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
@@ -97,9 +97,9 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage1 = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx @yyy");
-                var registerMessage2 = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx, @yyy and @zzz");
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                var registerMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx @yyy");
+                var registerMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx, @yyy and @zzz");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage1);
@@ -129,10 +129,10 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx, @yyy");
-                var addReviewMessage = MSTeamsTurnContext.CreateUserToBotMessage("Add @Review to @xxx");
-                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotMessage(findReviewerMessageText);
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx, @yyy");
+                var addReviewMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("Add @Review to @xxx");
+                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage(findReviewerMessageText);
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
@@ -157,9 +157,9 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx, @yyy");
-                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotMessage(findReviewerMessageText);
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx, @yyy");
+                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage(findReviewerMessageText);
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
@@ -183,9 +183,9 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx, @yyy and @zzz");
-                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotMessage(findReviewerMessageText);
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx, @yyy and @zzz");
+                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage(findReviewerMessageText);
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
@@ -210,10 +210,10 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx, @yyy and @zzz");
-                var registerSelfMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
-                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotMessage(findReviewerMessageText);
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx, @yyy and @zzz");
+                var registerSelfMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
+                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage(findReviewerMessageText);
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
@@ -245,8 +245,8 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend me");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend me");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(suspendMessage);
@@ -262,9 +262,9 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
-                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend me");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
+                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend me");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -281,10 +281,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
-                    var suspendMessage1 = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend me");
-                    var suspendMessage2 = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend me");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
+                    var suspendMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend me");
+                    var suspendMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend me");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -306,8 +306,8 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend @xxx");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend @xxx");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(suspendMessage);
@@ -323,9 +323,9 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
-                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend @xxx");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
+                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend @xxx");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -342,10 +342,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
-                    var suspendMessage1 = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend @xxx");
-                    var suspendMessage2 = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend @xxx");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
+                    var suspendMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend @xxx");
+                    var suspendMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend @xxx");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -371,8 +371,8 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(makeAvailableMessage);
@@ -388,9 +388,9 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -407,10 +407,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
-                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend me");
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
+                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend me");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -428,10 +428,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
-                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am busy");
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am busy");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -453,8 +453,8 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(makeAvailableMessage);
@@ -470,9 +470,9 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -489,10 +489,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
-                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend @xxx");
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
+                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend @xxx");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -510,10 +510,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
-                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is busy");
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is busy");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -539,8 +539,8 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(makeBusyMessage);
@@ -556,9 +556,9 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
-                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -575,10 +575,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
-                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am busy");
-                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
+                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am busy");
+                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -596,10 +596,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register me");
-                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend me");
-                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotMessage("@Review I am busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
+                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend me");
+                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -623,8 +623,8 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(makeBusyMessage);
@@ -640,9 +640,9 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
-                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -659,10 +659,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
-                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is busy");
-                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
+                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is busy");
+                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -680,10 +680,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review register @xxx");
-                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotMessage("@Review suspend @xxx");
-                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotMessage("@Review @xxx is busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
+                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend @xxx");
+                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -701,11 +701,27 @@ namespace ReviewBot.Tests
         }
 
         [Test]
-        public async Task OnTurnAsync_HelpMessageReceived_ExpectHelpReply()
+        public async Task OnTurnAsync_HelpMessageReceivedInChannel_ExpectHelpReply()
         {
             //Arrange
             var reviewBot = MakeReviewBot();
-            var helpMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review help");
+            var helpMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review help");
+
+            //Act
+            await reviewBot.OnTurnAsync(helpMessage);
+
+            //Assert
+            Assert.That(
+                helpMessage.Responses.Peek().Text,
+                Is.EqualTo("I am bot that helps you equally distribute reviews among reviewers in this channel. More at https://github.com/martinskuta/ReviewBot. \n\nThis is what I can do for you:\n\n\n\n**Register reviewers**: Use this command to register member(s) of a channel as a reviewer(s) in the current channel. You can register yourself too.\n\n*Usage:*\n\n  - @Review register @reviewer1, @reviewer2\n\n  - @Review register me\n\n\n\n\n\n**Current status**: Shows debt of currently active reviewers\n\n*Usage:*\n\n  - @Review status\n\n\n\n\n\n**All time statistics**: Shows stats like total number of reviews for all reviewers, including inactive ones.\n\n*Usage:*\n\n  - @Review alltime\n\n\n\n\n\n**Find reviewer**: Automatic way of looking for a reviewer with the highest debt. If there are two or more reviewers with highest debt, then out of those one is randomly chosen. There is also way of asking for review of feature that you did not implement, eg. ask for someone else. Also you can exclude multiple reviewers if they were working on the feature.\n\n*Usage:*\n\n  - SKYE-1234 is ready for @Review\n\n  - @reviewer is looking for @Review of SKYE-1234\n\n  - @reviewer1, @reviewer2 and me are looking for @Review of SKYE-1234\n\n\n\n\n\n**Add review**: Way to assign review directly to given reviewer(s). Debt is recalculated. On purpose not possible to add review to yourself.\n\n*Usage:*\n\n  - Add @Review to @reviewer1\n\n  - Add @Review to @reviewer1, @reviewer2 and @reviewer3\n\n\n\n\n\n**Remove review**: Way to un-assign review directly from given reviewer(s). Debt is recalculated. On purpose not possible to remove review from yourself.\n\n*Usage:*\n\n  - Remove @Review from @reviewer1\n\n  - Remove @Review from @reviewer1, @reviewer2 and @reviewer3\n\n\n\n\n\n**Suspend reviewer**: Way to change status of a reviewer to inactive. Inactive reviewers are NOT considered when looking for a reviewer and their debt does NOT increase. Use it when you are on vacations or when somebody leaves the team for example.\n\n*Usage:*\n\n  - @Review suspend @reviewer\n\n  - @Review suspend me\n\n\n\n\n\n**Make reviewer busy**: Way to change status of a reviewer to busy. Busy reviewers are NOT considered when looking for a reviewer, but their debt increases with every review.\n\n*Usage:*\n\n  - @Review @reviewer is busy\n\n  - @Review I am busy\n\n\n\n\n\n**Make reviewer available**: Way to change status of a reviewer to active. Only active reviewers are considered when looking for a reviewer. Use all time statistics command to see status of all reviewers or current status to see only reviewers that are collecting debt.\n\n*Usage:*\n\n  - @Review @reviewer1 is back\n\n  - @Review I am back\n\n\n\n\n\n**Help**: Shows features of this bot\n\n*Usage:*\n\n  - @Review help\n\n\n\n"));
+        }
+
+        [Test]
+        public async Task OnTurnAsync_HelpMessageReceivedInPrivateChat_ExpectHelpReply()
+        {
+            //Arrange
+            var reviewBot = MakeReviewBot();
+            var helpMessage = MSTeamsTurnContext.CreateUserToBotPrivateMessage("help");
 
             //Act
             await reviewBot.OnTurnAsync(helpMessage);
@@ -721,7 +737,7 @@ namespace ReviewBot.Tests
         {
             //Arrange
             var reviewBot = MakeReviewBot();
-            var helpMessage = MSTeamsTurnContext.CreateUserToBotMessage("@Review nothing");
+            var helpMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review nothing");
 
             //Act
             await reviewBot.OnTurnAsync(helpMessage);

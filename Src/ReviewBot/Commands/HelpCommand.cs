@@ -32,7 +32,7 @@ namespace ReviewBot.Commands
             var messageActivity = activity.AsMessageActivity();
             if (messageActivity == null) return 0;
 
-            if (!messageActivity.StartsWithRecipientMention()) return 0;
+            if (!messageActivity.IsPrivateChat() && !messageActivity.StartsWithRecipientMention()) return 0;
 
             var message = messageActivity.StripRecipientMention().StripNewLineAndTrim();
             return message.Equals("help", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
