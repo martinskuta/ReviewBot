@@ -51,7 +51,7 @@ namespace ReviewBot.Commands.Review
 
         public override string Description()
         {
-            return "Way to change status of a reviewer to busy. Busy reviewers are NOT considered when looking for a reviewer, but their debt increases with every review.";
+            return "Way to change status of a reviewer to busy. Busy reviewers are NOT considered when looking for a reviewer, but their debt increases with every review they skip.";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)
