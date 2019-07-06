@@ -3,6 +3,7 @@
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
+using ReviewBot.Utility;
 
 #endregion
 
@@ -25,7 +26,16 @@ namespace ReviewBot.Commands
 
         protected IActivity CreateHelpReply()
         {
-            return TurnContext.Activity.CreateReply(_command.PrintUsage(TurnContext.Activity.Recipient.Name));
+            var reply = TurnContext.Activity.CreateReply($"Correct usage of *{_command.Name()}* command:").AppendNewline();
+
+            foreach (var usage in _command.PrintUsages(TurnContext.Activity.Recipient.Name))
+            {
+                reply.AppendTab()
+                      .AppendText($"- {usage}")
+                      .AppendNewline();
+            }
+
+            return reply;
         }
     }
 }

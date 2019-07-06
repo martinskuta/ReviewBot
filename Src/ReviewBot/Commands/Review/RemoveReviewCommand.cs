@@ -31,9 +31,19 @@ namespace ReviewBot.Commands.Review
             return message.StartsWith("remove  from", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
         }
 
-        public override string PrintUsage(string myName)
+        public override string[] PrintUsages(string myName)
         {
-            return $"Remove review: Remove @{myName} from @reviewer1 and @reviewer2";
+            return new[] { $"Remove @{myName} from @reviewer1", $"Remove @{myName} from @reviewer1, @reviewer2 and @reviewer3" };
+        }
+
+        public override string Name()
+        {
+            return "Remove review";
+        }
+
+        public override string Description()
+        {
+            return "Way to un-assign review directly from given reviewer(s). Debt is recalculated. On purpose not possible to remove review from yourself.";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)

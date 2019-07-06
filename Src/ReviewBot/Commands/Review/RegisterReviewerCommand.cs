@@ -36,9 +36,23 @@ namespace ReviewBot.Commands.Review
             return message.StartsWith("register", StringComparison.InvariantCultureIgnoreCase) && !mentions.IsEmpty() ? 1 : 0;
         }
 
-        public override string PrintUsage(string myName)
+        public override string[] PrintUsages(string myName)
         {
-            return $"Register reviewers: '@{myName} register @reviewer1, @reviewer2' or '@{myName} register me' to register yourself.";
+            return new[]
+            {
+                $"@{myName} register @reviewer1, @reviewer2",
+                $"@{myName} register me"
+            };
+        }
+
+        public override string Name()
+        {
+            return "Register reviewers";
+        }
+
+        public override string Description()
+        {
+            return "Use this command to register member(s) of a channel as a reviewer(s) in the current channel. You can register yourself too.";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore reviewContextStore)

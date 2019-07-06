@@ -1,4 +1,11 @@
-﻿#region using
+﻿#region copyright
+
+// Copyright 2007 - 2019 Innoveo AG, Zurich/Switzerland
+// All rights reserved. Use is subject to license terms.
+
+#endregion
+
+#region using
 
 using System;
 using System.Linq;
@@ -31,9 +38,19 @@ namespace ReviewBot.Commands.Review
             return message.StartsWith("add  to", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
         }
 
-        public override string PrintUsage(string myName)
+        public override string[] PrintUsages(string myName)
         {
-            return $"Add review: Add @{myName} to @reviewer1 and @reviewer2";
+            return new[] { $"Add @{myName} to @reviewer1", $"Add @{myName} to @reviewer1, @reviewer2 and @reviewer3" };
+        }
+
+        public override string Name()
+        {
+            return "Add review";
+        }
+
+        public override string Description()
+        {
+            return "Way to assign review directly to given reviewer(s). Debt is recalculated. On purpose not possible to add review to yourself.";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)

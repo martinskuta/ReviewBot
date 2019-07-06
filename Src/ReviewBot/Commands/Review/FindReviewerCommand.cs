@@ -1,4 +1,11 @@
-﻿#region using
+﻿#region copyright
+
+// Copyright 2007 - 2019 Innoveo AG, Zurich/Switzerland
+// All rights reserved. Use is subject to license terms.
+
+#endregion
+
+#region using
 
 using System;
 using System.Collections.Generic;
@@ -55,10 +62,25 @@ namespace ReviewBot.Commands.Review
             return 0;
         }
 
-        public override string PrintUsage(string myName)
+        public override string[] PrintUsages(string myName)
+        {
+            return new[]
+            {
+                $"SKYE-1234 is ready for @{myName}",
+                $"@reviewer is looking for @{myName} of SKYE-1234",
+                $"@reviewer1, @reviewer2 and me are looking for @{myName} of SKYE-1234"
+            };
+        }
+
+        public override string Name()
+        {
+            return "Find reviewer";
+        }
+
+        public override string Description()
         {
             return
-                $"Find reviewer: 'SKYE-1234 is ready for @{myName}' or '@reviewer is looking for @{myName} of SKYE-1234' or '@reviewer1, @reviewer2 and me are looking for @{myName} of SKYE-1234'";
+                "Automatic way of looking for a reviewer with the highest debt. If there are two or more reviewers with highest debt, then out of those one is randomly chosen. There is also way of asking for review of feature that you did not implement, eg. ask for someone else. Also you can exclude multiple reviewers if they were working on the feature.";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)

@@ -35,9 +35,23 @@ namespace ReviewBot.Commands.Review
             return mentions.Count == 1 && message.EndsWith("is back", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
         }
 
-        public override string PrintUsage(string myName)
+        public override string[] PrintUsages(string myName)
         {
-            return $"Make available: '@{myName} @reviewer1 is back' or '@{myName} I am back' to make yourself available";
+            return new[]
+            {
+                $"@{myName} @reviewer1 is back",
+                $"@{myName} I am back"
+            };
+        }
+
+        public override string Name()
+        {
+            return "Make available";
+        }
+
+        public override string Description()
+        {
+            return "Way to change status of a reviewer to active. Only active reviewers are considered when looking for a reviewer.";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)

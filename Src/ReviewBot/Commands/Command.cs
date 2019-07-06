@@ -13,6 +13,10 @@ namespace ReviewBot.Commands
 
         public abstract CommandExecutable CreateExecutable(ITurnContext turnContext);
 
-        public abstract string PrintUsage(string myName);
+        public abstract string[] PrintUsages(string myName);
+
+        public abstract string Name();
+
+        public abstract string Description();
     }
 }

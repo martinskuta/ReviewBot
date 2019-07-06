@@ -713,18 +713,127 @@ namespace ReviewBot.Tests
             //Assert
             Assert.That(
                 helpMessage.Responses.Peek().Text,
-                Is.EqualTo(
-                    "This is what I can do for you:\n\n\n\n" +
-                    "Register reviewers: \'@Review register @reviewer1, @reviewer2\' or \'@Review register me\' to register yourself.\n\n" +
-                    "Print debt status of active reviewers: @Review status\n\n" +
-                    "Print all time stats: @Review alltime\n\n" +
-                    "Find reviewer: 'SKYE-1234 is ready for @Review' or '@reviewer is looking for @Review of SKYE-1234' or '@reviewer1, @reviewer2 and me are looking for @Review of SKYE-1234'\n\n" +
-                    "Add review: Add @Review to @reviewer1 and @reviewer2\n\n" +
-                    "Remove review: Remove @Review from @reviewer1 and @reviewer2\n\n" +
-                    "Suspend reviewer: \'@Review suspend @reviewer1\' or \'@Review\' suspend me\' to suspend yourself\n\n" +
-                    "Make busy: \'@Review @reviewer is busy\' or \'@Review I am busy\' to make yourself busy\n\n" +
-                    "Make available: \'@Review @reviewer1 is back\' or \'@Review I am back\' to make yourself available\n\n" +
-                    "Help: @Review help"));
+                Is.EqualTo(@"I am a bot that helps your channel to distribute reviews equally. The reviews are distributed per channel and every channel has their own statistics, so make sure you are using the correct channel!. The only command that works everywhere, even in private chat, is help command.
+
+This is what I can do for you:
+
+
+
+*Register reviewers*: Use this command to register member(s) of a channel as a reviewer(s) in the current channel. You can register yourself too.
+
+Usage:
+
+	- @Review register @reviewer1, @reviewer2
+
+	- @Review register me
+
+
+
+
+
+*Current status*: Shows debt of currently active reviewers
+
+Usage:
+
+	- @Review status
+
+
+
+
+
+*All time statistics*: Shows stats like total number of reviews for all reviewers, including inactive ones.
+
+Usage:
+
+	- @Review alltime
+
+
+
+
+
+*Find reviewer*: Automatic way of looking for a reviewer with the highest debt. If there are two or more reviewers with highest debt, then out of those one is randomly chosen. There is also way of asking for review of feature that you did not implement, eg. ask for someone else. Also you can exclude multiple reviewers if they were working on the feature.
+
+Usage:
+
+	- SKYE-1234 is ready for @Review
+
+	- @reviewer is looking for @Review of SKYE-1234
+
+	- @reviewer1, @reviewer2 and me are looking for @Review of SKYE-1234
+
+
+
+
+
+*Add review*: Way to assign review directly to given reviewer(s). Debt is recalculated. On purpose not possible to add review to yourself.
+
+Usage:
+
+	- Add @Review to @reviewer1
+
+	- Add @Review to @reviewer1, @reviewer2 and @reviewer3
+
+
+
+
+
+*Remove review*: Way to un-assign review directly from given reviewer(s). Debt is recalculated. On purpose not possible to remove review from yourself.
+
+Usage:
+
+	- Remove @Review from @reviewer1
+
+	- Remove @Review from @reviewer1, @reviewer2 and @reviewer3
+
+
+
+
+
+*Suspend reviewer*: Way to change status of a reviewer to inactive. Inactive reviewers are NOT considered when looking for a reviewer and their debt does NOT increase. Use it when you are on vacations or when somebody leaves the team for example.
+
+Usage:
+
+	- @Review suspend @reviewer
+
+	- @Review suspend me
+
+
+
+
+
+*Make busy*: Way to change status of a reviewer to busy. Busy reviewers are NOT considered when looking for a reviewer, but their debt increases with every review.
+
+Usage:
+
+	- @Review @reviewer is busy
+
+	- @Review I am busy
+
+
+
+
+
+*Make available*: Way to change status of a reviewer to active. Only active reviewers are considered when looking for a reviewer.
+
+Usage:
+
+	- @Review @reviewer1 is back
+
+	- @Review I am back
+
+
+
+
+
+*Help*: Shows features of this bot
+
+Usage:
+
+	- @Review help
+
+
+
+"));
         }
 
         [Test]

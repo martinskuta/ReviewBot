@@ -35,9 +35,23 @@ namespace ReviewBot.Commands.Review
             return mentions.Count == 1 && message.EndsWith("is busy", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
         }
 
-        public override string PrintUsage(string myName)
+        public override string[] PrintUsages(string myName)
         {
-            return $"Make busy: '@{myName} @reviewer is busy' or '@{myName} I am busy' to make yourself busy";
+            return new[]
+            {
+                $"@{myName} @reviewer is busy",
+                $"@{myName} I am busy"
+            };
+        }
+
+        public override string Name()
+        {
+            return "Make busy";
+        }
+
+        public override string Description()
+        {
+            return "Way to change status of a reviewer to busy. Busy reviewers are NOT considered when looking for a reviewer, but their debt increases with every review.";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)

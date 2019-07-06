@@ -78,6 +78,13 @@ namespace ReviewBot.Utility
             return activity;
         }
 
+        public static T AppendTab<T>(this T activity)
+            where T : IMessageActivity
+        {
+            activity.Text = activity.Text + "\t";
+            return activity;
+        }
+
         public static T AppendText<T>(this T activity, string text)
             where T : IMessageActivity
         {

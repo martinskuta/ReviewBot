@@ -30,9 +30,19 @@ namespace ReviewBot.Commands.Review
             return message.Equals("alltime", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
         }
 
-        public override string PrintUsage(string myName)
+        public override string[] PrintUsages(string myName)
         {
-            return $"Print all time stats: @{myName} alltime";
+            return new [] { $"@{myName} alltime" };
+        }
+
+        public override string Name()
+        {
+            return "All time statistics";
+        }
+
+        public override string Description()
+        {
+            return "Shows stats like total number of reviews for all reviewers, including inactive ones.";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)

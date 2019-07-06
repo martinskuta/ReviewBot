@@ -30,9 +30,19 @@ namespace ReviewBot.Commands.Review
             return message.Equals("status", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
         }
 
-        public override string PrintUsage(string myName)
+        public override string[] PrintUsages(string myName)
         {
-            return $"Print debt status of active reviewers: @{myName} status";
+            return new[] { $"@{myName} status" };
+        }
+
+        public override string Name()
+        {
+            return "Current status";
+        }
+
+        public override string Description()
+        {
+            return "Shows debt of currently active reviewers";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)

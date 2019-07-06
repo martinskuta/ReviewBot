@@ -35,9 +35,23 @@ namespace ReviewBot.Commands.Review
             return message.StartsWith("suspend", StringComparison.InvariantCultureIgnoreCase) && mentions.Count == 1 ? 1 : 0;
         }
 
-        public override string PrintUsage(string myName)
+        public override string[] PrintUsages(string myName)
         {
-            return $"Suspend reviewer: '@{myName} suspend @reviewer1' or '@{myName}' suspend me' to suspend yourself";
+            return new[]
+            {
+                $"@{myName} suspend @reviewer",
+                $"@{myName} suspend me"
+            };
+        }
+
+        public override string Name()
+        {
+            return "Suspend reviewer";
+        }
+
+        public override string Description()
+        {
+            return "Way to change status of a reviewer to inactive. Inactive reviewers are NOT considered when looking for a reviewer and their debt does NOT increase. Use it when you are on vacations or when somebody leaves the team for example.";
         }
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)
