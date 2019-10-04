@@ -1,4 +1,4 @@
-﻿#region using
+﻿﻿#region using
 
 using System;
 using System.Linq;
@@ -32,7 +32,7 @@ namespace ReviewBot.Commands.Review
 
         public override string[] PrintUsages(string myName)
         {
-            return new [] { $"@{myName} alltime" };
+            return new[] { $"@{myName} alltime" };
         }
 
         public override string Name()
@@ -74,8 +74,7 @@ namespace ReviewBot.Commands.Review
                 var reply = TurnContext.Activity.CreateReply("Ordered by review count:").AppendNewline();
                 foreach (var reviewer in activeReviewers)
                 {
-                    reply.AppendMention(new ChannelAccount(reviewer.Id, reviewer.Name))
-                         .AppendText($" ({reviewer.Status}): Reviews: {reviewer.ReviewCount}, Debt: {reviewer.ReviewDebt}")
+                    reply.AppendText($"**{reviewer.Name}** ({reviewer.Status}): Reviews: {reviewer.ReviewCount}, Debt: {reviewer.ReviewDebt}")
                          .AppendNewline();
                 }
 

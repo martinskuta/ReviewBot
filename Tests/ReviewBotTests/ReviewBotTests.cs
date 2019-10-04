@@ -36,7 +36,7 @@ namespace ReviewBot.Tests
 
                 //Assert
                 Assert.That(registerMessage.Responses.Peek().Text, Is.EqualTo("<at>xxx</at> is now registered as reviewer."));
-                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n<at>xxx</at> (Available): Reviews: 0, Debt: 0\n\n"));
+                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n**xxx** (Available): Reviews: 0, Debt: 0\n\n"));
             }
 
             [Test]
@@ -53,7 +53,7 @@ namespace ReviewBot.Tests
 
                 //Assert
                 Assert.That(registerMessage.Responses.Peek().Text, Is.EqualTo("<at>xxx</at> is now registered as reviewer."));
-                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n<at>xxx</at> (Available): Reviews: 0, Debt: 0\n\n"));
+                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n**xxx** (Available): Reviews: 0, Debt: 0\n\n"));
             }
 
             [Test]
@@ -73,7 +73,7 @@ namespace ReviewBot.Tests
                 //Assert
                 Assert.That(registerMessage1.Responses.Peek().Text, Is.EqualTo("<at>xxx</at> is now registered as reviewer."));
                 Assert.That(registerMessage2.Responses.Peek().Text, Is.EqualTo("<at>xxx</at> is already registered."));
-                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n<at>xxx</at> (Available): Reviews: 0, Debt: 0\n\n"));
+                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n**xxx** (Available): Reviews: 0, Debt: 0\n\n"));
             }
 
             [Test]
@@ -94,9 +94,9 @@ namespace ReviewBot.Tests
                     allTimeMessage.Responses.Peek().Text,
                     Is.EqualTo(
                         "Ordered by review count:\n\n" +
-                        "<at>xxx</at> (Available): Reviews: 0, Debt: 0\n\n" +
-                        "<at>yyy</at> (Available): Reviews: 0, Debt: 0\n\n" +
-                        "<at>zzz</at> (Available): Reviews: 0, Debt: 0\n\n"));
+                        "**xxx** (Available): Reviews: 0, Debt: 0\n\n" +
+                        "**yyy** (Available): Reviews: 0, Debt: 0\n\n" +
+                        "**zzz** (Available): Reviews: 0, Debt: 0\n\n"));
             }
 
             [Test]
@@ -120,9 +120,9 @@ namespace ReviewBot.Tests
                     allTimeMessage.Responses.Peek().Text,
                     Is.EqualTo(
                         "Ordered by review count:\n\n" +
-                        "<at>xxx</at> (Available): Reviews: 0, Debt: 0\n\n" +
-                        "<at>yyy</at> (Available): Reviews: 0, Debt: 0\n\n" +
-                        "<at>zzz</at> (Available): Reviews: 0, Debt: 0\n\n"));
+                        "**xxx** (Available): Reviews: 0, Debt: 0\n\n" +
+                        "**yyy** (Available): Reviews: 0, Debt: 0\n\n" +
+                        "**zzz** (Available): Reviews: 0, Debt: 0\n\n"));
             }
         }
 
@@ -153,8 +153,8 @@ namespace ReviewBot.Tests
                     allTimeMessage.Responses.Peek().Text,
                     Is.EqualTo(
                         "Ordered by review count:\n\n" +
-                        "<at>xxx</at> (Available): Reviews: 1, Debt: 0\n\n" +
-                        "<at>yyy</at> (Available): Reviews: 1, Debt: 0\n\n"));
+                        "**xxx** (Available): Reviews: 1, Debt: 0\n\n" +
+                        "**yyy** (Available): Reviews: 1, Debt: 0\n\n"));
             }
 
             [TestCase("@xxx is looking for @Review of SKYE-1234")]
@@ -179,8 +179,8 @@ namespace ReviewBot.Tests
                     allTimeMessage.Responses.Peek().Text,
                     Is.EqualTo(
                         "Ordered by review count:\n\n" +
-                        "<at>yyy</at> (Available): Reviews: 1, Debt: 0\n\n" +
-                        "<at>xxx</at> (Available): Reviews: 0, Debt: 1\n\n"));
+                        "**yyy** (Available): Reviews: 1, Debt: 0\n\n" +
+                        "**xxx** (Available): Reviews: 0, Debt: 1\n\n"));
             }
 
             [TestCase("@xxx and @yyy are looking for @Review of SKYE-1234")]
@@ -205,9 +205,9 @@ namespace ReviewBot.Tests
                     allTimeMessage.Responses.Peek().Text,
                     Is.EqualTo(
                         "Ordered by review count:\n\n" +
-                        "<at>zzz</at> (Available): Reviews: 1, Debt: 0\n\n" +
-                        "<at>xxx</at> (Available): Reviews: 0, Debt: 1\n\n" +
-                        "<at>yyy</at> (Available): Reviews: 0, Debt: 1\n\n"));
+                        "**zzz** (Available): Reviews: 1, Debt: 0\n\n" +
+                        "**xxx** (Available): Reviews: 0, Debt: 1\n\n" +
+                        "**yyy** (Available): Reviews: 0, Debt: 1\n\n"));
             }
 
             [TestCase("@xxx @yyy and me are looking for @Review of SKYE-1234")]
@@ -243,10 +243,10 @@ namespace ReviewBot.Tests
                     allTimeMessage.Responses.Peek().Text,
                     Is.EqualTo(
                         "Ordered by review count:\n\n" +
-                        "<at>zzz</at> (Available): Reviews: 1, Debt: 0\n\n" +
-                        "<at>Sender</at> (Available): Reviews: 0, Debt: 1\n\n" +
-                        "<at>xxx</at> (Available): Reviews: 0, Debt: 1\n\n" +
-                        "<at>yyy</at> (Available): Reviews: 0, Debt: 1\n\n"));
+                        "**zzz** (Available): Reviews: 1, Debt: 0\n\n" +
+                        "**Sender** (Available): Reviews: 0, Debt: 1\n\n" +
+                        "**xxx** (Available): Reviews: 0, Debt: 1\n\n" +
+                        "**yyy** (Available): Reviews: 0, Debt: 1\n\n"));
             }
         }
 
@@ -289,7 +289,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(suspendMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> enjoy your time off! Your review debt won't increase until you are back."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>Sender</at> (Suspended): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**Sender** (Suspended): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -310,7 +310,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(suspendMessage2.Responses.Peek().Text, Is.EqualTo("Yeah yeah, I know that already."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>Sender</at> (Suspended): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**Sender** (Suspended): Reviews: 0, Debt: 0\n\n"));
                 }
             }
 
@@ -350,7 +350,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(suspendMessage.Responses.Peek().Text, Is.EqualTo("<at>xxx</at> enjoy your time off! Your review debt won't increase until you are back."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>xxx</at> (Suspended): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Suspended): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -371,7 +371,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(suspendMessage2.Responses.Peek().Text, Is.EqualTo("Yeah yeah, I know that already."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>xxx</at> (Suspended): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Suspended): Reviews: 0, Debt: 0\n\n"));
                 }
             }
         }
@@ -415,7 +415,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Yeah yeah, I know that already."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>Sender</at> (Available): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**Sender** (Available): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -436,7 +436,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>Sender</at>! Great to see you doing reviews again."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>Sender</at> (Available): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**Sender** (Available): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -457,7 +457,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>Sender</at>! Great to see you doing reviews again."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>Sender</at> (Available): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**Sender** (Available): Reviews: 0, Debt: 0\n\n"));
                 }
             }
 
@@ -497,7 +497,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Yeah yeah, I know that already."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>xxx</at> (Available): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Available): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -518,7 +518,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>xxx</at>! Great to see you doing reviews again."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>xxx</at> (Available): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Available): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -539,7 +539,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>xxx</at>! Great to see you doing reviews again."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>xxx</at> (Available): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Available): Reviews: 0, Debt: 0\n\n"));
                 }
             }
         }
@@ -583,7 +583,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Ok <at>Sender</at>. I will not assign you any reviews, so you can get things done."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>Sender</at> (Busy): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**Sender** (Busy): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -604,7 +604,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(makeBusyMessage2.Responses.Peek().Text, Is.EqualTo("<at>Sender</at>, I know that already. Stop lurking around here and get your things done!"));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>Sender</at> (Busy): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**Sender** (Busy): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -627,7 +627,7 @@ namespace ReviewBot.Tests
                     Assert.That(
                         makeBusyMessage2.Responses.Peek().Text,
                         Is.EqualTo("<at>Sender</at>, to my knowledge, you are having time off! Resume yourself first if you are back from your time off."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>Sender</at> (Suspended): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**Sender** (Suspended): Reviews: 0, Debt: 0\n\n"));
                 }
             }
 
@@ -667,7 +667,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Ok <at>Sender</at>. I will not assign <at>xxx</at> any reviews."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>xxx</at> (Busy): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Busy): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -688,7 +688,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(makeBusyMessage2.Responses.Peek().Text, Is.EqualTo("<at>Sender</at>, I know that already. <at>xxx</at> must be really busy!"));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>xxx</at> (Busy): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Busy): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -711,7 +711,7 @@ namespace ReviewBot.Tests
                     Assert.That(
                         makeBusyMessage2.Responses.Peek().Text,
                         Is.EqualTo("<at>Sender</at>, to my knowledge, <at>xxx</at> is having time off! So I hope <at>xxx</at> is not busy."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "<at>xxx</at> (Suspended): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Suspended): Reviews: 0, Debt: 0\n\n"));
                 }
             }
         }
