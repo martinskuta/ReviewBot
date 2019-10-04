@@ -206,6 +206,9 @@ namespace ReviewBot.Tests
             [TestCase("@xxx @yyy and me are looking for @Review of SKYE-1234")]
             [TestCase("@xxx @yyy and me are looking for @Review of SKYE-1234. It is quite small.")]
             [TestCase("@xxx @yyy and me are looking for @Review of SKYE-1234 @jira-help")]
+            [TestCase("me and @xxx @yyy are looking for @Review of SKYE-1234")]
+            [TestCase("Me and @xxx @yyy are looking for @Review of SKYE-1234. It is quite small.")]
+            [TestCase("me @xxx and @yyy are looking for @Review of SKYE-1234 @jira-help")]
             public async Task OnTurnAsync_FindingReviewForMultipleOtherDevelopersAndSelf_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
             {
                 //Arrange
