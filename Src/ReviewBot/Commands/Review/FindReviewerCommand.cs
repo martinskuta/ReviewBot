@@ -7,13 +7,13 @@
 
 #region using
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using Review.Core.DataModel;
 using Review.Core.Services.Exceptions;
+using Review.Core.Utility;
 using ReviewBot.Storage;
 using ReviewBot.Utility;
 
@@ -39,25 +39,24 @@ namespace ReviewBot.Commands.Review
             var otherMentions = messageActivity.GetUniqueMentionsExceptRecipient();
 
             //SKYE-123 is ready for @review
-            if (message.Contains($"is ready for {recipientMention.Text}", StringComparison.InvariantCultureIgnoreCase)) return 1;
+            if (message.ContainsAnyOrdinal($"is ready for {recipientMention.Text}")) return 1;
 
             //@reviewer is looking for @review of SKYE-1234
-            if (message.Contains($"is looking for {recipientMention.Text} of"))
+            if (message.ContainsAnyOrdinal($"is looking for {recipientMention.Text} of"))
             {
-                var beforeIsLookingFor = message.Substring(0, message.IndexOf("is looking for", StringComparison.InvariantCultureIgnoreCase));
+                var wordsBeforeIsLookingFor = message.GetWordsBeforePhrase("is looking for");
 
-                if (otherMentions.Count(m => beforeIsLookingFor.Contains(m.Text)) == 1) return 1;
+                if (otherMentions.Count(m => wordsBeforeIsLookingFor.ContainsAnyOrdinal(m.Text)) == 1) return 1;
             }
 
             //ma and @reviewer are looking for @review of SKYE-1234
             //@reviewer1 @reviewer2 and @reviewer3 are looking for @review of SKYE-1234
-            if (otherMentions.Count >= 1 && message.Contains($"are looking for {recipientMention.Text} of"))
+            if (otherMentions.Count >= 1 && message.ContainsAnyOrdinal($"are looking for {recipientMention.Text} of"))
             {
-                var beforeAreLookingFor = message.Substring(0, message.IndexOf("are looking for", StringComparison.InvariantCultureIgnoreCase));
-                var wordsBeforeAreLookingFor = beforeAreLookingFor.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
+                var wordsBeforeAreLookingFor = message.GetWordsBeforePhrase("are looking for");
 
-                if (wordsBeforeAreLookingFor.Contains("me", StringComparer.OrdinalIgnoreCase) && otherMentions.Count(m => wordsBeforeAreLookingFor.Contains(m.Text)) >= 1) return 1;
-                if (otherMentions.Count(m => wordsBeforeAreLookingFor.Contains(m.Text)) >= 2) return 1;
+                if (wordsBeforeAreLookingFor.ContainsAnyOrdinal("me", "I") && otherMentions.Count(m => wordsBeforeAreLookingFor.ContainsAnyOrdinal(m.Text)) >= 1) return 1;
+                if (otherMentions.Count(m => wordsBeforeAreLookingFor.ContainsAnyOrdinal(m.Text)) >= 2) return 1;
             }
 
             return 0;
@@ -103,21 +102,20 @@ namespace ReviewBot.Commands.Review
                 var messageActivity = TurnContext.Activity.AsMessageActivity();
                 var otherMentions = TurnContext.Activity.GetUniqueMentionsExceptRecipient();
 
-                if (messageActivity.Text.Contains("is ready for")) return SenderIsLookingForReview();
+                if (messageActivity.Text.ContainsAnyOrdinal("is ready for")) return SenderIsLookingForReview();
 
-                if (messageActivity.Text.Contains("is looking for"))
+                if (messageActivity.Text.ContainsAnyOrdinal("is looking for"))
                 {
-                    var beforeIsLookingFor = messageActivity.Text.Substring(0, messageActivity.Text.IndexOf("is looking for", StringComparison.InvariantCultureIgnoreCase));
+                    var wordsBeforeIsLookingFor = messageActivity.Text.GetWordsBeforePhrase("is looking for");
 
-                    var developer = otherMentions.First(m => beforeIsLookingFor.Contains(m.Text)).Mentioned;
+                    var developer = otherMentions.First(m => wordsBeforeIsLookingFor.ContainsAnyOrdinal(m.Text)).Mentioned;
                     return OtherDeveloperIsLookingForReview(developer);
                 }
 
-                var beforeAreLookingFor = messageActivity.Text.Substring(0, messageActivity.Text.IndexOf("are looking for", StringComparison.InvariantCultureIgnoreCase));
-                var wordsBeforeAreLookingFor = beforeAreLookingFor.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                var wordsBeforeAreLookingFor = messageActivity.Text.GetWordsBeforePhrase("are looking for");
 
-                var developers = otherMentions.Where(m => wordsBeforeAreLookingFor.Contains(m.Text)).Select(m => m.Mentioned).ToList();
-                if (wordsBeforeAreLookingFor.Contains("me", StringComparer.OrdinalIgnoreCase)) developers.Add(TurnContext.Activity.From);
+                var developers = otherMentions.Where(m => wordsBeforeAreLookingFor.ContainsAnyOrdinal(m.Text)).Select(m => m.Mentioned).ToList();
+                if (wordsBeforeAreLookingFor.ContainsAnyOrdinal("me", "I")) developers.Add(TurnContext.Activity.From);
 
                 return OtherDevelopersAreLookingForReview(developers);
             }
