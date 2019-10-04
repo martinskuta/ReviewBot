@@ -3,15 +3,16 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Configuration;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ReviewBot.Storage;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 #endregion
 
@@ -25,7 +26,7 @@ namespace ReviewBot
         private readonly bool _isProduction;
         private ILoggerFactory _loggerFactory;
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IHostEnvironment env)
         {
             _isProduction = env.IsProduction();
             var builder = new ConfigurationBuilder()
@@ -100,7 +101,7 @@ namespace ReviewBot
             services.AddSingleton<ReviewBot>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostEnvironment env, ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory;
 

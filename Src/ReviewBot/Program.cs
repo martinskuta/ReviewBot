@@ -32,6 +32,7 @@ namespace ReviewBot
                 // Consider using Application Insights for your logging and metrics needs.
                 // https://azure.microsoft.com/en-us/services/application-insights/
                 // .UseApplicationInsights()
+                .UseKestrel(op => op.AllowSynchronousIO = true)
                 .UseStartup<Startup>()
                 .Build();
     }
