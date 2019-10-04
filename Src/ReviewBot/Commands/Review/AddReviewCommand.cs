@@ -35,12 +35,12 @@ namespace ReviewBot.Commands.Review
             if (messageActivity.GetUniqueMentionsExceptRecipient().IsEmpty()) return 0;
 
             var message = messageActivity.StripRecipientMention().StripNewLineAndTrim();
-            return message.StartsWith("add  to", StringComparison.InvariantCultureIgnoreCase) ? 1 : 0;
+            return message.StartsWith("add  to", StringComparison.InvariantCultureIgnoreCase) || message.StartsWith("assign  to") ? 1 : 0;
         }
 
         public override string[] PrintUsages(string myName)
         {
-            return new[] { $"Add @{myName} to @reviewer1", $"Add @{myName} to @reviewer1, @reviewer2 and @reviewer3" };
+            return new[] { $"Add @{myName} to @reviewer1", $"Assign @{myName} to @reviewer1, @reviewer2 and @reviewer3" };
         }
 
         public override string Name()
