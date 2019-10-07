@@ -54,9 +54,9 @@ At the moment the bot is supported only in **MS Teams**. You can either build an
 
 ## Techno used
 
-* [.NET Core 2.2](https://github.com/dotnet/core)
+* [.NET Core 3.0](https://github.com/dotnet/core)
 * [Bot framework V4](https://dev.botframework.com/)
-* [ASP.NET Core 2.2](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-2.1)
+* [ASP.NET Core 3.0](https://docs.microsoft.com/en-us/aspnet/core/?view=aspnetcore-3.0)
 * [Azure blob storage](https://azure.microsoft.com/en-us/services/storage/blobs/)
 * [Protocol buffers](https://developers.google.com/protocol-buffers/)
 * [NUnit testing framework v3](https://nunit.org/)
