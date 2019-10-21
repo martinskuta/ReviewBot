@@ -1,11 +1,4 @@
-﻿#region copyright
-
-// Copyright 2007 - 2019 Innoveo AG, Zurich/Switzerland
-// All rights reserved. Use is subject to license terms.
-
-#endregion
-
-#region using
+﻿#region using
 
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +37,7 @@ namespace ReviewBot.Commands.Review
             //@reviewer is looking for @review of SKYE-1234
             if (message.ContainsAnyOrdinal($"is looking for {recipientMention.Text} of"))
             {
-                var wordsBeforeIsLookingFor = message.GetWordsBeforePhrase("is looking for");
+                var wordsBeforeIsLookingFor = messageActivity.GetWordsBeforePhrase("is looking for");
 
                 if (otherMentions.Count(m => wordsBeforeIsLookingFor.ContainsAnyOrdinal(m.Text)) == 1) return 1;
             }
@@ -53,7 +46,7 @@ namespace ReviewBot.Commands.Review
             //@reviewer1 @reviewer2 and @reviewer3 are looking for @review of SKYE-1234
             if (otherMentions.Count >= 1 && message.ContainsAnyOrdinal($"are looking for {recipientMention.Text} of"))
             {
-                var wordsBeforeAreLookingFor = message.GetWordsBeforePhrase("are looking for");
+                var wordsBeforeAreLookingFor = messageActivity.GetWordsBeforePhrase("are looking for");
 
                 if (wordsBeforeAreLookingFor.ContainsAnyOrdinal("me", "I") && otherMentions.Count(m => wordsBeforeAreLookingFor.ContainsAnyOrdinal(m.Text)) >= 1) return 1;
                 if (otherMentions.Count(m => wordsBeforeAreLookingFor.ContainsAnyOrdinal(m.Text)) >= 2) return 1;
@@ -106,13 +99,13 @@ namespace ReviewBot.Commands.Review
 
                 if (messageActivity.Text.ContainsAnyOrdinal("is looking for"))
                 {
-                    var wordsBeforeIsLookingFor = messageActivity.Text.GetWordsBeforePhrase("is looking for");
+                    var wordsBeforeIsLookingFor = messageActivity.GetWordsBeforePhrase("is looking for");
 
                     var developer = otherMentions.First(m => wordsBeforeIsLookingFor.ContainsAnyOrdinal(m.Text)).Mentioned;
                     return OtherDeveloperIsLookingForReview(developer);
                 }
 
-                var wordsBeforeAreLookingFor = messageActivity.Text.GetWordsBeforePhrase("are looking for");
+                var wordsBeforeAreLookingFor = messageActivity.GetWordsBeforePhrase("are looking for");
 
                 var developers = otherMentions.Where(m => wordsBeforeAreLookingFor.ContainsAnyOrdinal(m.Text)).Select(m => m.Mentioned).ToList();
                 if (wordsBeforeAreLookingFor.ContainsAnyOrdinal("me", "I")) developers.Add(TurnContext.Activity.From);

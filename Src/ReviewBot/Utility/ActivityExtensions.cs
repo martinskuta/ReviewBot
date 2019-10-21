@@ -136,5 +136,27 @@ namespace ReviewBot.Utility
         {
             return activity.ChannelData.channel.id;
         }
+
+        public static IList<string> GetWordsBeforePhrase(this IMessageActivity activity, string phrase)
+        {
+            var message = activity.Text.StripNewLineAndTrim();
+            var textBeforePhrase = message.Substring(0, message.IndexOf(phrase, StringComparison.OrdinalIgnoreCase));
+
+            var splitResult = new List<string>();
+
+            foreach (var mention in activity.GetMentions())
+            {
+                var replaced = textBeforePhrase.Replace(mention.Text, string.Empty);
+                if (replaced.Length != textBeforePhrase.Length)
+                {
+                    splitResult.Add(mention.Text);
+                    textBeforePhrase = replaced;
+                }
+            }
+
+            splitResult.AddRange(textBeforePhrase.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+
+            return splitResult;
+        }
     }
 }

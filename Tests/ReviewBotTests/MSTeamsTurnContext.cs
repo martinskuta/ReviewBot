@@ -59,15 +59,7 @@ namespace ReviewBot.Tests
 
             var turnContext = new MSTeamsTurnContext(activity);
 
-            foreach (Match match in Regex.Matches(message, @"@\w+"))
-            {
-                var mentionedUserName = match.Value.Substring(1);
-                activity.Entities.Add(
-                    new Entity("mention")
-                    {
-                        Properties = JObject.FromObject(new Mention(new ChannelAccount(mentionedUserName + "_id", mentionedUserName), match.Value, "mention"))
-                    });
-            }
+            ConvertMentions(activity);
 
             return turnContext;
         }
@@ -103,17 +95,26 @@ namespace ReviewBot.Tests
 
             var turnContext = new MSTeamsTurnContext(activity);
 
-            foreach (Match match in Regex.Matches(message, @"@\w+"))
+            ConvertMentions(activity);
+
+            return turnContext;
+        }
+
+        private static void ConvertMentions(Activity activity)
+        {
+            const string mentionRegex = @"@'([\w\s]+)'";
+
+            foreach (Match match in Regex.Matches(activity.Text, mentionRegex))
             {
-                var mentionedUserName = match.Value.Substring(1);
+                var mentionedUserName = match.Groups[1].Value;
                 activity.Entities.Add(
                     new Entity("mention")
                     {
-                        Properties = JObject.FromObject(new Mention(new ChannelAccount(mentionedUserName + "_id", mentionedUserName), match.Value, "mention"))
+                        Properties = JObject.FromObject(new Mention(new ChannelAccount(mentionedUserName + "_id", mentionedUserName), $"@{mentionedUserName}", "mention"))
                     });
             }
 
-            return turnContext;
+            activity.Text = Regex.Replace(activity.Text, mentionRegex, "@$1");
         }
     }
 }

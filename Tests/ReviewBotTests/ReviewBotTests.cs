@@ -1,11 +1,4 @@
-﻿#region copyright
-
-// Copyright 2007 - 2019 Innoveo AG, Zurich/Switzerland
-// All rights reserved. Use is subject to license terms.
-
-#endregion
-
-#region using
+﻿#region using
 
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -27,16 +20,16 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
                 await reviewBot.OnTurnAsync(allTimeMessage);
 
                 //Assert
-                Assert.That(registerMessage.Responses.Peek().Text, Is.EqualTo("<at>xxx</at> is now registered as reviewer."));
-                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n**xxx** (Available): Reviews: 0, Debt: 0\n\n"));
+                Assert.That(registerMessage.Responses.Peek().Text, Is.EqualTo("<at>x x x</at> is now registered as reviewer."));
+                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n**x x x** (Available): Reviews: 0, Debt: 0\n\n"));
             }
 
             [Test]
@@ -44,16 +37,16 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx and @xxx");
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x' and @'x x x'");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
                 await reviewBot.OnTurnAsync(allTimeMessage);
 
                 //Assert
-                Assert.That(registerMessage.Responses.Peek().Text, Is.EqualTo("<at>xxx</at> is now registered as reviewer."));
-                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n**xxx** (Available): Reviews: 0, Debt: 0\n\n"));
+                Assert.That(registerMessage.Responses.Peek().Text, Is.EqualTo("<at>x x x</at> is now registered as reviewer."));
+                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n**x x x** (Available): Reviews: 0, Debt: 0\n\n"));
             }
 
             [Test]
@@ -61,9 +54,9 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
-                var registerMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                var registerMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                var registerMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage1);
@@ -71,9 +64,9 @@ namespace ReviewBot.Tests
                 await reviewBot.OnTurnAsync(allTimeMessage);
 
                 //Assert
-                Assert.That(registerMessage1.Responses.Peek().Text, Is.EqualTo("<at>xxx</at> is now registered as reviewer."));
-                Assert.That(registerMessage2.Responses.Peek().Text, Is.EqualTo("<at>xxx</at> is already registered."));
-                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n**xxx** (Available): Reviews: 0, Debt: 0\n\n"));
+                Assert.That(registerMessage1.Responses.Peek().Text, Is.EqualTo("<at>x x x</at> is now registered as reviewer."));
+                Assert.That(registerMessage2.Responses.Peek().Text, Is.EqualTo("<at>x x x</at> is already registered."));
+                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n**x x x** (Available): Reviews: 0, Debt: 0\n\n"));
             }
 
             [Test]
@@ -81,20 +74,20 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx, @yyy and @zzz");
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x', @'yyy' and @'zzz'");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
                 await reviewBot.OnTurnAsync(allTimeMessage);
 
                 //Assert
-                Assert.That(registerMessage.Responses.Peek().Text, Is.EqualTo("<at>xxx</at> <at>yyy</at> <at>zzz</at> are now registered as reviewers."));
+                Assert.That(registerMessage.Responses.Peek().Text, Is.EqualTo("<at>x x x</at> <at>yyy</at> <at>zzz</at> are now registered as reviewers."));
                 Assert.That(
                     allTimeMessage.Responses.Peek().Text,
                     Is.EqualTo(
                         "Ordered by review count:\n\n" +
-                        "**xxx** (Available): Reviews: 0, Debt: 0\n\n" +
+                        "**x x x** (Available): Reviews: 0, Debt: 0\n\n" +
                         "**yyy** (Available): Reviews: 0, Debt: 0\n\n" +
                         "**zzz** (Available): Reviews: 0, Debt: 0\n\n"));
             }
@@ -104,9 +97,9 @@ namespace ReviewBot.Tests
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx @yyy");
-                var registerMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx, @yyy and @zzz");
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                var registerMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x' @'yyy'");
+                var registerMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x', @'yyy' and @'zzz'");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage1);
@@ -114,13 +107,13 @@ namespace ReviewBot.Tests
                 await reviewBot.OnTurnAsync(allTimeMessage);
 
                 //Assert
-                Assert.That(registerMessage1.Responses.Peek().Text, Is.EqualTo("<at>xxx</at> <at>yyy</at> are now registered as reviewers."));
-                Assert.That(registerMessage2.Responses.Peek().Text, Is.EqualTo("<at>zzz</at> is now registered as reviewer. <at>xxx</at> <at>yyy</at> were already registered."));
+                Assert.That(registerMessage1.Responses.Peek().Text, Is.EqualTo("<at>x x x</at> <at>yyy</at> are now registered as reviewers."));
+                Assert.That(registerMessage2.Responses.Peek().Text, Is.EqualTo("<at>zzz</at> is now registered as reviewer. <at>x x x</at> <at>yyy</at> were already registered."));
                 Assert.That(
                     allTimeMessage.Responses.Peek().Text,
                     Is.EqualTo(
                         "Ordered by review count:\n\n" +
-                        "**xxx** (Available): Reviews: 0, Debt: 0\n\n" +
+                        "**x x x** (Available): Reviews: 0, Debt: 0\n\n" +
                         "**yyy** (Available): Reviews: 0, Debt: 0\n\n" +
                         "**zzz** (Available): Reviews: 0, Debt: 0\n\n"));
             }
@@ -129,17 +122,17 @@ namespace ReviewBot.Tests
         [TestFixture]
         public class FindReviewerCommand
         {
-            [TestCase("FEATURE-1234 is ready for @Review")]
-            [TestCase("FEATURE-1234 @jira-help is ready for @Review")]
-            [TestCase("FEATURE-1234 is ready for @Review @jira-help")]
+            [TestCase("FEATURE-1234 is ready for @'Review'")]
+            [TestCase("FEATURE-1234 @'jira'-help is ready for @'Review'")]
+            [TestCase("FEATURE-1234 is ready for @'Review' @'jira'-help")]
             public async Task OnTurnAsync_LookingForReviewerOfYourPullRequest_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx, @yyy");
-                var addReviewMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("Add @Review to @xxx");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x', @'yyy'");
+                var addReviewMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("Add @'Review' to @'x x x'");
                 var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage(findReviewerMessageText);
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
@@ -153,20 +146,20 @@ namespace ReviewBot.Tests
                     allTimeMessage.Responses.Peek().Text,
                     Is.EqualTo(
                         "Ordered by review count:\n\n" +
-                        "**xxx** (Available): Reviews: 1, Debt: 0\n\n" +
+                        "**x x x** (Available): Reviews: 1, Debt: 0\n\n" +
                         "**yyy** (Available): Reviews: 1, Debt: 0\n\n"));
             }
 
-            [TestCase("@xxx is looking for @Review of SKYE-1234")]
-            [TestCase("@xxx is looking for @Review of SKYE-1234. It is quite small.")]
-            [TestCase("@xxx is looking for @Review of SKYE-1234 @jira-help")]
+            [TestCase("@'x x x' is looking for @'Review' of SKYE-1234")]
+            [TestCase("@'x x x' is looking for @'Review' of SKYE-1234. It is quite small.")]
+            [TestCase("@'x x x' is looking for @'Review' of SKYE-1234 @'jira'-help")]
             public async Task OnTurnAsync_FindingReviewForOtherDeveloper_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx, @yyy");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x', @'yyy'");
                 var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage(findReviewerMessageText);
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
@@ -180,19 +173,19 @@ namespace ReviewBot.Tests
                     Is.EqualTo(
                         "Ordered by review count:\n\n" +
                         "**yyy** (Available): Reviews: 1, Debt: 0\n\n" +
-                        "**xxx** (Available): Reviews: 0, Debt: 1\n\n"));
+                        "**x x x** (Available): Reviews: 0, Debt: 1\n\n"));
             }
 
-            [TestCase("@xxx and @yyy are looking for @Review of SKYE-1234")]
-            [TestCase("@xxx and @yyy are looking for @Review of SKYE-1234. It is quite small.")]
-            [TestCase("@xxx and @yyy are looking for @Review of SKYE-1234 @jira-help")]
+            [TestCase("@'x x x' and @'yyy' are looking for @'Review' of SKYE-1234")]
+            [TestCase("@'x x x' and @'yyy' are looking for @'Review' of SKYE-1234. It is quite small.")]
+            [TestCase("@'x x x' and @'yyy' are looking for @'Review' of SKYE-1234 @'jira'-help")]
             public async Task OnTurnAsync_FindingReviewForMultipleOtherDevelopers_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx, @yyy and @zzz");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x', @'yyy' and @'zzz'");
                 var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage(findReviewerMessageText);
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
@@ -206,30 +199,30 @@ namespace ReviewBot.Tests
                     Is.EqualTo(
                         "Ordered by review count:\n\n" +
                         "**zzz** (Available): Reviews: 1, Debt: 0\n\n" +
-                        "**xxx** (Available): Reviews: 0, Debt: 1\n\n" +
+                        "**x x x** (Available): Reviews: 0, Debt: 1\n\n" +
                         "**yyy** (Available): Reviews: 0, Debt: 1\n\n"));
             }
 
-            [TestCase("@xxx @yyy and me are looking for @Review of SKYE-1234")]
-            [TestCase("@xxx @yyy and me are looking for @Review of SKYE-1234. It is quite small.")]
-            [TestCase("@xxx @yyy and me are looking for @Review of SKYE-1234 @jira-help")]
-            [TestCase("me and @xxx @yyy are looking for @Review of SKYE-1234")]
-            [TestCase("Me and @xxx @yyy are looking for @Review of SKYE-1234. It is quite small.")]
-            [TestCase("me @xxx and @yyy are looking for @Review of SKYE-1234 @jira-help")]
-            [TestCase("@xxx @yyy and I are looking for @Review of SKYE-1234")]
-            [TestCase("@xxx @yyy and I are looking for @Review of SKYE-1234. It is quite small.")]
-            [TestCase("@xxx @yyy and I are looking for @Review of SKYE-1234 @jira-help")]
-            [TestCase("I and @xxx @yyy are looking for @Review of SKYE-1234")]
-            [TestCase("I and @xxx @yyy are looking for @Review of SKYE-1234. It is quite small.")]
-            [TestCase("I @xxx and @yyy are looking for @Review of SKYE-1234 @jira-help")]
+            [TestCase("@'x x x' @'yyy' and me are looking for @'Review' of SKYE-1234")]
+            [TestCase("@'x x x' @'yyy' and me are looking for @'Review' of SKYE-1234. It is quite small.")]
+            [TestCase("@'x x x' @'yyy' and me are looking for @'Review' of SKYE-1234 @'jira'-help")]
+            [TestCase("me and @'x x x' @'yyy' are looking for @'Review' of SKYE-1234")]
+            [TestCase("Me and @'x x x' @'yyy' are looking for @'Review' of SKYE-1234. It is quite small.")]
+            [TestCase("me @'x x x' and @'yyy' are looking for @'Review' of SKYE-1234 @'jira'-help")]
+            [TestCase("@'x x x' @'yyy' and I are looking for @'Review' of SKYE-1234")]
+            [TestCase("@'x x x' @'yyy' and I are looking for @'Review' of SKYE-1234. It is quite small.")]
+            [TestCase("@'x x x' @'yyy' and I are looking for @'Review' of SKYE-1234 @'jira'-help")]
+            [TestCase("I and @'x x x' @'yyy' are looking for @'Review' of SKYE-1234")]
+            [TestCase("I and @'x x x' @'yyy' are looking for @'Review' of SKYE-1234. It is quite small.")]
+            [TestCase("I @'x x x' and @'yyy' are looking for @'Review' of SKYE-1234 @'jira'-help")]
             public async Task OnTurnAsync_FindingReviewForMultipleOtherDevelopersAndSelf_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
             {
                 //Arrange
                 var reviewBot = MakeReviewBot();
-                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx, @yyy and @zzz");
-                var registerSelfMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x', @'yyy' and @'zzz'");
+                var registerSelfMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register me");
                 var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage(findReviewerMessageText);
-                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                 //Act
                 await reviewBot.OnTurnAsync(registerMessage);
@@ -245,7 +238,7 @@ namespace ReviewBot.Tests
                         "Ordered by review count:\n\n" +
                         "**zzz** (Available): Reviews: 1, Debt: 0\n\n" +
                         "**Sender** (Available): Reviews: 0, Debt: 1\n\n" +
-                        "**xxx** (Available): Reviews: 0, Debt: 1\n\n" +
+                        "**x x x** (Available): Reviews: 0, Debt: 1\n\n" +
                         "**yyy** (Available): Reviews: 0, Debt: 1\n\n"));
             }
         }
@@ -261,8 +254,8 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend me");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' suspend me");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(suspendMessage);
@@ -278,9 +271,9 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
-                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend me");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register me");
+                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' suspend me");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -297,10 +290,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
-                    var suspendMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend me");
-                    var suspendMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend me");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register me");
+                    var suspendMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' suspend me");
+                    var suspendMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' suspend me");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -322,15 +315,15 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend @xxx");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' suspend @'x x x'");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(suspendMessage);
                     await reviewBot.OnTurnAsync(allTimeMessage);
 
                     //Assert
-                    Assert.That(suspendMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but <at>xxx</at> is not registered as reviewer."));
+                    Assert.That(suspendMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but <at>x x x</at> is not registered as reviewer."));
                     Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("There are no registered reviewers."));
                 }
 
@@ -339,9 +332,9 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
-                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend @xxx");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' suspend @'x x x'");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -349,8 +342,8 @@ namespace ReviewBot.Tests
                     await reviewBot.OnTurnAsync(allTimeMessage);
 
                     //Assert
-                    Assert.That(suspendMessage.Responses.Peek().Text, Is.EqualTo("<at>xxx</at> enjoy your time off! Your review debt won't increase until you are back."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Suspended): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(suspendMessage.Responses.Peek().Text, Is.EqualTo("<at>x x x</at> enjoy your time off! Your review debt won't increase until you are back."));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**x x x** (Suspended): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -358,10 +351,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
-                    var suspendMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend @xxx");
-                    var suspendMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend @xxx");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                    var suspendMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' suspend @'x x x'");
+                    var suspendMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' suspend @'x x x'");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -371,7 +364,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(suspendMessage2.Responses.Peek().Text, Is.EqualTo("Yeah yeah, I know that already."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Suspended): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**x x x** (Suspended): Reviews: 0, Debt: 0\n\n"));
                 }
             }
         }
@@ -387,8 +380,8 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' I am back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(makeAvailableMessage);
@@ -404,9 +397,9 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register me");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' I am back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -423,10 +416,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
-                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend me");
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register me");
+                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' suspend me");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' I am back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -444,10 +437,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
-                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am busy");
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register me");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' I am busy");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' I am back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -469,15 +462,15 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' is back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(makeAvailableMessage);
                     await reviewBot.OnTurnAsync(allTimeMessage);
 
                     //Assert
-                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but <at>xxx</at> is not registered as reviewer."));
+                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but <at>x x x</at> is not registered as reviewer."));
                     Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("There are no registered reviewers."));
                 }
 
@@ -486,9 +479,9 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' is back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -497,7 +490,7 @@ namespace ReviewBot.Tests
 
                     //Assert
                     Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Yeah yeah, I know that already."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Available): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**x x x** (Available): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -505,10 +498,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
-                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend @xxx");
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                    var suspendMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' suspend @'x x x'");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' is back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -517,8 +510,8 @@ namespace ReviewBot.Tests
                     await reviewBot.OnTurnAsync(allTimeMessage);
 
                     //Assert
-                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>xxx</at>! Great to see you doing reviews again."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Available): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>x x x</at>! Great to see you doing reviews again."));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**x x x** (Available): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -526,10 +519,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
-                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is busy");
-                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is back");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' is busy");
+                    var makeAvailableMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' is back");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -538,8 +531,8 @@ namespace ReviewBot.Tests
                     await reviewBot.OnTurnAsync(allTimeMessage);
 
                     //Assert
-                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>xxx</at>! Great to see you doing reviews again."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Available): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(makeAvailableMessage.Responses.Peek().Text, Is.EqualTo("Welcome back <at>x x x</at>! Great to see you doing reviews again."));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**x x x** (Available): Reviews: 0, Debt: 0\n\n"));
                 }
             }
         }
@@ -555,8 +548,8 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' I am busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(makeBusyMessage);
@@ -572,9 +565,9 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
-                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register me");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' I am busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -591,10 +584,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
-                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am busy");
-                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register me");
+                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' I am busy");
+                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' I am busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -612,10 +605,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register me");
-                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend me");
-                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review I am busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register me");
+                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' suspend me");
+                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' I am busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -639,15 +632,15 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' is busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(makeBusyMessage);
                     await reviewBot.OnTurnAsync(allTimeMessage);
 
                     //Assert
-                    Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but <at>xxx</at> is not registered as reviewer."));
+                    Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but <at>x x x</at> is not registered as reviewer."));
                     Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("There are no registered reviewers."));
                 }
 
@@ -656,9 +649,9 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
-                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                    var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' is busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -666,8 +659,8 @@ namespace ReviewBot.Tests
                     await reviewBot.OnTurnAsync(allTimeMessage);
 
                     //Assert
-                    Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Ok <at>Sender</at>. I will not assign <at>xxx</at> any reviews."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Busy): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Ok <at>Sender</at>. I will not assign <at>x x x</at> any reviews."));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**x x x** (Busy): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -675,10 +668,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
-                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is busy");
-                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' is busy");
+                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' is busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -687,8 +680,8 @@ namespace ReviewBot.Tests
                     await reviewBot.OnTurnAsync(allTimeMessage);
 
                     //Assert
-                    Assert.That(makeBusyMessage2.Responses.Peek().Text, Is.EqualTo("<at>Sender</at>, I know that already. <at>xxx</at> must be really busy!"));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Busy): Reviews: 0, Debt: 0\n\n"));
+                    Assert.That(makeBusyMessage2.Responses.Peek().Text, Is.EqualTo("<at>Sender</at>, I know that already. <at>x x x</at> must be really busy!"));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**x x x** (Busy): Reviews: 0, Debt: 0\n\n"));
                 }
 
                 [Test]
@@ -696,10 +689,10 @@ namespace ReviewBot.Tests
                 {
                     //Arrange
                     var reviewBot = MakeReviewBot();
-                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review register @xxx");
-                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review suspend @xxx");
-                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review @xxx is busy");
-                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review alltime");
+                    var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                    var makeBusyMessage1 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' suspend @'x x x'");
+                    var makeBusyMessage2 = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' is busy");
+                    var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
 
                     //Act
                     await reviewBot.OnTurnAsync(registerMessage);
@@ -710,8 +703,8 @@ namespace ReviewBot.Tests
                     //Assert
                     Assert.That(
                         makeBusyMessage2.Responses.Peek().Text,
-                        Is.EqualTo("<at>Sender</at>, to my knowledge, <at>xxx</at> is having time off! So I hope <at>xxx</at> is not busy."));
-                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**xxx** (Suspended): Reviews: 0, Debt: 0\n\n"));
+                        Is.EqualTo("<at>Sender</at>, to my knowledge, <at>x x x</at> is having time off! So I hope <at>x x x</at> is not busy."));
+                    Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**x x x** (Suspended): Reviews: 0, Debt: 0\n\n"));
                 }
             }
         }
@@ -721,7 +714,7 @@ namespace ReviewBot.Tests
         {
             //Arrange
             var reviewBot = MakeReviewBot();
-            var helpMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review help");
+            var helpMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' help");
 
             //Act
             await reviewBot.OnTurnAsync(helpMessage);
@@ -755,7 +748,7 @@ namespace ReviewBot.Tests
         {
             //Arrange
             var reviewBot = MakeReviewBot();
-            var helpMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@Review nothing");
+            var helpMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' nothing");
 
             //Act
             await reviewBot.OnTurnAsync(helpMessage);
