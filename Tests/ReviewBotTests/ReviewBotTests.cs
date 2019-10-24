@@ -123,8 +123,8 @@ namespace ReviewBot.Tests
         public class FindReviewerCommand
         {
             [TestCase("FEATURE-1234 is ready for @'Review'")]
-            [TestCase("FEATURE-1234 @'jira'-help is ready for @'Review'")]
-            [TestCase("FEATURE-1234 is ready for @'Review' @'jira'-help")]
+            [TestCase("FEATURE-1234 @'jira-help' is ready for @'Review'")]
+            [TestCase("FEATURE-1234 is ready for @'Review' @'jira-help'")]
             public async Task OnTurnAsync_LookingForReviewerOfYourPullRequest_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
             {
                 //Arrange
@@ -152,7 +152,7 @@ namespace ReviewBot.Tests
 
             [TestCase("@'x x x' is looking for @'Review' of SKYE-1234")]
             [TestCase("@'x x x' is looking for @'Review' of SKYE-1234. It is quite small.")]
-            [TestCase("@'x x x' is looking for @'Review' of SKYE-1234 @'jira'-help")]
+            [TestCase("@'x x x' is looking for @'Review' of SKYE-1234 @'jira-help'")]
             public async Task OnTurnAsync_FindingReviewForOtherDeveloper_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
             {
                 //Arrange
@@ -178,7 +178,7 @@ namespace ReviewBot.Tests
 
             [TestCase("@'x x x' and @'yyy' are looking for @'Review' of SKYE-1234")]
             [TestCase("@'x x x' and @'yyy' are looking for @'Review' of SKYE-1234. It is quite small.")]
-            [TestCase("@'x x x' and @'yyy' are looking for @'Review' of SKYE-1234 @'jira'-help")]
+            [TestCase("@'x x x' and @'yyy' are looking for @'Review' of SKYE-1234 @'jira-help'")]
             public async Task OnTurnAsync_FindingReviewForMultipleOtherDevelopers_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
             {
                 //Arrange
@@ -205,16 +205,16 @@ namespace ReviewBot.Tests
 
             [TestCase("@'x x x' @'yyy' and me are looking for @'Review' of SKYE-1234")]
             [TestCase("@'x x x' @'yyy' and me are looking for @'Review' of SKYE-1234. It is quite small.")]
-            [TestCase("@'x x x' @'yyy' and me are looking for @'Review' of SKYE-1234 @'jira'-help")]
+            [TestCase("@'x x x' @'yyy' and me are looking for @'Review' of SKYE-1234 @'jira-help'")]
             [TestCase("me and @'x x x' @'yyy' are looking for @'Review' of SKYE-1234")]
             [TestCase("Me and @'x x x' @'yyy' are looking for @'Review' of SKYE-1234. It is quite small.")]
-            [TestCase("me @'x x x' and @'yyy' are looking for @'Review' of SKYE-1234 @'jira'-help")]
+            [TestCase("me @'x x x' and @'yyy' are looking for @'Review' of SKYE-1234 @'jira-help'")]
             [TestCase("@'x x x' @'yyy' and I are looking for @'Review' of SKYE-1234")]
             [TestCase("@'x x x' @'yyy' and I are looking for @'Review' of SKYE-1234. It is quite small.")]
-            [TestCase("@'x x x' @'yyy' and I are looking for @'Review' of SKYE-1234 @'jira'-help")]
+            [TestCase("@'x x x' @'yyy' and I are looking for @'Review' of SKYE-1234 @'jira-help'")]
             [TestCase("I and @'x x x' @'yyy' are looking for @'Review' of SKYE-1234")]
             [TestCase("I and @'x x x' @'yyy' are looking for @'Review' of SKYE-1234. It is quite small.")]
-            [TestCase("I @'x x x' and @'yyy' are looking for @'Review' of SKYE-1234 @'jira'-help")]
+            [TestCase("I @'x x x' and @'yyy' are looking for @'Review' of SKYE-1234 @'jira-help'")]
             public async Task OnTurnAsync_FindingReviewForMultipleOtherDevelopersAndSelf_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
             {
                 //Arrange

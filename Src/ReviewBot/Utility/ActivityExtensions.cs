@@ -1,4 +1,11 @@
-﻿#region using
+﻿#region copyright
+
+// Copyright 2007 - 2019 Innoveo AG, Zurich/Switzerland
+// All rights reserved. Use is subject to license terms.
+
+#endregion
+
+#region using
 
 using System;
 using System.Collections.Generic;
@@ -137,23 +144,38 @@ namespace ReviewBot.Utility
             return activity.ChannelData.channel.id;
         }
 
+        /// <summary>
+        ///   Finds the phrase in the message and splits the text before given phrase into words. Mentions, even if they include
+        ///   white space are considered one word.
+        /// </summary>
+        /// <remarks>
+        ///   If the phrase is not found or is empty then empty list is returned.
+        /// </remarks>
         public static IList<string> GetWordsBeforePhrase(this IMessageActivity activity, string phrase)
         {
+            if (string.IsNullOrEmpty(phrase)) return new string[0];
+
             var message = activity.Text.StripNewLineAndTrim();
-            var textBeforePhrase = message.Substring(0, message.IndexOf(phrase, StringComparison.OrdinalIgnoreCase));
+
+            var phraseOccurrenceIdx = message.IndexOf(phrase, StringComparison.OrdinalIgnoreCase);
+
+            if (phraseOccurrenceIdx < 1) return new string[0];
+
+            var textBeforePhrase = message.Substring(0, phraseOccurrenceIdx);
 
             var splitResult = new List<string>();
 
             foreach (var mention in activity.GetMentions())
             {
                 var replaced = textBeforePhrase.Replace(mention.Text, string.Empty);
+                //if we found the mention
                 if (replaced.Length != textBeforePhrase.Length)
                 {
                     splitResult.Add(mention.Text);
                     textBeforePhrase = replaced;
                 }
             }
-
+            //now that we found and removed all mentions from the text, split into words
             splitResult.AddRange(textBeforePhrase.Split(' ', StringSplitOptions.RemoveEmptyEntries));
 
             return splitResult;
