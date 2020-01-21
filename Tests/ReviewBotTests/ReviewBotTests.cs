@@ -150,6 +150,34 @@ namespace ReviewBot.Tests
                         "**yyy** (Available): Reviews: 1, Debt: 0\n\n"));
             }
 
+            [TestCase("FEATURE-1234 is ready for @'Review'")]
+            [TestCase("FEATURE-1234 @'jira-help' is ready for @'Review'")]
+            [TestCase("FEATURE-1234 is ready for @'Review' @'jira-help'")]
+            public async Task OnTurnAsync_LookingForReviewerOfYourPullRequestAndOnlyReviewerThatCannotApprovePullRequestIsAvailable_ExpectReviewerWithHighestDebtAssigned(string findReviewerMessageText)
+            {
+                //Arrange
+                var reviewBot = MakeReviewBot();
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x', @'yyy'");
+                var addReviewMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("Add @'Review' to @'x x x'");
+                var findReviewerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage(findReviewerMessageText);
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
+
+                //Act
+                await reviewBot.OnTurnAsync(registerMessage);
+                await reviewBot.OnTurnAsync(addReviewMessage);
+                await reviewBot.OnTurnAsync(findReviewerMessage);
+                await reviewBot.OnTurnAsync(allTimeMessage);
+
+                //Assert
+                Assert.That(findReviewerMessage.Responses.Peek().Text, Is.EqualTo("<at>Sender</at> assign the review to <at>yyy</at> and don't forget to create pull request!"));
+                Assert.That(
+                    allTimeMessage.Responses.Peek().Text,
+                    Is.EqualTo(
+                        "Ordered by review count:\n\n" +
+                        "**x x x** (Available): Reviews: 1, Debt: 0\n\n" +
+                        "**yyy** (Available): Reviews: 1, Debt: 0\n\n"));
+            }
+
             [TestCase("@'x x x' is looking for @'Review' of SKYE-1234")]
             [TestCase("@'x x x' is looking for @'Review' of SKYE-1234. It is quite small.")]
             [TestCase("@'x x x' is looking for @'Review' of SKYE-1234 @'jira-help'")]
@@ -709,6 +737,65 @@ namespace ReviewBot.Tests
             }
         }
 
+        [TestFixture]
+        public class SetCanApprovePullRequestsCommand
+        {
+            [Test]
+            public async Task OnTurnAsync_SettingCanApprovePullRequestOnNotRegisteredReviewer_ExpectNotRegisteredReply()
+            {
+                //Arrange
+                var reviewBot = MakeReviewBot();
+                var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' can approve pull requests!");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
+
+                //Act
+                await reviewBot.OnTurnAsync(makeBusyMessage);
+                await reviewBot.OnTurnAsync(allTimeMessage);
+
+                //Assert
+                Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Sorry <at>Sender</at>, but <at>x x x</at> is not registered as reviewer."));
+                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("There are no registered reviewers."));
+            }
+
+            [Test]
+            public async Task OnTurnAsync_SettingCanApprovePullRequestToFalse_ExpectAcknowledgeMessage()
+            {
+                //Arrange
+                var reviewBot = MakeReviewBot();
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' cannot approve pull requests!");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
+
+                //Act
+                await reviewBot.OnTurnAsync(registerMessage);
+                await reviewBot.OnTurnAsync(makeBusyMessage);
+                await reviewBot.OnTurnAsync(allTimeMessage);
+
+                //Assert
+                Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Ok.Btw, did you know that reviewers in alltime and status command with star after their name are the ones who cannot approve pull requests?"));
+                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**x x x*** (Available): Reviews: 0, Debt: 0\n\n"));
+            }
+
+            [Test]
+            public async Task OnTurnAsync_SettingCanApprovePullRequestToTrue_ExpectAcknowledgeMessage()
+            {
+                //Arrange
+                var reviewBot = MakeReviewBot();
+                var registerMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' register @'x x x'");
+                var makeBusyMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' @'x x x' can approve pull requests!");
+                var allTimeMessage = MSTeamsTurnContext.CreateUserToBotChannelMessage("@'Review' alltime");
+
+                //Act
+                await reviewBot.OnTurnAsync(registerMessage);
+                await reviewBot.OnTurnAsync(makeBusyMessage);
+                await reviewBot.OnTurnAsync(allTimeMessage);
+
+                //Assert
+                Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Wow, that's awesome! Congratulations to your promotion <at>x x x</at>! :)"));
+                Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**x x x** (Available): Reviews: 0, Debt: 0\n\n"));
+            }
+        }
+
         [Test]
         public async Task OnTurnAsync_HelpMessageReceivedInChannel_ExpectHelpReply()
         {
@@ -723,7 +810,7 @@ namespace ReviewBot.Tests
             Assert.That(
                 helpMessage.Responses.Peek().Text,
                 Is.EqualTo(
-                    "I am bot that helps you equally distribute reviews among reviewers in this channel. More [here](https://github.com/martinskuta/ReviewBot). \n\nThis is what I can do for you:\n\n\n\n**Register reviewers**: Use this command to register member(s) of a channel as a reviewer(s) in the current channel. You can register yourself too.\n\n*Usage:*\n\n  - @Review register @reviewer1, @reviewer2\n\n  - @Review register me\n\n\n\n\n\n**Current status**: Shows debt of currently active reviewers\n\n*Usage:*\n\n  - @Review status\n\n\n\n\n\n**All time statistics**: Shows stats like total number of reviews for all reviewers, including inactive ones.\n\n*Usage:*\n\n  - @Review alltime\n\n\n\n\n\n**Find reviewer**: Automatic way of looking for a reviewer with the highest debt. If there are two or more reviewers with highest debt, then out of those one is randomly chosen. There is also way of asking for review of feature that you did not implement, eg. ask for someone else. Also you can exclude multiple reviewers if they were working on the feature.\n\n*Usage:*\n\n  - SKYE-1234 is ready for @Review\n\n  - @reviewer is looking for @Review of SKYE-1234\n\n  - @reviewer1, @reviewer2 and me are looking for @Review of SKYE-1234\n\n\n\n\n\n**Add review**: Way to assign review directly to given reviewer(s). Debt is recalculated. On purpose not possible to add review to yourself.\n\n*Usage:*\n\n  - Add @Review to @reviewer1\n\n  - Assign @Review to @reviewer1, @reviewer2 and @reviewer3\n\n\n\n\n\n**Remove review**: Way to un-assign review directly from given reviewer(s). Debt is recalculated. On purpose not possible to remove review from yourself.\n\n*Usage:*\n\n  - Remove @Review from @reviewer1\n\n  - Remove @Review from @reviewer1, @reviewer2 and @reviewer3\n\n\n\n\n\n**Suspend reviewer**: Way to change status of a reviewer to inactive. Inactive reviewers are NOT considered when looking for a reviewer and their debt does NOT increase. Use it when you are on vacations or when somebody leaves the team for example.\n\n*Usage:*\n\n  - @Review suspend @reviewer\n\n  - @Review suspend me\n\n\n\n\n\n**Make reviewer busy**: Way to change status of a reviewer to busy. Busy reviewers are NOT considered when looking for a reviewer, but their debt increases with every review they skip.\n\n*Usage:*\n\n  - @Review @reviewer is busy\n\n  - @Review I am busy\n\n\n\n\n\n**Make reviewer available**: Way to change status of a reviewer to active. Only active reviewers are considered when looking for a reviewer. Use all time statistics command to see status of all reviewers or current status to see only reviewers that are collecting debt.\n\n*Usage:*\n\n  - @Review @reviewer1 is back\n\n  - @Review I am back\n\n\n\n\n\n**Help**: Shows features of this bot\n\n*Usage:*\n\n  - @Review help\n\n\n\n"));
+                    "I am bot that helps you equally distribute reviews among reviewers in this channel. More [here](https://github.com/martinskuta/ReviewBot). \n\nThis is what I can do for you:\n\n\n\n**Register reviewers**: Use this command to register member(s) of a channel as a reviewer(s) in the current channel. You can register yourself too.\n\n*Usage:*\n\n  - @Review register @reviewer1, @reviewer2\n\n  - @Review register me\n\n\n\n\n\n**Current status**: Shows debt of currently active reviewers\n\n*Usage:*\n\n  - @Review status\n\n\n\n\n\n**All time statistics**: Shows stats like total number of reviews for all reviewers, including inactive ones.\n\n*Usage:*\n\n  - @Review alltime\n\n\n\n\n\n**Find reviewer**: Automatic way of looking for a reviewer with the highest debt. If there are two or more reviewers with highest debt, then out of those one is randomly chosen. There is also way of asking for review of feature that you did not implement, eg. ask for someone else. Also you can exclude multiple reviewers if they were working on the feature.\n\n*Usage:*\n\n  - SKYE-1234 is ready for @Review\n\n  - @reviewer is looking for @Review of SKYE-1234\n\n  - @reviewer1, @reviewer2 and me are looking for @Review of SKYE-1234\n\n\n\n\n\n**Add review**: Way to assign review directly to given reviewer(s). Debt is recalculated. On purpose not possible to add review to yourself.\n\n*Usage:*\n\n  - Add @Review to @reviewer1\n\n  - Assign @Review to @reviewer1, @reviewer2 and @reviewer3\n\n\n\n\n\n**Remove review**: Way to un-assign review directly from given reviewer(s). Debt is recalculated. On purpose not possible to remove review from yourself.\n\n*Usage:*\n\n  - Remove @Review from @reviewer1\n\n  - Remove @Review from @reviewer1, @reviewer2 and @reviewer3\n\n\n\n\n\n**Suspend reviewer**: Way to change status of a reviewer to inactive. Inactive reviewers are NOT considered when looking for a reviewer and their debt does NOT increase. Use it when you are on vacations or when somebody leaves the team for example.\n\n*Usage:*\n\n  - @Review suspend @reviewer\n\n  - @Review suspend me\n\n\n\n\n\n**Make reviewer busy**: Way to change status of a reviewer to busy. Busy reviewers are NOT considered when looking for a reviewer, but their debt increases with every review they skip.\n\n*Usage:*\n\n  - @Review @reviewer is busy\n\n  - @Review I am busy\n\n\n\n\n\n**Make reviewer available**: Way to change status of a reviewer to active. Only active reviewers are considered when looking for a reviewer. Use all time statistics command to see status of all reviewers or current status to see only reviewers that are collecting debt.\n\n*Usage:*\n\n  - @Review @reviewer1 is back\n\n  - @Review I am back\n\n\n\n\n\n**Can approve pull requests**: Allows you to specify if given reviewer can or cannot approve pull requests. If a reviewer that cannot approve pull request is chosen a second one that can will be selected too.\n\n*Usage:*\n\n  - @Review @reviewer can approve pull requests!\n\n  - @Review @reviewer cannot approve pull requests.\n\n\n\n\n\n**Help**: Shows features of this bot\n\n*Usage:*\n\n  - @Review help\n\n\n\n"));
         }
 
         [Test]
@@ -740,7 +827,7 @@ namespace ReviewBot.Tests
             Assert.That(
                 helpMessage.Responses.Peek().Text,
                 Is.EqualTo(
-                    "I am bot that helps you equally distribute reviews among reviewers in this channel. More [here](https://github.com/martinskuta/ReviewBot). \n\nThis is what I can do for you:\n\n\n\n**Register reviewers**: Use this command to register member(s) of a channel as a reviewer(s) in the current channel. You can register yourself too.\n\n*Usage:*\n\n  - @Review register @reviewer1, @reviewer2\n\n  - @Review register me\n\n\n\n\n\n**Current status**: Shows debt of currently active reviewers\n\n*Usage:*\n\n  - @Review status\n\n\n\n\n\n**All time statistics**: Shows stats like total number of reviews for all reviewers, including inactive ones.\n\n*Usage:*\n\n  - @Review alltime\n\n\n\n\n\n**Find reviewer**: Automatic way of looking for a reviewer with the highest debt. If there are two or more reviewers with highest debt, then out of those one is randomly chosen. There is also way of asking for review of feature that you did not implement, eg. ask for someone else. Also you can exclude multiple reviewers if they were working on the feature.\n\n*Usage:*\n\n  - SKYE-1234 is ready for @Review\n\n  - @reviewer is looking for @Review of SKYE-1234\n\n  - @reviewer1, @reviewer2 and me are looking for @Review of SKYE-1234\n\n\n\n\n\n**Add review**: Way to assign review directly to given reviewer(s). Debt is recalculated. On purpose not possible to add review to yourself.\n\n*Usage:*\n\n  - Add @Review to @reviewer1\n\n  - Assign @Review to @reviewer1, @reviewer2 and @reviewer3\n\n\n\n\n\n**Remove review**: Way to un-assign review directly from given reviewer(s). Debt is recalculated. On purpose not possible to remove review from yourself.\n\n*Usage:*\n\n  - Remove @Review from @reviewer1\n\n  - Remove @Review from @reviewer1, @reviewer2 and @reviewer3\n\n\n\n\n\n**Suspend reviewer**: Way to change status of a reviewer to inactive. Inactive reviewers are NOT considered when looking for a reviewer and their debt does NOT increase. Use it when you are on vacations or when somebody leaves the team for example.\n\n*Usage:*\n\n  - @Review suspend @reviewer\n\n  - @Review suspend me\n\n\n\n\n\n**Make reviewer busy**: Way to change status of a reviewer to busy. Busy reviewers are NOT considered when looking for a reviewer, but their debt increases with every review they skip.\n\n*Usage:*\n\n  - @Review @reviewer is busy\n\n  - @Review I am busy\n\n\n\n\n\n**Make reviewer available**: Way to change status of a reviewer to active. Only active reviewers are considered when looking for a reviewer. Use all time statistics command to see status of all reviewers or current status to see only reviewers that are collecting debt.\n\n*Usage:*\n\n  - @Review @reviewer1 is back\n\n  - @Review I am back\n\n\n\n\n\n**Help**: Shows features of this bot\n\n*Usage:*\n\n  - @Review help\n\n\n\n"));
+                    "I am bot that helps you equally distribute reviews among reviewers in this channel. More [here](https://github.com/martinskuta/ReviewBot). \n\nThis is what I can do for you:\n\n\n\n**Register reviewers**: Use this command to register member(s) of a channel as a reviewer(s) in the current channel. You can register yourself too.\n\n*Usage:*\n\n  - @Review register @reviewer1, @reviewer2\n\n  - @Review register me\n\n\n\n\n\n**Current status**: Shows debt of currently active reviewers\n\n*Usage:*\n\n  - @Review status\n\n\n\n\n\n**All time statistics**: Shows stats like total number of reviews for all reviewers, including inactive ones.\n\n*Usage:*\n\n  - @Review alltime\n\n\n\n\n\n**Find reviewer**: Automatic way of looking for a reviewer with the highest debt. If there are two or more reviewers with highest debt, then out of those one is randomly chosen. There is also way of asking for review of feature that you did not implement, eg. ask for someone else. Also you can exclude multiple reviewers if they were working on the feature.\n\n*Usage:*\n\n  - SKYE-1234 is ready for @Review\n\n  - @reviewer is looking for @Review of SKYE-1234\n\n  - @reviewer1, @reviewer2 and me are looking for @Review of SKYE-1234\n\n\n\n\n\n**Add review**: Way to assign review directly to given reviewer(s). Debt is recalculated. On purpose not possible to add review to yourself.\n\n*Usage:*\n\n  - Add @Review to @reviewer1\n\n  - Assign @Review to @reviewer1, @reviewer2 and @reviewer3\n\n\n\n\n\n**Remove review**: Way to un-assign review directly from given reviewer(s). Debt is recalculated. On purpose not possible to remove review from yourself.\n\n*Usage:*\n\n  - Remove @Review from @reviewer1\n\n  - Remove @Review from @reviewer1, @reviewer2 and @reviewer3\n\n\n\n\n\n**Suspend reviewer**: Way to change status of a reviewer to inactive. Inactive reviewers are NOT considered when looking for a reviewer and their debt does NOT increase. Use it when you are on vacations or when somebody leaves the team for example.\n\n*Usage:*\n\n  - @Review suspend @reviewer\n\n  - @Review suspend me\n\n\n\n\n\n**Make reviewer busy**: Way to change status of a reviewer to busy. Busy reviewers are NOT considered when looking for a reviewer, but their debt increases with every review they skip.\n\n*Usage:*\n\n  - @Review @reviewer is busy\n\n  - @Review I am busy\n\n\n\n\n\n**Make reviewer available**: Way to change status of a reviewer to active. Only active reviewers are considered when looking for a reviewer. Use all time statistics command to see status of all reviewers or current status to see only reviewers that are collecting debt.\n\n*Usage:*\n\n  - @Review @reviewer1 is back\n\n  - @Review I am back\n\n\n\n\n\n**Can approve pull requests**: Allows you to specify if given reviewer can or cannot approve pull requests. If a reviewer that cannot approve pull request is chosen a second one that can will be selected too.\n\n*Usage:*\n\n  - @Review @reviewer can approve pull requests!\n\n  - @Review @reviewer cannot approve pull requests.\n\n\n\n\n\n**Help**: Shows features of this bot\n\n*Usage:*\n\n  - @Review help\n\n\n\n"));
         }
 
         [Test]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using NUnit.Framework;
 using Review.Core.DataModel;
 using Review.Core.Services;
@@ -362,12 +363,70 @@ namespace Review.Core.Tests.Services
             reviewService.SuspendReviewer("suspended-reviewer");
 
             //Act
-            var assignedReviewer = reviewService.AddReviewToHighestDebtor(new[] {"excluded-reviewer"});
+            var assignedReviewer = reviewService.AddReviewToHighestDebtor(new[] {"excluded-reviewer"}).Single();
 
             //Assert
             Assert.That(assignedReviewer.Id, Is.EqualTo("available-reviewer"));
             Assert.That(assignedReviewer.ReviewCount, Is.EqualTo(1));
             Assert.That(assignedReviewer.ReviewDebt, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void
+            AddReviewToHighestDebtor_TwoReviewerWithHighestDebtCannotApprovePR_ExpectTwoReviewersReturnedTheHighestDebtorAndNextOneWhoCan()
+        {
+            //Arrange
+            var reviewContext = new ReviewContext();
+            var reviewService = new ReviewService(reviewContext);
+            reviewService.RegisterReviewer("cannot-approve1", "");
+            reviewService.SetCanApprovePullRequestFlag("cannot-approve1", false);
+            reviewService.RegisterReviewer("cannot-approve2", "");
+            reviewService.SetCanApprovePullRequestFlag("cannot-approve2", false);
+            reviewService.RegisterReviewer("can-approve1", "");
+            reviewService.RegisterReviewer("can-approve2", "");
+            reviewService.RegisterReviewer("excluded-reviewer", "");
+
+            //arranging the debt
+            reviewService.AddReview(new []{"can-approve1", "can-approve2" });
+            reviewService.AddReview(new []{"can-approve2" });
+
+            //Act
+            var assignedReviewers = reviewService.AddReviewToHighestDebtor(new[] { "excluded-reviewer" });
+
+            //Assert
+            Assert.That(assignedReviewers.Count, Is.EqualTo(2));
+            Assert.That(assignedReviewers[0].Id, Is.AnyOf("cannot-approve1", "cannot-approve2")); //they have same debt so will be chosen randomly
+            Assert.That(assignedReviewers[0].ReviewCount, Is.EqualTo(1));
+            Assert.That(assignedReviewers[0].ReviewDebt, Is.EqualTo(1));
+            Assert.That(assignedReviewers[0].CanApprovePullRequest, Is.False);
+
+            Assert.That(assignedReviewers[1].Id, Is.EqualTo("can-approve1"));
+            Assert.That(assignedReviewers[1].ReviewCount, Is.EqualTo(2));
+            Assert.That(assignedReviewers[1].ReviewDebt, Is.EqualTo(0));
+            Assert.That(assignedReviewers[1].CanApprovePullRequest, Is.True);
+        }
+
+        [Test]
+        public void AddReviewToHighestDebtor_OnlyReviewersThatCannotApprovePR_ExpectAnywayOneOfThemOnly()
+        {
+            //Arrange
+            var reviewContext = new ReviewContext();
+            var reviewService = new ReviewService(reviewContext);
+            reviewService.RegisterReviewer("cannot-approve1", "");
+            reviewService.SetCanApprovePullRequestFlag("cannot-approve1", false);
+            reviewService.RegisterReviewer("cannot-approve2", "");
+            reviewService.SetCanApprovePullRequestFlag("cannot-approve2", false);
+            reviewService.RegisterReviewer("excluded-reviewer", "");
+
+            //Act
+            var assignedReviewers = reviewService.AddReviewToHighestDebtor(new[] { "excluded-reviewer" });
+
+            //Assert
+            Assert.That(assignedReviewers.Count, Is.EqualTo(1));
+            Assert.That(assignedReviewers[0].Id, Is.AnyOf("cannot-approve1", "cannot-approve2")); //they have same debt so will be chosen randomly
+            Assert.That(assignedReviewers[0].ReviewCount, Is.EqualTo(1));
+            Assert.That(assignedReviewers[0].ReviewDebt, Is.EqualTo(0));
+            Assert.That(assignedReviewers[0].CanApprovePullRequest, Is.False);
         }
 
         [Test]
@@ -419,7 +478,7 @@ namespace Review.Core.Tests.Services
             reviewService.RegisterReviewer("user-id", "");
 
             //Act
-            var assignedReviewer = reviewService.AddReviewToHighestDebtor(new string[0]);
+            var assignedReviewer = reviewService.AddReviewToHighestDebtor(new string[0]).Single();
 
             //Assert
             Assert.That(assignedReviewer.Id, Is.EqualTo("user-id"));
@@ -558,6 +617,65 @@ namespace Review.Core.Tests.Services
             //Act
             //Assert
             Assert.Throws<ReviewerSuspendedCannotBeBusyException>(() => reviewService.MakeReviewerBusy("user-id"));
+        }
+
+        [Test]
+        public void SetCanApprovePullRequest_ReviewerCanApproveAndIsSetToFalse_ExpectReviewerCanApprovePullRequestIsFalse()
+        {
+            //Arrange
+            var reviewContext = new ReviewContext();
+            var reviewService = new ReviewService(reviewContext);
+            reviewService.RegisterReviewer("user-id", "");
+
+            //Act
+            reviewService.SetCanApprovePullRequestFlag("user-id", false);
+
+            //Assert
+            Assert.That(reviewService.GetReviewer("user-id").CanApprovePullRequest, Is.False);
+        }
+
+        [Test]
+        public void SetCanApprovePullRequest_ReviewerCannotApproveAndIsSetToTrue_ExpectReviewerCanApprovePullRequestIsTrue()
+        {
+            //Arrange
+            var reviewContext = new ReviewContext();
+            var reviewService = new ReviewService(reviewContext);
+            reviewService.RegisterReviewer("user-id", "");
+            reviewService.SetCanApprovePullRequestFlag("user-id", false);
+
+            //Act
+            reviewService.SetCanApprovePullRequestFlag("user-id", true);
+
+            //Assert
+            Assert.That(reviewService.GetReviewer("user-id").CanApprovePullRequest, Is.True);
+        }
+
+        [Test]
+        public void SetCanApprovePullRequest_ReviewerDoesntExist_ExpectReviewerNotRegisteredException()
+        {
+            //Arrange
+            var reviewContext = new ReviewContext();
+            var reviewService = new ReviewService(reviewContext);
+
+            //Act
+            //Assert
+            Assert.Throws<ReviewerNotRegisteredException>(() => reviewService.SetCanApprovePullRequestFlag("user-id", false));
+        }
+
+        [Test]
+        public void SetCanApprovePullRequest_ReviewerCannotApproveAndIsSetToFalse_ExpectStillFalse()
+        {
+            //Arrange
+            var reviewContext = new ReviewContext();
+            var reviewService = new ReviewService(reviewContext);
+            reviewService.RegisterReviewer("user-id", "");
+            reviewService.SetCanApprovePullRequestFlag("user-id", false);
+
+            //Act
+            reviewService.SetCanApprovePullRequestFlag("user-id", false);
+
+            //Assert
+            Assert.That(reviewService.GetReviewer("user-id").CanApprovePullRequest, Is.False);
         }
 
         [Test]

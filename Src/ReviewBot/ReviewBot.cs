@@ -33,6 +33,7 @@ namespace ReviewBot
             _reviewCommands.Add(new SuspendReviewerCommand(contextStore));
             _reviewCommands.Add(new MakeReviewerBusyCommand(contextStore));
             _reviewCommands.Add(new MakeAvailableCommand(contextStore));
+            _reviewCommands.Add(new CanApprovePullRequestsCommand(contextStore));
             _reviewCommands.Add(new HelpCommand(_reviewCommands));
         }
 

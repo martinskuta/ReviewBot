@@ -125,8 +125,19 @@ namespace ReviewBot.Utility
         /// <returns>new .Text property value</returns>
         public static string StripMentionText(this IMessageActivity activity, string id)
         {
+            return activity.StripMentionText(new[] { id });
+        }
+
+        /// <summary>
+        ///   Replace any mention text for given ids from Text property
+        /// </summary>
+        /// <param name="ids">ids to match</param>
+        /// <param name="activity"></param>
+        /// <returns>new .Text property value</returns>
+        public static string StripMentionText(this IMessageActivity activity, string[] ids)
+        {
             var resultText = activity.Text;
-            foreach (var mention in activity.GetMentions().Where(mention => mention.Mentioned.Id == id))
+            foreach (var mention in activity.GetMentions().Where(mention => ids.ContainsAnyOrdinal(mention.Mentioned.Id)))
             {
                 resultText = Regex.Replace(resultText, mention.Text, string.Empty, RegexOptions.IgnoreCase);
             }

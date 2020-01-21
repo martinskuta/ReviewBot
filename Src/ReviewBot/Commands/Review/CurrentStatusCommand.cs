@@ -75,7 +75,7 @@ namespace ReviewBot.Commands.Review
                 var reply = TurnContext.Activity.CreateReply("Ordered by debt:").AppendNewline();
                 foreach (var reviewer in activeReviewers)
                 {
-                    reply.AppendText($"**{reviewer.Name}** ({reviewer.Status}) Debt: {reviewer.ReviewDebt}")
+                    reply.AppendText($"**{reviewer.Name}**{(reviewer.CanApprovePullRequest ? "" : "*")} ({reviewer.Status}) Debt: {reviewer.ReviewDebt}")
                          .AppendNewline();
                 }
 

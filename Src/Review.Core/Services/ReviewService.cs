@@ -72,7 +72,14 @@ namespace Review.Core.Services
             reviewer.Status = ReviewerStatus.Available;
         }
 
-        public Reviewer AddReviewToHighestDebtor(string[] excludedReviewerIds)
+        public void SetCanApprovePullRequestFlag(string reviewerId, bool canApprovePullRequest)
+        {
+            var reviewer = GetReviewer(reviewerId);
+
+            reviewer.CanApprovePullRequest = canApprovePullRequest;
+        }
+
+        public IReadOnlyList<Reviewer> AddReviewToHighestDebtor(string[] excludedReviewerIds)
         {
             ValidateContextForAssigningReviews();
 
@@ -81,10 +88,35 @@ namespace Review.Core.Services
 
             var highestDebtor = reviewersWithHighestDebt.Random();
 
-            AddReview(highestDebtor);
-            NormalizeDebt();
+            //if the randomly chosen reviewer can approve PR we don't need to do anything else
+            if (highestDebtor.CanApprovePullRequest)
+            {
+                AddReview(highestDebtor);
+                NormalizeDebt();
+                return new[] { highestDebtor };
+            }
 
-            return highestDebtor;
+            //if the randomly chosen one cannot approve PR we have to try to find one additional reviewer that can
+            var reviewers = new List<Reviewer>(2) { highestDebtor };
+
+            //if at least one of the reviewers with the highest debt can approve PR, lets add him directly
+            if (reviewersWithHighestDebt.Any(r => r.CanApprovePullRequest))
+            {
+                reviewers.Add(reviewersWithHighestDebt.Where(r => r.CanApprovePullRequest).Random());
+            }
+            else
+            {
+                var highestDebtorsThatCanApprove = GetAvailableReviewersWithHighestDebt(excludedReviewerIds, true);
+                //We could be strict and fail here, because there is no available reviewer that can approve PR, but for now we let it up to the users of this service
+                if (!highestDebtorsThatCanApprove.IsEmpty())
+                {
+                    reviewers.Add(highestDebtorsThatCanApprove.Random());
+                }
+            }
+
+            reviewers.ForEach(AddReview);
+            NormalizeDebt();
+            return reviewers;
         }
 
         public void AddReview(string[] reviewerIds)
@@ -147,13 +179,17 @@ namespace Review.Core.Services
             return reviewerIds.Distinct().Select(GetReviewer).ToList();
         }
 
-        private IList<Reviewer> GetAvailableReviewersWithHighestDebt(string[] excludedReviewerIds)
+        private IList<Reviewer> GetAvailableReviewersWithHighestDebt(string[] excludedReviewerIds, bool onlyReviewersThatCanApprove = false)
         {
             var highestDebt = 0;
             var highestDebtors = new List<Reviewer>();
 
-            foreach (var reviewer in _context.Reviewers.Where(reviewer =>
-                reviewer.IsAvailable && excludedReviewerIds?.Contains(reviewer.Id) == false))
+            var availableReviewers = onlyReviewersThatCanApprove
+                                         ? _context.Reviewers.Where(
+                                             reviewer => reviewer.IsAvailable && reviewer.CanApprovePullRequest && excludedReviewerIds?.Contains(reviewer.Id) == false)
+                                         : _context.Reviewers.Where(reviewer => reviewer.IsAvailable && excludedReviewerIds?.Contains(reviewer.Id) == false);
+
+            foreach (var reviewer in availableReviewers)
             {
                 if (reviewer.ReviewDebt > highestDebt)
                 {

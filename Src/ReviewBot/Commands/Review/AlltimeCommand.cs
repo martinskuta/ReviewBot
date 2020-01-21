@@ -47,12 +47,12 @@ namespace ReviewBot.Commands.Review
 
         protected override ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore)
         {
-            return new CurrentStatusExecutable(this, turnContext, contextStore);
+            return new AllTimeCommandExecutable(this, turnContext, contextStore);
         }
 
-        private class CurrentStatusExecutable : ReviewCommandExecutable
+        private class AllTimeCommandExecutable : ReviewCommandExecutable
         {
-            public CurrentStatusExecutable(Command command, ITurnContext turnContext, IReviewContextStore contextStore)
+            public AllTimeCommandExecutable(Command command, ITurnContext turnContext, IReviewContextStore contextStore)
                 : base(command, turnContext, contextStore)
             {
             }
@@ -74,7 +74,7 @@ namespace ReviewBot.Commands.Review
                 var reply = TurnContext.Activity.CreateReply("Ordered by review count:").AppendNewline();
                 foreach (var reviewer in activeReviewers)
                 {
-                    reply.AppendText($"**{reviewer.Name}** ({reviewer.Status}): Reviews: {reviewer.ReviewCount}, Debt: {reviewer.ReviewDebt}")
+                    reply.AppendText($"**{reviewer.Name}**{(reviewer.CanApprovePullRequest ? "" : "*")} ({reviewer.Status}): Reviews: {reviewer.ReviewCount}, Debt: {reviewer.ReviewDebt}")
                          .AppendNewline();
                 }
 

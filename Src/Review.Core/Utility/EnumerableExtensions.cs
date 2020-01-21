@@ -44,12 +44,14 @@ namespace Review.Core.Utility
         }
 
         /// <summary>
-        ///   Returns random element from the given list.
+        ///   Returns random element from the given enumerable.
         /// </summary>
-        public static T Random<T>(this IList<T> list)
+        public static T Random<T>(this IEnumerable<T> enumerable)
         {
-            if (list == null) throw new ArgumentNullException(nameof(list));
-            if (list.Count == 0) throw new ArgumentException("The sequence contains no elements.");
+            if (enumerable == null) throw new ArgumentNullException(nameof(enumerable));
+
+            var list = enumerable.ToList();
+            if (list.IsEmpty()) throw new ArgumentException("The sequence contains no elements.");
 
             if (list.Count == 1) return list[0];
 

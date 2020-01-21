@@ -119,8 +119,8 @@ namespace ReviewBot.Commands.Review
 
                 try
                 {
-                    var assignedReviewer = ReviewService.AddReviewToHighestDebtor(new[] { featureAuthor.Id });
-                    return CreateAssignTheReviewToReply(assignedReviewer);
+                    var assignedReviewers = ReviewService.AddReviewToHighestDebtor(new[] { featureAuthor.Id });
+                    return CreateAssignTheReviewToReply(assignedReviewers);
                 }
                 catch (NoReviewerAvailableException)
                 {
@@ -132,8 +132,8 @@ namespace ReviewBot.Commands.Review
             {
                 try
                 {
-                    var assignedReviewer = ReviewService.AddReviewToHighestDebtor(new[] { developer.Id });
-                    return CreateAssignTheReviewToReply(assignedReviewer);
+                    var assignedReviewers = ReviewService.AddReviewToHighestDebtor(new[] { developer.Id });
+                    return CreateAssignTheReviewToReply(assignedReviewers);
                 }
                 catch (NoReviewerAvailableException)
                 {
@@ -145,8 +145,8 @@ namespace ReviewBot.Commands.Review
             {
                 try
                 {
-                    var assignedReviewer = ReviewService.AddReviewToHighestDebtor(developers.Select(d => d.Id).ToArray());
-                    return CreateAssignTheReviewToReply(assignedReviewer);
+                    var assignedReviewers = ReviewService.AddReviewToHighestDebtor(developers.Select(d => d.Id).ToArray());
+                    return CreateAssignTheReviewToReply(assignedReviewers);
                 }
                 catch (NoReviewerAvailableException)
                 {
@@ -159,13 +159,39 @@ namespace ReviewBot.Commands.Review
                 return TurnContext.Activity.CreateReply("Sorry ").AppendMention(TurnContext.Activity.From).AppendText(", there are no reviewers available.");
             }
 
-            private IActivity CreateAssignTheReviewToReply(Reviewer reviewer)
+            private IActivity CreateAssignTheReviewToReply(IReadOnlyList<Reviewer> reviewers)
             {
+                if (reviewers.Count == 1)
+                {
+                    var reviewer = reviewers[0];
+                    if (reviewer.CanApprovePullRequest)
+                    {
+                        return TurnContext.Activity.CreateReply()
+                                        .AppendMention(TurnContext.Activity.From)
+                                        .AppendText(" assign the review to ")
+                                        .AppendMention(new ChannelAccount(reviewer.Id, reviewer.Name))
+                                        .AppendText(" and don't forget to create pull request!");
+                    }
+
+                    return TurnContext.Activity.CreateReply()
+                                      .AppendMention(TurnContext.Activity.From)
+                                      .AppendText(" assign the review to ")
+                                      .AppendMention(new ChannelAccount(reviewer.Id, reviewer.Name))
+                                      .AppendText(" and don't forget to create pull request! PS: Someone needs to review it again after ")
+                                      .AppendMention(new ChannelAccount(reviewer.Id, reviewer.Name))
+                                      .AppendText(", because she cannot approve pull requests.");
+                }
+
+                var juniorReviewer = reviewers.Single(r => !r.CanApprovePullRequest);
+                var seniorReviewer = reviewers.Single(r => r.CanApprovePullRequest);
+
                 return TurnContext.Activity.CreateReply()
                                   .AppendMention(TurnContext.Activity.From)
                                   .AppendText(" assign the review to ")
-                                  .AppendMention(new ChannelAccount(reviewer.Id, reviewer.Name))
-                                  .AppendText(" and don't forget to create pull request!");
+                                  .AppendMention(new ChannelAccount(juniorReviewer.Id, juniorReviewer.Name))
+                                  .AppendText(" and then for final review to ")
+                                  .AppendMention(new ChannelAccount(seniorReviewer.Id, seniorReviewer.Name))
+                                  .AppendText(". Also don't forget to create pull request!");
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿#region using
 
+using System.ComponentModel;
 using System.Runtime.Serialization;
 
 #endregion
@@ -9,6 +10,11 @@ namespace Review.Core.DataModel
     [DataContract]
     public class Reviewer
     {
+        public Reviewer()
+        {
+            CanApprovePullRequest = true;
+        }
+
         /// <summary>
         ///   Unique id of the reviewer
         /// </summary>
@@ -39,6 +45,16 @@ namespace Review.Core.DataModel
         /// </summary>
         [DataMember(Order = 5)]
         public int ReviewDebt { get; set; }
+
+        /// <summary>
+        ///   A flag to split reviewers to two levels. If this flag is set to true it means that review by this reviewer is enough
+        ///   to approve pull request. If this flag is false than a review from someone with this flag is needed afterwards.
+        ///   Good for new team members that are learning the code base, they will do the first review and then later someone more
+        ///   experienced with this flag set will do 2nd review to approve the pull request.
+        /// </summary>
+        [DataMember(Order = 6)]
+        [DefaultValue(true)]
+        public bool CanApprovePullRequest { get; set; }
 
         public bool IsAvailable => Status == ReviewerStatus.Available;
 
