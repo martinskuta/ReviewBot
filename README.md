@@ -44,7 +44,7 @@ Please note that @Review is the mention of the bot in a team chat. In any case y
 
 ### MS Teams
 
-At the moment the bot is supported only in **MS Teams**. You can either build and deploy the bot yourself or you can start using it for free by using the steps below. Consider the free version as a way to try it, it might not run forever.
+At the moment the bot is supported only in **MS Teams**. You can either build and deploy the bot yourself or you can start using it for free by using the steps below. Consider the free version as a way to try it.
 
 1. Download the MS Teams install bundle: [ReviewBotMsTeamsInstallBundle.zip](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Bundle/ReviewBotMsTeamsInstallBundle.zip "MS Teams installation bundle")
 2. Open MS Teams and on the left locate team where you want the bot to be available and click the three dots menu and select **Manage team**
