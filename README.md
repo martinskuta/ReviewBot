@@ -20,13 +20,13 @@ Before that it is still good to know, that the bot works with so called **review
 
 ### Supported commands
 
-Please note that @Review is the mention of the bot in a team chat. In any case you can just use '@Review help' to see all available commands.
+Please note that @Review is the mention of the bot in a team chat. In any case you can just use '@Review help' or send a 'help' private message to see all available commands.
 
-1. **Registering reviewers**. This allows you to define the reviewers in given context. Context can for example MS Teams channel or Slack channel.
+1. **Registering reviewers**. First to be able to start getting reviews assigned you need register who the reviewers are. The reviewers are registered per channel where the message is sent, so this way you can have multiple review groups, each in different MS Teams or Slack channel.
 	* Registering yourself: <br> ![reigstering yourself](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/self_registering.png "Self registering")
 	* Registering others: <br> ![reigstering others](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/registering_others.png "Registering others")
 
-2. **Assigning reviews**
+2. **Assigning reviews**. Once you register everyone you can start asking for reviews and the bot will pick a reviewer for you.
 	* Find reviewer automatically (one with the highest debt): <br> ![assigning review](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/find_reviewer_auto.png "Assigning review automatically")
 	* Assign review directly to someone: <br> ![assign review directly](https://raw.githubusercontent.com/martinskuta/ReviewBot/master/Docs/add_review.png "Assigning review directly")
 
