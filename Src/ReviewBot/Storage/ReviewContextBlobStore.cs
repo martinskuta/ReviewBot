@@ -2,9 +2,10 @@
 
 using System;
 using System.Threading.Tasks;
+using Azure;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Configuration;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Blob;
 using Review.Core.DataModel;
 using ReviewBot.Utility;
 
@@ -14,11 +15,11 @@ namespace ReviewBot.Storage
 {
     public class ReviewContextBlobStore : IReviewContextStore
     {
-        private readonly CloudStorageAccount _cloudStorageAccount;
+        private readonly BlobServiceClient _blobServiceClient;
 
         public ReviewContextBlobStore(IConfiguration configuration)
         {
-            _cloudStorageAccount = CloudStorageAccount.Parse(configuration["AzureBlobStorageConnectionString"]);
+            _blobServiceClient = new BlobServiceClient(configuration["AzureBlobStorageConnectionString"]);
         }
 
         public async Task<ReviewContext> GetContext(string contextId)
@@ -26,22 +27,22 @@ namespace ReviewBot.Storage
             var container = await GetBlobContainer();
 
             // Create test blob - default strategy is last writer wins - so UploadText will overwrite existing blob if present
-            var blockBlob = container.GetBlockBlobReference(contextId);
+            var blockBlob = container.GetBlobClient(contextId);
             if (!await blockBlob.ExistsAsync())
             {
                 var reviewContext = new ReviewContext { Id = contextId, ETag = "" };
-                using (var ms = reviewContext.ToMemoryStream())
-                {
-                    await blockBlob.UploadFromStreamAsync(ms);
-                }
+                await using var ms = reviewContext.ToMemoryStream();
+                await blockBlob.UploadAsync(ms);
 
                 return reviewContext;
             }
 
-            using (var blobStream = await blockBlob.OpenReadAsync())
+            var blobProperties = await blockBlob.GetPropertiesAsync();
+
+            await using var blobStream = await blockBlob.OpenReadAsync();
             {
                 var reviewContext = blobStream.Deserialize<ReviewContext>();
-                reviewContext.ETag = blockBlob.Properties.ETag;
+                reviewContext.ETag = blobProperties.Value.ETag.ToString();
                 return reviewContext;
             }
         }
@@ -51,24 +52,18 @@ namespace ReviewBot.Storage
             if (context.ETag == null) throw new ArgumentException("Cannot save context without ETag.");
 
             var container = await GetBlobContainer();
-            var blockBlob = container.GetBlockBlobReference(context.Id);
+            var blockBlob = container.GetBlobClient(context.Id);
 
-            using (var ms = context.ToMemoryStream())
-            {
-                await blockBlob.UploadFromStreamAsync(
-                    ms,
-                    AccessCondition.GenerateIfMatchCondition(context.ETag),
-                    new BlobRequestOptions(),
-                    new OperationContext());
-            }
+            await using var ms = context.ToMemoryStream();
+            await blockBlob.UploadAsync(
+                ms, new BlobUploadOptions { Conditions = new BlobRequestConditions { IfMatch = new ETag(context.ETag)} });
         }
 
-        private async Task<CloudBlobContainer> GetBlobContainer()
+        private async Task<BlobContainerClient> GetBlobContainer()
         {
-            var blobClient = _cloudStorageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference("reviewcontexts");
-            await container.CreateIfNotExistsAsync();
-            return container;
+            var blobClient = _blobServiceClient.GetBlobContainerClient("reviewcontexts");
+            await blobClient.CreateIfNotExistsAsync();
+            return blobClient;
         }
     }
 }

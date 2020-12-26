@@ -187,7 +187,7 @@ namespace ReviewBot.Utility
                 }
             }
             //now that we found and removed all mentions from the text, split into words
-            splitResult.AddRange(textBeforePhrase.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+            splitResult.AddRange(textBeforePhrase.Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries));
 
             return splitResult;
         }
