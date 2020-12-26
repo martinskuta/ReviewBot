@@ -775,7 +775,7 @@ namespace ReviewBot.Tests
                 await reviewBot.OnTurnAsync(allTimeMessage);
 
                 //Assert
-                Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Ok.Btw, did you know that reviewers in alltime and status command with star after their name are the ones who cannot approve pull requests?"));
+                Assert.That(makeBusyMessage.Responses.Peek().Text, Is.EqualTo("Ok. Btw, did you know that reviewers in alltime and status command with star after their name are the ones who cannot approve pull requests?"));
                 Assert.That(allTimeMessage.Responses.Peek().Text, Is.EqualTo("Ordered by review count:\n\n" + "**x x x*** (Available): Reviews: 0, Debt: 0\n\n"));
             }
 
