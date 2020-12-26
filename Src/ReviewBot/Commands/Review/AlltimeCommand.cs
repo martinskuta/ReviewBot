@@ -1,4 +1,11 @@
-﻿﻿#region using
+﻿#region copyright
+
+// Copyright 2007 - 2019 Innoveo AG, Zurich/Switzerland
+// All rights reserved. Use is subject to license terms.
+
+#endregion
+
+#region using
 
 using System;
 using System.Linq;
