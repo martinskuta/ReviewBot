@@ -24,13 +24,13 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.7.0" />
-    <PackageReference Include="Microsoft.Bot.Builder" Version="4.5.3" />
-    <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.5.3" />
-    <PackageReference Include="Microsoft.Bot.Configuration" Version="4.5.3" />
-    <PackageReference Include="Microsoft.Bot.Connector" Version="4.5.3" />
-    <PackageReference Include="Microsoft.Bot.Schema" Version="4.5.3" />
-    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="3.0.0" />
-    <PackageReference Include="protobuf-net" Version="2.4.0" />
+    <PackageReference Include="Microsoft.Bot.Builder" Version="4.11.1" />
+    <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.11.1" />
+    <PackageReference Include="Microsoft.Bot.Configuration" Version="4.11.1" />
+    <PackageReference Include="Microsoft.Bot.Connector" Version="4.11.1" />
+    <PackageReference Include="Microsoft.Bot.Schema" Version="4.11.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="5.0.1" />
+    <PackageReference Include="protobuf-net" Version="3.0.73" />
   </ItemGroup>
 
 
