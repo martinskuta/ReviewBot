@@ -33,6 +33,7 @@ namespace ReviewBot
                           .SetBasePath(env.ContentRootPath)
                           .AddJsonFile("appsettings.json", true, true)
                           .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
+                          
                           .AddEnvironmentVariables();
 
             Configuration = builder.Build();
@@ -62,28 +63,31 @@ namespace ReviewBot
             services.AddBot<ReviewBot>(
                 options =>
                 {
-                    var secretKey = Configuration.GetSection("botFileSecret")?.Value;
-                    var botFilePath = Configuration.GetSection("botFilePath")?.Value;
+                    // var secretKey = Configuration.GetSection("botFileSecret")?.Value;
+                    // var botFilePath = Configuration.GetSection("botFilePath")?.Value;
+                    //
+                    // // Loads .bot configuration file and adds a singleton that your Bot can access through dependency injection.
+                    // var botConfig = BotConfiguration.Load(botFilePath, secretKey);
+                    // services.AddSingleton(
+                    //     sp =>
+                    //         botConfig ??
+                    //         throw new InvalidOperationException($"The .bot config file could not be loaded. ({botConfig})"));
+                    //
+                    // // Retrieve current endpoint.
+                    // var environment = _isProduction ? "production" : "development";
+                    // var service = botConfig.Services.Where(s => s.Type == "endpoint" && s.Name == environment)
+                    //                        .FirstOrDefault();
+                    // if (!(service is EndpointService endpointService))
+                    // {
+                    //     throw new InvalidOperationException(
+                    //         $"The .bot file does not contain an endpoint with name '{environment}'.");
+                    // }
 
-                    // Loads .bot configuration file and adds a singleton that your Bot can access through dependency injection.
-                    var botConfig = BotConfiguration.Load(botFilePath, secretKey);
-                    services.AddSingleton(
-                        sp =>
-                            botConfig ??
-                            throw new InvalidOperationException($"The .bot config file could not be loaded. ({botConfig})"));
-
-                    // Retrieve current endpoint.
-                    var environment = _isProduction ? "production" : "development";
-                    var service = botConfig.Services.Where(s => s.Type == "endpoint" && s.Name == environment)
-                                           .FirstOrDefault();
-                    if (!(service is EndpointService endpointService))
-                    {
-                        throw new InvalidOperationException(
-                            $"The .bot file does not contain an endpoint with name '{environment}'.");
-                    }
+                    var appId = Configuration.GetSection("botAppId")?.Value;
+                    var appPassword = Configuration.GetSection("botAppPassword")?.Value;
 
                     options.CredentialProvider =
-                        new SimpleCredentialProvider(endpointService.AppId, endpointService.AppPassword);
+                        new SimpleCredentialProvider(appId, appPassword);
 
                     // Creates a logger for the application to use.
                     ILogger logger = _loggerFactory.CreateLogger<ReviewBot>();

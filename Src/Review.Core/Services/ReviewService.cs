@@ -40,6 +40,11 @@ namespace Review.Core.Services
             return _context.Reviewers.AsReadOnly();
         }
 
+        public void UpdateId(string oldId, string newId)
+        {
+            _context.Reviewers.FirstOrDefault(r => r.Id == oldId).Id = newId;
+        }
+
         public void SuspendReviewer(string reviewerId)
         {
             var reviewer = GetReviewer(reviewerId);

@@ -24,6 +24,8 @@ namespace Review.Core.Services
 
         IReadOnlyList<Reviewer> GetAllReviewers();
 
+        void UpdateId(string oldId, string newId);
+
         void SuspendReviewer([NotNull] string reviewerId);
 
         void MakeReviewerBusy([NotNull] string reviewerId);
