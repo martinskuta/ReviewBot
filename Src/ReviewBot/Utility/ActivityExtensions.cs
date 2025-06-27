@@ -41,7 +41,7 @@ public static class ActivityExtensions
         return recipientMention != null && activity.Text.TrimEnd().EndsWith(recipientMention.Text);
     }
 
-    public static bool IsPrivateChat(this IMessageActivity activity) => activity.Conversation.ConversationType == "personal";
+    public static bool IsPrivateChat(this IMessageActivity activity) => activity.Conversation.IsGroup == false;
 
     public static T AppendMention<T>(this T activity, ChannelAccount mentionedUser, string mentionText = null)
         where T : IMessageActivity
@@ -105,6 +105,12 @@ public static class ActivityExtensions
     public static Mention GetRecipientMention(this IMessageActivity activity)
     {
         return activity.GetMentions().FirstOrDefault(m => m.Mentioned.Id == activity.Recipient.Id);
+    }
+
+    public static bool IsRecipientMentioned(this IMessageActivity activity)
+    {
+        return activity.Entities?.Where(entity => string.Compare(entity.Type, "mention", StringComparison.OrdinalIgnoreCase) == 0)
+                       .Select(e => e.Properties.ToObject<Mention>()).Any(m => m.Mentioned.Id == activity.Recipient.Id) ?? false;
     }
 
     /// <summary>

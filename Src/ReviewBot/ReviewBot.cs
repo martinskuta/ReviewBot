@@ -1,4 +1,11 @@
-﻿#region using
+﻿#region copyright
+
+// Copyright 2007 - 2025 Innoveo AG, Zurich/Switzerland
+// All rights reserved. Use is subject to license terms.
+
+#endregion
+
+#region using
 
 using System.Collections.Generic;
 using System.Threading;
@@ -10,6 +17,7 @@ using Newtonsoft.Json;
 using ReviewBot.Commands;
 using ReviewBot.Commands.Review;
 using ReviewBot.Storage;
+using ReviewBot.Utility;
 
 #endregion
 
@@ -41,8 +49,17 @@ public class ReviewBot : IBot
 
     public async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = new CancellationToken())
     {
+        _logger.LogTrace($"Received message: {turnContext.Activity.Text}. Activity object: {JsonConvert.SerializeObject(turnContext.Activity, Formatting.Indented)}");
+
         if (turnContext.Activity.Type == ActivityTypes.Message)
         {
+            // In case we receive all channel messages, we wanna react only to messages addressed to bot currently
+            if (!turnContext.Activity.IsPrivateChat() && !turnContext.Activity.IsRecipientMentioned())
+            {
+                _logger.LogTrace("Message not addressed to review bot. Ignoring.");
+                return;
+            }
+
             await HandleMessage(turnContext);
             return;
         }
@@ -52,8 +69,6 @@ public class ReviewBot : IBot
 
     private async Task HandleMessage(ITurnContext turnContext)
     {
-        _logger.LogTrace($"Handling message: {turnContext.Activity.Text}. Activity object: {JsonConvert.SerializeObject(turnContext.Activity, Formatting.Indented)}");
-
         var matchingCommand = GetMatchingCommand(turnContext);
         if (matchingCommand == null)
         {
