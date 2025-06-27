@@ -154,6 +154,10 @@ public static class ActivityExtensions
     {
         return activity.ChannelData.channel.id;
     }
+    
+    public static string GetSlackTeamId(this IActivity activity) => activity.ChannelData.SlackMessage.team_id;
+     
+    public static string GetSlackChannelId(this IActivity activity) => activity.ChannelData.SlackMessage["event"].channel;
 
     /// <summary>
     ///   Finds the phrase in the message and splits the text before given phrase into words. Mentions, even if they include
