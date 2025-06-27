@@ -1,13 +1,20 @@
-﻿#region using
+﻿#region copyright
+
+// Copyright 2007 - 2025 Innoveo AG, Zurich/Switzerland
+// All rights reserved. Use is subject to license terms.
+
+#endregion
+
+#region using
 
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Configuration;
 using Review.Core.DataModel;
-using ReviewBot.Utility;
 
 #endregion
 
@@ -27,24 +34,22 @@ public class ReviewContextBlobStore : IReviewContextStore
         var container = await GetBlobContainer();
 
         // Create test blob - default strategy is last writer wins - so UploadText will overwrite existing blob if present
-        var blockBlob = container.GetBlobClient(contextId);
-        if (!await blockBlob.ExistsAsync())
+        var blobClient = container.GetBlobClient(contextId);
+        if (!await blobClient.ExistsAsync())
         {
-            var reviewContext = new ReviewContext { Id = contextId, ETag = "" };
-            await using var ms = reviewContext.ToMemoryStream();
-            await blockBlob.UploadAsync(ms);
+            var newReviewContext = new ReviewContext { Id = contextId, ETag = "" };
+            await using var writeStream = await blobClient.OpenWriteAsync(false);
+            await JsonSerializer.SerializeAsync(writeStream, newReviewContext);
 
-            return reviewContext;
+            return newReviewContext;
         }
 
-        var blobProperties = await blockBlob.GetPropertiesAsync();
+        var blobProperties = await blobClient.GetPropertiesAsync();
 
-        await using var blobStream = await blockBlob.OpenReadAsync();
-        {
-            var reviewContext = blobStream.Deserialize<ReviewContext>();
-            reviewContext.ETag = blobProperties.Value.ETag.ToString();
-            return reviewContext;
-        }
+        await using var blobStream = await blobClient.OpenReadAsync();
+        var existingReviewContext = await JsonSerializer.DeserializeAsync<ReviewContext>(blobStream);
+        existingReviewContext.ETag = blobProperties.Value.ETag.ToString();
+        return existingReviewContext;
     }
 
     public async Task SaveContext(ReviewContext context)
@@ -52,12 +57,12 @@ public class ReviewContextBlobStore : IReviewContextStore
         if (context.ETag == null) throw new ArgumentException("Cannot save context without ETag.");
 
         var container = await GetBlobContainer();
-        var blockBlob = container.GetBlobClient(context.Id);
+        var blobClient = container.GetBlobClient(context.Id);
 
-        await using var ms = context.ToMemoryStream();
-        await blockBlob.UploadAsync(
-            ms,
-            new BlobUploadOptions { Conditions = new BlobRequestConditions { IfMatch = new ETag(context.ETag) } });
+        await using var writeStream = await blobClient.OpenWriteAsync(
+                                          true,
+                                          new BlobOpenWriteOptions { OpenConditions = new BlobRequestConditions { IfMatch = new ETag(context.ETag) } });
+        await JsonSerializer.SerializeAsync(writeStream, context);
     }
 
     private async Task<BlobContainerClient> GetBlobContainer()
