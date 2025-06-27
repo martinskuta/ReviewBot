@@ -151,6 +151,21 @@ public static class ActivityExtensions
         return resultText;
     }
 
+    public static void ReplyInSlackThread(this IMessageActivity activity)
+    {
+        if (!activity.IsSlackActivity()) return;
+
+        // set up the conversation so we'll be in the thread
+        string threadTs = activity.ChannelData?.SlackMessage?["event"]?.thread_ts;
+        string ts = activity.ChannelData?.SlackMessage?["event"]?.ts;
+
+        if (string.IsNullOrEmpty(threadTs) && !string.IsNullOrEmpty(ts) && activity.Conversation.Id.Split(':').Length == 3)
+        {
+            // this is a main-channel conversation - pretend it came in on a thread
+            activity.Conversation.Id += $":{ts}";
+        }
+    }
+
     public static string GetMsTeamsTenantId(this IActivity activity)
     {
         return activity.ChannelData.tenant.id;

@@ -84,11 +84,14 @@ public class ReviewBot : IBot
     {
         _logger.LogTrace($"Message will be handled by {command.GetType().Name}. Message: {turnContext.Activity.Text}");
 
+        turnContext.Activity.ReplyInSlackThread();
+
         var commandExecutable = command.CreateExecutable(turnContext);
 
         await commandExecutable.Execute();
 
         var messageActivity = commandExecutable.GetReply();
+
         messageActivity.TextFormat = TextFormatTypes.Markdown;
 
         await turnContext.SendActivityAsync(messageActivity);
