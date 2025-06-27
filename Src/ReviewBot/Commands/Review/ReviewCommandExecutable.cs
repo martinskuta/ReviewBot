@@ -1,15 +1,12 @@
 ﻿#region using
 
 using System;
-using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
-using Review.Core;
 using Review.Core.Services;
-using Review.Core.Services.Exceptions;
 using ReviewBot.Storage;
 using ReviewBot.Utility;
 
@@ -20,9 +17,9 @@ namespace ReviewBot.Commands.Review;
 public abstract class ReviewCommandExecutable : CommandExecutable
 {
     private readonly IReviewContextStore _contextStore;
+    private ILogger _logger;
     private IActivity _reply;
     protected IReviewService ReviewService;
-    private ILogger _logger;
 
     protected ReviewCommandExecutable(ILoggerFactory loggerFactory, Command command, ITurnContext turnContext, IReviewContextStore contextStore)
         : base(command, turnContext)
@@ -76,27 +73,24 @@ public abstract class ReviewCommandExecutable : CommandExecutable
                           .AppendText(", there are no reviewers registered here yet.");
     }
 
-        private string GetReviewContextId()
+    private string GetReviewContextId()
+    {
+        if (TurnContext.Activity.IsMsTeamsActivity())
         {
-            _logger.LogInformation("Get review context id. Activity data: {Activity}", JsonSerializer.Serialize(TurnContext.Activity));
-            _logger.LogInformation("Get review context id. Channel data: {Activity}", TurnContext.Activity.ChannelData);
-            
-            if (TurnContext.Activity.ChannelId == "msteams")
-            {
-                var tenantId = TurnContext.Activity.GetMsTeamsTenantId();
-                var channelId = TurnContext.Activity.GetMsTeamsChannelId();
+            var tenantId = TurnContext.Activity.GetMsTeamsTenantId();
+            var channelId = TurnContext.Activity.GetMsTeamsChannelId();
 
-                return HttpUtility.UrlDecode($"{tenantId}_{channelId}");
-            }
-
-            if (TurnContext.Activity.ChannelId == "slack")
-            {
-                var teamId = TurnContext.Activity.GetSlackTeamId();
-                var channelId = TurnContext.Activity.GetSlackChannelId();
-                
-                return HttpUtility.UrlDecode($"{teamId}_{channelId}");
-            }
-
-            throw new Exception($"Unsupported channel: {TurnContext.Activity.ChannelId}");
+            return HttpUtility.UrlDecode($"{tenantId}_{channelId}");
         }
+
+        if (TurnContext.Activity.IsSlackActivity())
+        {
+            var teamId = TurnContext.Activity.GetSlackTeamId();
+            var channelId = TurnContext.Activity.GetSlackChannelId();
+
+            return HttpUtility.UrlDecode($"{teamId}_{channelId}");
+        }
+
+        throw new Exception($"Unsupported channel: {TurnContext.Activity.ChannelId}");
+    }
 }

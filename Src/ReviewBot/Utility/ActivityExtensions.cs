@@ -83,21 +83,21 @@ public static class ActivityExtensions
     public static T AppendNewline<T>(this T activity)
         where T : IMessageActivity
     {
-        activity.Text = activity.Text + "\n\n";
+        activity.Text += "\n\n";
         return activity;
     }
 
     public static T AppendIndentation<T>(this T activity)
         where T : IMessageActivity
     {
-        activity.Text = activity.Text + "  ";
+        activity.Text += "  ";
         return activity;
     }
 
     public static T AppendText<T>(this T activity, string text)
         where T : IMessageActivity
     {
-        activity.Text = activity.Text + text;
+        activity.Text += text;
         return activity;
     }
 
@@ -154,10 +154,14 @@ public static class ActivityExtensions
     {
         return activity.ChannelData.channel.id;
     }
-    
+
     public static string GetSlackTeamId(this IActivity activity) => activity.ChannelData.SlackMessage.team_id;
-     
+
     public static string GetSlackChannelId(this IActivity activity) => activity.ChannelData.SlackMessage["event"].channel;
+
+    public static bool IsSlackActivity(this IActivity activity) => activity.ChannelId == "slack";
+
+    public static bool IsMsTeamsActivity(this IActivity activity) => activity.ChannelId == "msteams";
 
     /// <summary>
     ///   Finds the phrase in the message and splits the text before given phrase into words. Mentions, even if they include
@@ -190,6 +194,7 @@ public static class ActivityExtensions
                 textBeforePhrase = replaced;
             }
         }
+
         //now that we found and removed all mentions from the text, split into words
         splitResult.AddRange(textBeforePhrase.Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries));
 

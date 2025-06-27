@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using ReviewBot.Commands;
 using ReviewBot.Commands.Review;
 using ReviewBot.Storage;
@@ -51,7 +52,7 @@ public class ReviewBot : IBot
 
     private async Task HandleMessage(ITurnContext turnContext)
     {
-        _logger.LogTrace($"Handling message: {turnContext.Activity.Text}");
+        _logger.LogTrace($"Handling message: {turnContext.Activity.Text}. Activity object: {JsonConvert.SerializeObject(turnContext.Activity, Formatting.Indented)}");
 
         var matchingCommand = GetMatchingCommand(turnContext);
         if (matchingCommand == null)
