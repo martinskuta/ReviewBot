@@ -61,9 +61,9 @@ public static class ActivityExtensions
             mentionedUser.Name = mentionText;
         }
 
-        var mentionEntityText = string.Format("<at>{0}</at>", mentionedUser.Name);
+        var mentionEntityText = activity.IsSlackActivity() ? $"<@{mentionedUser.Name}>" : $"<at>{mentionedUser.Name}</at>";
 
-        activity.Text = activity.Text + mentionEntityText;
+        activity.Text += mentionEntityText;
 
         if (activity.Entities == null)
         {
