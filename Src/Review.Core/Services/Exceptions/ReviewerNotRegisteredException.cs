@@ -1,14 +1,13 @@
-﻿namespace Review.Core.Services.Exceptions
-{
-    public class ReviewerNotRegisteredException : ReviewException
-    {
-        public ReviewerNotRegisteredException(string reviewerId)
-            : base(
-                $"Reviewer with id '{reviewerId}' is not registered.")
-        {
-            ReviewerId = reviewerId;
-        }
+﻿namespace Review.Core.Services.Exceptions;
 
-        public string ReviewerId { get; }
+public class ReviewerNotRegisteredException : ReviewException
+{
+    public ReviewerNotRegisteredException(string reviewerId)
+        : base(
+            $"Reviewer with id '{reviewerId}' is not registered.")
+    {
+        ReviewerId = reviewerId;
     }
+
+    public string ReviewerId { get; }
 }
