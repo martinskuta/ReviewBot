@@ -10,13 +10,13 @@
 
 
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.19.1" />
-    <PackageReference Include="Microsoft.Bot.Builder" Version="4.21.2" />
-    <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.21.2" />
-    <PackageReference Include="Microsoft.Bot.Configuration" Version="4.21.2" />
-    <PackageReference Include="Microsoft.Bot.Connector" Version="4.21.2" />
-    <PackageReference Include="Microsoft.Bot.Schema" Version="4.21.2" />
-    <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="8.0.0" />
+      <PackageReference Include="Azure.Storage.Blobs" Version="12.24.1"/>
+      <PackageReference Include="Microsoft.Bot.Builder" Version="4.23.0"/>
+      <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.23.0"/>
+      <PackageReference Include="Microsoft.Bot.Configuration" Version="4.23.0"/>
+      <PackageReference Include="Microsoft.Bot.Connector" Version="4.23.0"/>
+      <PackageReference Include="Microsoft.Bot.Schema" Version="4.23.0"/>
+      <PackageReference Include="Microsoft.Extensions.Logging.AzureAppServices" Version="9.0.6"/>
   </ItemGroup>
 
 
