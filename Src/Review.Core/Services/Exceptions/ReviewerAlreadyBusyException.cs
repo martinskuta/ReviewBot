@@ -1,10 +1,9 @@
-﻿namespace Review.Core.Services.Exceptions
+﻿namespace Review.Core.Services.Exceptions;
+
+public class ReviewerAlreadyBusyException : ReviewException
 {
-    public class ReviewerAlreadyBusyException : ReviewException
+    public ReviewerAlreadyBusyException(string reviewerId)
+        : base($"Reviewer '{reviewerId}' is already busy.")
     {
-        public ReviewerAlreadyBusyException(string reviewerId)
-            : base($"Reviewer '{reviewerId}' is already busy.")
-        {
-        }
     }
 }

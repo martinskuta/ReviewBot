@@ -12,100 +12,99 @@ using ReviewBot.Storage;
 
 #endregion
 
-namespace ReviewBot
+namespace ReviewBot;
+
+/// <summary>
+///     The Startup class configures services and the request pipeline.
+/// </summary>
+public class Startup
 {
-    /// <summary>
-    ///     The Startup class configures services and the request pipeline.
-    /// </summary>
-    public class Startup
+    private readonly bool _isProduction;
+    private ILoggerFactory _loggerFactory;
+
+    public Startup(IHostEnvironment env)
     {
-        private readonly bool _isProduction;
-        private ILoggerFactory _loggerFactory;
+        _isProduction = env.IsProduction();
+        var builder = new ConfigurationBuilder()
+                      .SetBasePath(env.ContentRootPath)
+                      .AddJsonFile("appsettings.json", true, true)
+                      .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
+                      .AddEnvironmentVariables();
 
-        public Startup(IHostEnvironment env)
+        Configuration = builder.Build();
+    }
+
+    /// <summary>
+    ///     Gets the configuration that represents a set of key/value application configuration properties.
+    /// </summary>
+    /// <value>
+    ///     The <see cref="IConfiguration" /> that represents a set of key/value application configuration properties.
+    /// </value>
+    public IConfiguration Configuration { get; }
+
+    /// <summary>
+    ///     This method gets called by the runtime. Use this method to add services to the container.
+    /// </summary>
+    /// <param name="services">
+    ///     The <see cref="IServiceCollection" /> specifies the contract for a collection of service
+    ///     descriptors.
+    /// </param>
+    /// <seealso cref="IStatePropertyAccessor{T}" />
+    /// <seealso cref="https://docs.microsoft.com/en-us/aspnet/web-api/overview/advanced/dependency-injection" />
+    /// <seealso
+    ///     cref="https://docs.microsoft.com/en-us/azure/bot-service/bot-service-manage-channels?view=azure-bot-service-4.0" />
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddBot<ReviewBot>(options =>
         {
-            _isProduction = env.IsProduction();
-            var builder = new ConfigurationBuilder()
-                          .SetBasePath(env.ContentRootPath)
-                          .AddJsonFile("appsettings.json", true, true)
-                          .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
-                          .AddEnvironmentVariables();
+            // var secretKey = Configuration.GetSection("botFileSecret")?.Value;
+            // var botFilePath = Configuration.GetSection("botFilePath")?.Value;
+            //
+            // // Loads .bot configuration file and adds a singleton that your Bot can access through dependency injection.
+            // var botConfig = BotConfiguration.Load(botFilePath, secretKey);
+            // services.AddSingleton(
+            //     sp =>
+            //         botConfig ??
+            //         throw new InvalidOperationException($"The .bot config file could not be loaded. ({botConfig})"));
+            //
+            // // Retrieve current endpoint.
+            // var environment = _isProduction ? "production" : "development";
+            // var service = botConfig.Services.Where(s => s.Type == "endpoint" && s.Name == environment)
+            //                        .FirstOrDefault();
+            // if (!(service is EndpointService endpointService))
+            // {
+            //     throw new InvalidOperationException(
+            //         $"The .bot file does not contain an endpoint with name '{environment}'.");
+            // }
 
-            Configuration = builder.Build();
-        }
+            var appId = Configuration.GetSection("botAppId")?.Value;
+            var appPassword = Configuration.GetSection("botAppPassword")?.Value;
 
-        /// <summary>
-        ///     Gets the configuration that represents a set of key/value application configuration properties.
-        /// </summary>
-        /// <value>
-        ///     The <see cref="IConfiguration" /> that represents a set of key/value application configuration properties.
-        /// </value>
-        public IConfiguration Configuration { get; }
+            options.CredentialProvider =
+                new SimpleCredentialProvider(appId, appPassword);
 
-        /// <summary>
-        ///     This method gets called by the runtime. Use this method to add services to the container.
-        /// </summary>
-        /// <param name="services">
-        ///     The <see cref="IServiceCollection" /> specifies the contract for a collection of service
-        ///     descriptors.
-        /// </param>
-        /// <seealso cref="IStatePropertyAccessor{T}" />
-        /// <seealso cref="https://docs.microsoft.com/en-us/aspnet/web-api/overview/advanced/dependency-injection" />
-        /// <seealso
-        ///     cref="https://docs.microsoft.com/en-us/azure/bot-service/bot-service-manage-channels?view=azure-bot-service-4.0" />
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddBot<ReviewBot>(options =>
+            // Creates a logger for the application to use.
+            ILogger logger = _loggerFactory.CreateLogger<ReviewBot>();
+
+            // Catches any errors that occur during a conversation turn and logs them.
+            options.OnTurnError = async (context, exception) =>
             {
-                // var secretKey = Configuration.GetSection("botFileSecret")?.Value;
-                // var botFilePath = Configuration.GetSection("botFilePath")?.Value;
-                //
-                // // Loads .bot configuration file and adds a singleton that your Bot can access through dependency injection.
-                // var botConfig = BotConfiguration.Load(botFilePath, secretKey);
-                // services.AddSingleton(
-                //     sp =>
-                //         botConfig ??
-                //         throw new InvalidOperationException($"The .bot config file could not be loaded. ({botConfig})"));
-                //
-                // // Retrieve current endpoint.
-                // var environment = _isProduction ? "production" : "development";
-                // var service = botConfig.Services.Where(s => s.Type == "endpoint" && s.Name == environment)
-                //                        .FirstOrDefault();
-                // if (!(service is EndpointService endpointService))
-                // {
-                //     throw new InvalidOperationException(
-                //         $"The .bot file does not contain an endpoint with name '{environment}'.");
-                // }
+                logger.LogError($"Exception caught : {exception}");
+                await context.SendActivityAsync(
+                    $"Sorry, it looks like something went wrong. Error: {exception.Message}");
+            };
+        });
 
-                var appId = Configuration.GetSection("botAppId")?.Value;
-                var appPassword = Configuration.GetSection("botAppPassword")?.Value;
+        services.AddSingleton<IReviewContextStore, ReviewContextBlobStore>();
+        services.AddSingleton<ReviewBot>();
+    }
 
-                options.CredentialProvider =
-                    new SimpleCredentialProvider(appId, appPassword);
+    public void Configure(IApplicationBuilder app, IHostEnvironment env, ILoggerFactory loggerFactory)
+    {
+        _loggerFactory = loggerFactory;
 
-                // Creates a logger for the application to use.
-                ILogger logger = _loggerFactory.CreateLogger<ReviewBot>();
-
-                // Catches any errors that occur during a conversation turn and logs them.
-                options.OnTurnError = async (context, exception) =>
-                {
-                    logger.LogError($"Exception caught : {exception}");
-                    await context.SendActivityAsync(
-                        $"Sorry, it looks like something went wrong. Error: {exception.Message}");
-                };
-            });
-
-            services.AddSingleton<IReviewContextStore, ReviewContextBlobStore>();
-            services.AddSingleton<ReviewBot>();
-        }
-
-        public void Configure(IApplicationBuilder app, IHostEnvironment env, ILoggerFactory loggerFactory)
-        {
-            _loggerFactory = loggerFactory;
-
-            app.UseDefaultFiles()
-               .UseStaticFiles()
-               .UseBotFramework();
-        }
+        app.UseDefaultFiles()
+           .UseStaticFiles()
+           .UseBotFramework();
     }
 }

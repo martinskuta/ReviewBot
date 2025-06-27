@@ -5,12 +5,11 @@ using Review.Core.DataModel;
 
 #endregion
 
-namespace ReviewBot.Storage
-{
-    public interface IReviewContextStore
-    {
-        Task<ReviewContext> GetContext(string contextId);
+namespace ReviewBot.Storage;
 
-        Task SaveContext(ReviewContext context);
-    }
+public interface IReviewContextStore
+{
+    Task<ReviewContext> GetContext(string contextId);
+
+    Task SaveContext(ReviewContext context);
 }
