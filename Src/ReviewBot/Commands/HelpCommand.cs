@@ -95,6 +95,6 @@ public class HelpCommand : Command
             return Task.CompletedTask;
         }
 
-        public override IActivity GetReply() => _reply;
+        public override IMessageActivity GetReply() => _reply;
     }
 }

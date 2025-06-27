@@ -69,7 +69,7 @@ public class RegisterReviewerCommand : ReviewCommand
 
         protected override bool IsReadonly => false;
 
-        protected override IActivity ExecuteReviewAction()
+        protected override IMessageActivity ExecuteReviewAction()
         {
             var messageActivity = TurnContext.Activity.AsMessageActivity();
             var message = messageActivity.StripRecipientMention().StripNewLineAndTrim();
@@ -94,7 +94,7 @@ public class RegisterReviewerCommand : ReviewCommand
             return RegisterReviewers(reviewersToRegister);
         }
 
-        private IActivity RegisterSenderAsReviewer()
+        private IMessageActivity RegisterSenderAsReviewer()
         {
             var reviewer = TurnContext.Activity.From;
 
@@ -109,7 +109,7 @@ public class RegisterReviewerCommand : ReviewCommand
             }
         }
 
-        private IActivity RegisterReviewer(ChannelAccount reviewer)
+        private IMessageActivity RegisterReviewer(ChannelAccount reviewer)
         {
             try
             {
@@ -128,7 +128,7 @@ public class RegisterReviewerCommand : ReviewCommand
             }
         }
 
-        private IActivity RegisterReviewers(IEnumerable<ChannelAccount> reviewers)
+        private IMessageActivity RegisterReviewers(IEnumerable<ChannelAccount> reviewers)
         {
             var registered = new List<ChannelAccount>();
             var alreadyRegistered = new List<ChannelAccount>();

@@ -22,9 +22,9 @@ public abstract class CommandExecutable
 
     public abstract Task Execute();
 
-    public abstract IActivity GetReply();
+    public abstract IMessageActivity GetReply();
 
-    protected IActivity CreateHelpReply()
+    protected IMessageActivity CreateHelpReply()
     {
         var reply = TurnContext.Activity.CreateReply($"Correct usage of **{_command.Name()}** command:").AppendNewline();
 

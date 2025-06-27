@@ -69,7 +69,7 @@ public class MakeReviewerBusyCommand : ReviewCommand
 
         protected override bool IsReadonly => false;
 
-        protected override IActivity ExecuteReviewAction()
+        protected override IMessageActivity ExecuteReviewAction()
         {
             var messageActivity = TurnContext.Activity.AsMessageActivity();
             var reviewerToMakeBusy = messageActivity.GetUniqueMentionsExceptRecipient().FirstOrDefault()?.Mentioned;
@@ -77,7 +77,7 @@ public class MakeReviewerBusyCommand : ReviewCommand
             return reviewerToMakeBusy == null ? MakeSelfBusy() : MakeReviewerBusy(reviewerToMakeBusy);
         }
 
-        private IActivity MakeReviewerBusy(ChannelAccount reviewer)
+        private IMessageActivity MakeReviewerBusy(ChannelAccount reviewer)
         {
             try
             {
@@ -106,7 +106,7 @@ public class MakeReviewerBusyCommand : ReviewCommand
             }
         }
 
-        private IActivity MakeSelfBusy()
+        private IMessageActivity MakeSelfBusy()
         {
             try
             {

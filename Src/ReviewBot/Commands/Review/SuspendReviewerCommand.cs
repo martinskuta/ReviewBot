@@ -69,7 +69,7 @@ public class SuspendReviewerCommand : ReviewCommand
 
         protected override bool IsReadonly => false;
 
-        protected override IActivity ExecuteReviewAction()
+        protected override IMessageActivity ExecuteReviewAction()
         {
             var messageActivity = TurnContext.Activity.AsMessageActivity();
             var reviewerToSuspend = messageActivity.GetUniqueMentionsExceptRecipient().FirstOrDefault()?.Mentioned;
@@ -77,7 +77,7 @@ public class SuspendReviewerCommand : ReviewCommand
             return reviewerToSuspend == null ? SelfSuspend() : SuspendReviewer(reviewerToSuspend);
         }
 
-        private IActivity SelfSuspend()
+        private IMessageActivity SelfSuspend()
         {
             try
             {
@@ -96,7 +96,7 @@ public class SuspendReviewerCommand : ReviewCommand
             }
         }
 
-        private IActivity SuspendReviewer(ChannelAccount reviewer)
+        private IMessageActivity SuspendReviewer(ChannelAccount reviewer)
         {
             try
             {

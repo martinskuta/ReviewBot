@@ -88,7 +88,10 @@ public class ReviewBot : IBot
 
         await commandExecutable.Execute();
 
-        await turnContext.SendActivityAsync(commandExecutable.GetReply());
+        var messageActivity = commandExecutable.GetReply();
+        messageActivity.TextFormat = TextFormatTypes.Markdown;
+
+        await turnContext.SendActivityAsync(messageActivity);
     }
 
     private Task ReplyWithHelp(ITurnContext turnContext)

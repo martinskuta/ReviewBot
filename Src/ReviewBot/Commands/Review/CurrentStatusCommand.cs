@@ -59,7 +59,7 @@ public class CurrentStatusCommand : ReviewCommand
 
         protected override bool IsReadonly => true;
 
-        protected override IActivity ExecuteReviewAction()
+        protected override IMessageActivity ExecuteReviewAction()
         {
             var activeReviewers = ReviewService.GetAllReviewers()
                                                .Where(r => !r.IsSuspended)

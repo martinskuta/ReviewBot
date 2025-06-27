@@ -69,7 +69,7 @@ public class MakeAvailableCommand : ReviewCommand
 
         protected override bool IsReadonly => false;
 
-        protected override IActivity ExecuteReviewAction()
+        protected override IMessageActivity ExecuteReviewAction()
         {
             var messageActivity = TurnContext.Activity.AsMessageActivity();
             var reviewerToResume = messageActivity.GetUniqueMentionsExceptRecipient().FirstOrDefault()?.Mentioned;
@@ -77,7 +77,7 @@ public class MakeAvailableCommand : ReviewCommand
             return reviewerToResume == null ? SelfResume() : ResumeReviewer(reviewerToResume);
         }
 
-        private IActivity ResumeReviewer(ChannelAccount reviewer)
+        private IMessageActivity ResumeReviewer(ChannelAccount reviewer)
         {
             try
             {
@@ -96,7 +96,7 @@ public class MakeAvailableCommand : ReviewCommand
             }
         }
 
-        private IActivity SelfResume()
+        private IMessageActivity SelfResume()
         {
             try
             {

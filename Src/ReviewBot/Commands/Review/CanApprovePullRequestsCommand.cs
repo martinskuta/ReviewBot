@@ -72,7 +72,7 @@ public class CanApprovePullRequestsCommand : ReviewCommand
 
         protected override bool IsReadonly => false;
 
-        protected override IActivity ExecuteReviewAction()
+        protected override IMessageActivity ExecuteReviewAction()
         {
             var messageActivity = TurnContext.Activity.AsMessageActivity();
             var reviewerToSet = messageActivity.GetUniqueMentionsExceptRecipient().First().Mentioned;

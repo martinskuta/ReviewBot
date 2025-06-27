@@ -16,7 +16,7 @@ namespace ReviewBot.Commands.Review;
 public abstract class ReviewCommandExecutable : CommandExecutable
 {
     private readonly IReviewContextStore _contextStore;
-    private IActivity _reply;
+    private IMessageActivity _reply;
     protected IReviewService ReviewService;
 
     protected ReviewCommandExecutable(Command command, ITurnContext turnContext, IReviewContextStore contextStore)
@@ -43,18 +43,18 @@ public abstract class ReviewCommandExecutable : CommandExecutable
         await _contextStore.SaveContext(reviewContext);
     }
 
-    public override IActivity GetReply() => _reply;
+    public override IMessageActivity GetReply() => _reply;
 
-    protected abstract IActivity ExecuteReviewAction();
+    protected abstract IMessageActivity ExecuteReviewAction();
 
-    protected IActivity CreateSorryYouAreNotRegisteredReply()
+    protected IMessageActivity CreateSorryYouAreNotRegisteredReply()
     {
         return TurnContext.Activity.CreateReply("Sorry ")
                           .AppendMention(TurnContext.Activity.From)
                           .AppendText(", but you are not registered as reviewer.");
     }
 
-    protected IActivity CreateSorryReviewerNotRegisteredReply(ChannelAccount notRegistered)
+    protected IMessageActivity CreateSorryReviewerNotRegisteredReply(ChannelAccount notRegistered)
     {
         return TurnContext.Activity.CreateReply("Sorry ")
                           .AppendMention(TurnContext.Activity.From)
@@ -63,7 +63,7 @@ public abstract class ReviewCommandExecutable : CommandExecutable
                           .AppendText(" is not registered as reviewer.");
     }
 
-    protected IActivity CreateSorryNoReviewersRegisteredYetReply()
+    protected IMessageActivity CreateSorryNoReviewersRegisteredYetReply()
     {
         return TurnContext.Activity.CreateReply("Sorry ")
                           .AppendMention(TurnContext.Activity.From)

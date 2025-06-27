@@ -66,7 +66,7 @@ public class FixIdCommand : ReviewCommand
 
         protected override bool IsReadonly => false;
 
-        protected override IActivity ExecuteReviewAction()
+        protected override IMessageActivity ExecuteReviewAction()
         {
             var featureAuthor = TurnContext.Activity.From;
 

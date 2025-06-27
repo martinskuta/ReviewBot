@@ -60,7 +60,7 @@ public class RemoveReviewCommand : ReviewCommand
 
         protected override bool IsReadonly => false;
 
-        protected override IActivity ExecuteReviewAction()
+        protected override IMessageActivity ExecuteReviewAction()
         {
             var featureAuthor = TurnContext.Activity.From;
             var messageActivity = TurnContext.Activity.AsMessageActivity();

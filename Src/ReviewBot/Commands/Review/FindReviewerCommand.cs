@@ -90,7 +90,7 @@ public class FindReviewerCommand : ReviewCommand
 
         protected override bool IsReadonly => false;
 
-        protected override IActivity ExecuteReviewAction()
+        protected override IMessageActivity ExecuteReviewAction()
         {
             var messageActivity = TurnContext.Activity.AsMessageActivity();
             var otherMentions = TurnContext.Activity.GetUniqueMentionsExceptRecipient();
@@ -113,7 +113,7 @@ public class FindReviewerCommand : ReviewCommand
             return OtherDevelopersAreLookingForReview(developers);
         }
 
-        private IActivity SenderIsLookingForReview()
+        private IMessageActivity SenderIsLookingForReview()
         {
             var featureAuthor = TurnContext.Activity.From;
 
@@ -128,7 +128,7 @@ public class FindReviewerCommand : ReviewCommand
             }
         }
 
-        private IActivity OtherDeveloperIsLookingForReview(ChannelAccount developer)
+        private IMessageActivity OtherDeveloperIsLookingForReview(ChannelAccount developer)
         {
             try
             {
@@ -141,7 +141,7 @@ public class FindReviewerCommand : ReviewCommand
             }
         }
 
-        private IActivity OtherDevelopersAreLookingForReview(IList<ChannelAccount> developers)
+        private IMessageActivity OtherDevelopersAreLookingForReview(IList<ChannelAccount> developers)
         {
             try
             {
@@ -154,12 +154,12 @@ public class FindReviewerCommand : ReviewCommand
             }
         }
 
-        private IActivity CreateSorryNoReviewersAvailable()
+        private IMessageActivity CreateSorryNoReviewersAvailable()
         {
             return TurnContext.Activity.CreateReply("Sorry ").AppendMention(TurnContext.Activity.From).AppendText(", there are no reviewers available.");
         }
 
-        private IActivity CreateAssignTheReviewToReply(IReadOnlyList<Reviewer> reviewers)
+        private IMessageActivity CreateAssignTheReviewToReply(IReadOnlyList<Reviewer> reviewers)
         {
             if (reviewers.Count == 1)
             {
