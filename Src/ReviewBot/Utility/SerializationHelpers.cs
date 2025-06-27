@@ -5,20 +5,21 @@ using ProtoBuf;
 
 #endregion
 
-namespace ReviewBot.Utility;
-
-public static class SerializationHelpers
+namespace ReviewBot.Utility
 {
-    public static MemoryStream ToMemoryStream(this object obj)
+    public static class SerializationHelpers
     {
-        var ms = new MemoryStream();
-        Serializer.Serialize(ms, obj);
-        ms.Seek(0, SeekOrigin.Begin);
-        return ms;
-    }
+        public static MemoryStream ToMemoryStream(this object obj)
+        {
+            var ms = new MemoryStream();
+            Serializer.Serialize(ms, obj);
+            ms.Seek(0, SeekOrigin.Begin);
+            return ms;
+        }
 
-    public static T Deserialize<T>(this Stream s)
-    {
-        return Serializer.Deserialize<T>(s);
+        public static T Deserialize<T>(this Stream s)
+        {
+            return Serializer.Deserialize<T>(s);
+        }
     }
 }

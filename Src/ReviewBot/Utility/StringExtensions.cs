@@ -1,11 +1,16 @@
-﻿using System.Text.RegularExpressions;
+﻿#region using
 
-namespace ReviewBot.Utility;
+using System.Text.RegularExpressions;
 
-public static class StringExtensions
+#endregion
+
+namespace ReviewBot.Utility
 {
-    public static string StripNewLineAndTrim(this string str)
+    public static class StringExtensions
     {
-        return str == null ? null : Regex.Replace(str.Trim(), @"\t|\n|\r", "");
+        public static string StripNewLineAndTrim(this string str)
+        {
+            return str == null ? null : Regex.Replace(str.Trim(), @"\t|\n|\r", "");
+        }
     }
 }

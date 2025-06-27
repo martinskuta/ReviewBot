@@ -1,13 +1,19 @@
-﻿using System;
+﻿#region using
 
-namespace Review.Core;
+using System;
 
-/// <summary>
-///     Base exception class for all exceptions thrown by the review framework.
-/// </summary>
-public abstract class ReviewException : Exception
+#endregion
+
+namespace Review.Core
 {
-    protected ReviewException(string message) : base(message)
+    /// <summary>
+    ///     Base exception class for all exceptions thrown by the review framework.
+    /// </summary>
+    public abstract class ReviewException : Exception
     {
+        protected ReviewException(string message)
+            : base(message)
+        {
+        }
     }
 }

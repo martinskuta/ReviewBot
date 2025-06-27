@@ -5,21 +5,22 @@ using ReviewBot.Storage;
 
 #endregion
 
-namespace ReviewBot.Commands.Review;
-
-public abstract class ReviewCommand : Command
+namespace ReviewBot.Commands.Review
 {
-    private readonly IReviewContextStore _contextStore;
-
-    protected ReviewCommand(IReviewContextStore contextStore)
+    public abstract class ReviewCommand : Command
     {
-        _contextStore = contextStore;
-    }
+        private readonly IReviewContextStore _contextStore;
 
-    public override CommandExecutable CreateExecutable(ITurnContext turnContext)
-    {
-        return CreateReviewExecutable(turnContext, _contextStore);
-    }
+        protected ReviewCommand(IReviewContextStore contextStore)
+        {
+            _contextStore = contextStore;
+        }
 
-    protected abstract ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore);
+        public override CommandExecutable CreateExecutable(ITurnContext turnContext)
+        {
+            return CreateReviewExecutable(turnContext, _contextStore);
+        }
+
+        protected abstract ReviewCommandExecutable CreateReviewExecutable(ITurnContext turnContext, IReviewContextStore contextStore);
+    }
 }

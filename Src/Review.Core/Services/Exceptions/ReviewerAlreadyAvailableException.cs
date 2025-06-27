@@ -1,9 +1,11 @@
-﻿namespace Review.Core.Services.Exceptions;
-
-public class ReviewerAlreadyAvailableException : ReviewException
+﻿namespace Review.Core.Services.Exceptions
 {
-    public ReviewerAlreadyAvailableException(string reviewerId) : base(
-        $"Reviewer '{reviewerId}' is already available.")
+    public class ReviewerAlreadyAvailableException : ReviewException
     {
+        public ReviewerAlreadyAvailableException(string reviewerId)
+            : base(
+                $"Reviewer '{reviewerId}' is already available.")
+        {
+        }
     }
 }

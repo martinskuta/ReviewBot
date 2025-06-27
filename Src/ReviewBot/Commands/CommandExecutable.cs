@@ -7,34 +7,35 @@ using ReviewBot.Utility;
 
 #endregion
 
-namespace ReviewBot.Commands;
-
-public abstract class CommandExecutable
+namespace ReviewBot.Commands
 {
-    private readonly Command _command;
-    protected readonly ITurnContext TurnContext;
-
-    protected CommandExecutable(Command command, ITurnContext turnContext)
+    public abstract class CommandExecutable
     {
-        _command = command;
-        TurnContext = turnContext;
-    }
+        private readonly Command _command;
+        protected readonly ITurnContext TurnContext;
 
-    public abstract Task Execute();
-
-    public abstract IActivity GetReply();
-
-    protected IActivity CreateHelpReply()
-    {
-        var reply = TurnContext.Activity.CreateReply($"Correct usage of **{_command.Name()}** command:").AppendNewline();
-
-        foreach (var usage in _command.PrintUsages(TurnContext.Activity.Recipient.Name))
+        protected CommandExecutable(Command command, ITurnContext turnContext)
         {
-            reply.AppendIndentation()
-                 .AppendText($"- {usage}")
-                 .AppendNewline();
+            _command = command;
+            TurnContext = turnContext;
         }
 
-        return reply;
+        public abstract Task Execute();
+
+        public abstract IActivity GetReply();
+
+        protected IActivity CreateHelpReply()
+        {
+            var reply = TurnContext.Activity.CreateReply($"Correct usage of **{_command.Name()}** command:").AppendNewline();
+
+            foreach (var usage in _command.PrintUsages(TurnContext.Activity.Recipient.Name))
+            {
+                reply.AppendIndentation()
+                     .AppendText($"- {usage}")
+                     .AppendNewline();
+            }
+
+            return reply;
+        }
     }
 }

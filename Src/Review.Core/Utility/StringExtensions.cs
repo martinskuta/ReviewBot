@@ -7,28 +7,29 @@ using System.Text;
 
 #endregion
 
-namespace Review.Core.Utility;
-
-public static class StringExtensions
+namespace Review.Core.Utility
 {
-    public static bool ContainsAnyOrdinal(this string str, params string[] values)
+    public static class StringExtensions
     {
-        return values.Any(value => str.Contains(value, StringComparison.OrdinalIgnoreCase));
-    }
-
-    public static bool ContainsAnyOrdinal(this IList<string> listOfStrings, params string[] values)
-    {
-        return values.Any(value => listOfStrings.Contains(value, StringComparer.OrdinalIgnoreCase));
-    }
-
-    public static string NormalizeDiacritics(this string str)
-    {
-        var sb = new StringBuilder();
-        foreach (var b in str.Normalize(NormalizationForm.FormD).Where(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
+        public static bool ContainsAnyOrdinal(this string str, params string[] values)
         {
-            sb.Append(b);
+            return values.Any(value => str.Contains(value, StringComparison.OrdinalIgnoreCase));
         }
 
-        return sb.ToString();
+        public static bool ContainsAnyOrdinal(this IList<string> listOfStrings, params string[] values)
+        {
+            return values.Any(value => listOfStrings.Contains(value, StringComparer.OrdinalIgnoreCase));
+        }
+
+        public static string NormalizeDiacritics(this string str)
+        {
+            var sb = new StringBuilder();
+            foreach (var b in str.Normalize(NormalizationForm.FormD).Where(c => char.IsLetter(c) || char.IsWhiteSpace(c)))
+            {
+                sb.Append(b);
+            }
+
+            return sb.ToString();
+        }
     }
 }
