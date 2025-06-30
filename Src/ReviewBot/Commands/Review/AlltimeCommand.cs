@@ -82,7 +82,7 @@ public class AllTimeCommand : ReviewCommand
             foreach (var reviewer in activeReviewers)
             {
                 reply.AppendText(
-                         $"**{reviewer.Name}**{(reviewer.CanApprovePullRequest ? "" : "*")} ({reviewer.Status}): Reviews: {reviewer.ReviewCount}, Debt: {reviewer.ReviewDebt}")
+                         $"**{reviewer.Name}** {(reviewer.CanApprovePullRequest ? "" : "*")} ({reviewer.Status}): Reviews: {reviewer.ReviewCount}, Debt: {reviewer.ReviewDebt}")
                      .AppendNewline();
             }
 
